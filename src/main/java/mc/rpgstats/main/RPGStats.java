@@ -3,6 +3,7 @@ package mc.rpgstats.main;
 import mc.rpgstats.components.*;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
+import nerdhub.cardinal.components.api.component.ComponentProvider;
 import nerdhub.cardinal.components.api.event.EntityComponentCallback;
 import nerdhub.cardinal.components.api.util.EntityComponents;
 import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;

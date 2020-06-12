@@ -17,7 +17,7 @@ public class MeleeComponent implements IStatComponent {
 
     @Override
     public void fromTag(CompoundTag tag) {
-        this.level = tag.getInt("level");
+        this.level = 0;//tag.getInt("level");
         this.xp = tag.getInt("xp");
     }
 
@@ -56,5 +56,10 @@ public class MeleeComponent implements IStatComponent {
     @Override
     public void setLevel(int newLevel) {
         this.level = newLevel;
+    }
+
+    @Override
+    public String getName() {
+        return "melee";
     }
 }

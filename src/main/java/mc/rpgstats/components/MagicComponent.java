@@ -57,4 +57,9 @@ public class MagicComponent implements IStatComponent {
     public void setLevel(int newLevel) {
         this.level = newLevel;
     }
+
+    @Override
+    public String getName() {
+        return "magic";
+    }
 }

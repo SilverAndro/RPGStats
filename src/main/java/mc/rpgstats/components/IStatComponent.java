@@ -7,4 +7,5 @@ public interface IStatComponent extends EntitySyncedComponent {
     void setXP(int newXP);
     int getLevel();
     void setLevel(int newLevel);
+    String getName();
 }

@@ -52,4 +52,20 @@ public class RPGStats implements ModInitializer {
 	public static int getComponentLevel(ComponentType<? extends IStatComponent> type, ComponentProvider provider) {
 		return type.get(provider).getLevel();
 	}
+
+	public static void addXpAndLevelUpIfNeeded(ComponentType<? extends IStatComponent> type, ComponentProvider provider, int newValue) {
+		int nextXP = type.get(provider).getXP() + newValue;
+		int currentlevel = getComponentLevel(type, provider);
+
+		if (currentlevel <= 51) {
+			// Enough to level up
+			double nextXPForLevelUp = Math.floor(Math.pow(currentlevel + 1, 3) * 0.08) + 50;
+			if (nextXP >= nextXPForLevelUp) {
+				nextXP -= nextXPForLevelUp;
+				setComponentLevel(type, provider, currentlevel + 1);
+			}
+
+			setComponentXP(type, provider, nextXP);
+		}
+	}
 }

@@ -4,8 +4,9 @@
   "package": "mc.rpgstats.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-  ],
-  "client": [
+    "BlockBreakMixin",
+    "PotionDrinkMixin",
+    "PotionSplashMixin",
     "KillMixin",
     "ShieldMixin"
   ],

@@ -36,19 +36,20 @@ public class RPGStats implements ModInitializer {
 		EntityComponents.setRespawnCopyStrategy(MAGIC_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
 	}
 
-	public void setComponentXP(ComponentType<IStatComponent> type, ComponentProvider provider, int newValue) {
+	// Helper methods for components
+	public static void setComponentXP(ComponentType<? extends IStatComponent> type, ComponentProvider provider, int newValue) {
 		type.get(provider).setXP(newValue);
 	}
 
-	public int getComponentXP(ComponentType<IStatComponent> type, ComponentProvider provider) {
+	public static int getComponentXP(ComponentType<? extends IStatComponent> type, ComponentProvider provider) {
 		return type.get(provider).getXP();
 	}
 
-	public void setComponentLevel(ComponentType<IStatComponent> type, ComponentProvider provider, int newValue) {
+	public static void setComponentLevel(ComponentType<? extends IStatComponent> type, ComponentProvider provider, int newValue) {
 		type.get(provider).setLevel(newValue);
 	}
 
-	public int getComponentLevel(ComponentType<IStatComponent> type, ComponentProvider provider) {
+	public static int getComponentLevel(ComponentType<? extends IStatComponent> type, ComponentProvider provider) {
 		return type.get(provider).getLevel();
 	}
 }

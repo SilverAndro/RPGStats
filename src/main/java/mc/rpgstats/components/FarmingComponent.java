@@ -8,30 +8,23 @@ import net.minecraft.nbt.CompoundTag;
 
 public class FarmingComponent implements IStatComponent {
     private final PlayerEntity player;
-    private int value = 0;
+    private int xp = 0;
+    private int level = 0;
 
     public FarmingComponent(PlayerEntity player) {
         this.player = player;
     }
 
     @Override
-    public int getValue() {
-        return this.value;
-    }
-
-    @Override
-    public void setValue(int newValue) {
-        this.value = newValue;
-    }
-
-    @Override
     public void fromTag(CompoundTag tag) {
-        this.value = tag.getInt("value");
+        this.level = tag.getInt("level");
+        this.xp = tag.getInt("xp");
     }
 
     @Override
     public CompoundTag toTag(CompoundTag tag) {
-        tag.putInt("value", this.value);
+        tag.putInt("xp", this.xp);
+        tag.putInt("level", this.level);
         return tag;
     }
 
@@ -43,5 +36,25 @@ public class FarmingComponent implements IStatComponent {
     @Override
     public ComponentType<?> getComponentType() {
         return RPGStats.FARMING_COMPONENT;
+    }
+
+    @Override
+    public int getXP() {
+        return this.xp;
+    }
+
+    @Override
+    public void setXP(int newXP) {
+        this.xp = newXP;
+    }
+
+    @Override
+    public int getLevel() {
+        return this.level;
+    }
+
+    @Override
+    public void setLevel(int newLevel) {
+        this.level = newLevel;
     }
 }

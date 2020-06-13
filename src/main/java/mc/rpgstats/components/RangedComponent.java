@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
 
 public class RangedComponent implements IStatComponent {
     private final PlayerEntity player;
@@ -66,6 +67,6 @@ public class RangedComponent implements IStatComponent {
 
     @Override
     public void onLevelUp() {
-
+        player.sendMessage(new LiteralText("§a+1§r Bow accuracy"), false);
     }
 }

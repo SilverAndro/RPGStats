@@ -5,6 +5,7 @@ import nerdhub.cardinal.components.api.ComponentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class MagicComponent implements IStatComponent {
     private final PlayerEntity player;
@@ -61,5 +62,10 @@ public class MagicComponent implements IStatComponent {
     @Override
     public String getName() {
         return "magic";
+    }
+
+    @Override
+    public void onLevelUp() {
+
     }
 }

@@ -25,7 +25,7 @@ public class ImpalingMixin {
     private static void cursedManip(ItemStack stack, EntityGroup group, CallbackInfoReturnable<Float> cir, MutableFloat mutableFloat) {
         if (EnchantmentHelper.get(stack).containsKey(Enchantments.IMPALING) && !(group == EntityGroup.AQUATIC)) {
             System.out.println(stack.getHolder());
-            if (RPGStats.getComponentLevel(RPGStats.RANGED_COMPONENT, ComponentProvider.fromEntity(stack.getHolder())) >= 50) {
+            if (RPGStats.getComponentLevel(RPGStats.RANGED_COMPONENT, ComponentProvider.fromEntity(stack.getHolder())) >= 25) {
                 int level = EnchantmentHelper.get(stack).get(Enchantments.IMPALING);
                 System.out.println(level);
                 System.out.println(mutableFloat.getValue());

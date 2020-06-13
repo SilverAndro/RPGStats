@@ -58,7 +58,7 @@ public class RPGStats implements ModInitializer {
 		int nextXP = getComponentXP(type, provider) + addedXP;
 		int currentLevel = getComponentLevel(type, provider);
 
-		if (currentLevel <= 51) {
+		if (currentLevel <= 50) {
 			// Enough to level up
 			double nextXPForLevelUp = Math.floor(Math.pow(currentLevel + 1, 3) * 0.08) + 70;
 			if (nextXP >= nextXPForLevelUp) {

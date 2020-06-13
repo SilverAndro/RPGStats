@@ -67,5 +67,10 @@ public class RangedComponent implements IStatComponent {
     @Override
     public void onLevelUp() {
         player.sendMessage(new LiteralText("§a+1§r Bow accuracy"), false);
+        if (level == 25) {
+            player.sendMessage(new LiteralText("§aAqueus§r - Impaling applies to all mobs, not just water based ones"), false);
+        } else if (level == 50) {
+            player.sendMessage(new LiteralText("§aNix§r - You no longer need arrows"), false);
+        }
     }
 }

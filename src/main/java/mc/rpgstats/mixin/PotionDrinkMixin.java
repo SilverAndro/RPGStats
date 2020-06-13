@@ -27,12 +27,9 @@ public class PotionDrinkMixin {
     @Inject(at = @At("HEAD"), method = "getMaxUseTime", cancellable = true)
     private void getUseTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         Entity holder = stack.getHolder();
-        System.out.println("hello world");
-        System.out.println(holder);
         if (holder instanceof PlayerEntity) {
             PlayerEntity spe = (PlayerEntity)holder;
             cir.setReturnValue((int) (32 - Math.floor(RPGStats.getComponentLevel(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(spe)) / 3.0f)));
-            System.out.println(cir.getReturnValue());
         }
     }
 }

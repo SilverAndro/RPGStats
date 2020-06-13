@@ -2,6 +2,7 @@ package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -20,6 +21,18 @@ public class PotionDrinkMixin {
         PlayerEntity playerEntity = user instanceof PlayerEntity ? (PlayerEntity)user : null;
         if (playerEntity instanceof ServerPlayerEntity) {
             RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(user), 10);
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "getMaxUseTime", cancellable = true)
+    private void getUseTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
+        Entity holder = stack.getHolder();
+        System.out.println("hello world");
+        System.out.println(holder);
+        if (holder instanceof PlayerEntity) {
+            PlayerEntity spe = (PlayerEntity)holder;
+            cir.setReturnValue((int) (32 - Math.floor(RPGStats.getComponentLevel(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(spe)) / 3.0f)));
+            System.out.println(cir.getReturnValue());
         }
     }
 }

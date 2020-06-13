@@ -7,6 +7,8 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -44,6 +46,9 @@ public abstract class KillMixin {
 					if (le instanceof PassiveEntity) {
 						RPGStats.addXpAndLevelUpIfNeeded(RPGStats.FARMING_COMPONENT, provider, 1);
 					} else {
+						int level = RPGStats.getComponentLevel(RPGStats.MELEE_COMPONENT, provider);
+						int duration = level >= 25 ? level >= 50 ? 200 : 100 : 0;
+						((ServerPlayerEntity)entity).applyStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, duration));
 						if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
 							RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MELEE_COMPONENT, provider, 130);
 						} else if (le instanceof EndermanEntity) {

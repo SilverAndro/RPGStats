@@ -70,6 +70,6 @@ public class MeleeComponent implements IStatComponent {
     @Override
     public void onLevelUp() {
         Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + 0.1);
-        player.sendMessage(new LiteralText("+0.1 Melee damage"), false);
+        player.sendMessage(new LiteralText("§a+0.1§r Melee damage"), false);
     }
 }

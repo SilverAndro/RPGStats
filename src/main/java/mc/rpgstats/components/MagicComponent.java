@@ -66,6 +66,7 @@ public class MagicComponent implements IStatComponent {
 
     @Override
     public void onLevelUp() {
+        player.sendMessage(new LiteralText("§a+1§r Drunk potion duration"), false);
         if (level % 3 == 0) {
             player.sendMessage(new LiteralText("§a+1§r Potion drink speed"), false);
         }

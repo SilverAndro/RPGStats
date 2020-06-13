@@ -34,7 +34,7 @@ public abstract class KillMixin {
 				ComponentProvider provider = ComponentProvider.fromEntity(entity);
 				if (source.isProjectile()) {
 					if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-						RPGStats.addXpAndLevelUpIfNeeded(RPGStats.RANGED_COMPONENT, provider, 50);
+						RPGStats.addXpAndLevelUpIfNeeded(RPGStats.RANGED_COMPONENT, provider, 130);
 					} else {
 						RPGStats.addXpAndLevelUpIfNeeded(RPGStats.RANGED_COMPONENT, provider, 1);
 					}
@@ -45,7 +45,7 @@ public abstract class KillMixin {
 						RPGStats.addXpAndLevelUpIfNeeded(RPGStats.FARMING_COMPONENT, provider, 1);
 					} else {
 						if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-							RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MELEE_COMPONENT, provider, 50);
+							RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MELEE_COMPONENT, provider, 130);
 						} else if (le instanceof EndermanEntity) {
 							if (getRandom().nextDouble() > 0.60) {
 								RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MELEE_COMPONENT, provider, 1);

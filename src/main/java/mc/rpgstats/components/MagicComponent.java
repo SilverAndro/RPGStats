@@ -5,7 +5,7 @@ import nerdhub.cardinal.components.api.ComponentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
 
 public class MagicComponent implements IStatComponent {
     private final PlayerEntity player;
@@ -66,6 +66,8 @@ public class MagicComponent implements IStatComponent {
 
     @Override
     public void onLevelUp() {
-
+        if (level % 3 == 0) {
+            player.sendMessage(new LiteralText("§a+1§r Potion drink speed"), false);
+        }
     }
 }

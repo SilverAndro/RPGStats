@@ -60,11 +60,11 @@ public class RPGStats implements ModInitializer {
 
 		if (currentLevel <= 51) {
 			// Enough to level up
-			double nextXPForLevelUp = Math.floor(Math.pow(currentLevel + 1, 3) * 0.08) + 75;
+			double nextXPForLevelUp = Math.floor(Math.pow(currentLevel + 1, 3) * 0.08) + 70;
 			if (nextXP >= nextXPForLevelUp) {
 				nextXP -= nextXPForLevelUp;
 				setComponentLevel(type, provider, currentLevel + 1);
-				((PlayerEntity)type.get(provider).getEntity()).sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + type.get(provider).getName() + "§r level!"), false);
+				((PlayerEntity)type.get(provider).getEntity()).sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + type.get(provider).getName() + "§r level! You are now level §6" + type.get(provider).getLevel()), false);
 				type.get(provider).onLevelUp();
 			}
 

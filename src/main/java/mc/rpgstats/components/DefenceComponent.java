@@ -3,8 +3,13 @@ package mc.rpgstats.components;
 import mc.rpgstats.main.RPGStats;
 import nerdhub.cardinal.components.api.ComponentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
+
+import java.util.Objects;
 
 public class DefenceComponent implements IStatComponent {
     private final PlayerEntity player;
@@ -61,5 +66,15 @@ public class DefenceComponent implements IStatComponent {
     @Override
     public String getName() {
         return "defence";
+    }
+
+    @Override
+    public void onLevelUp() {
+        Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) + 0.01);
+        player.sendMessage(new LiteralText("+0.01 Knockback resistance"), false);
+        if (getLevel() % 4 == 0) {
+            Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) + 1);
+            player.sendMessage(new LiteralText("+1 Health"), false);
+        }
     }
 }

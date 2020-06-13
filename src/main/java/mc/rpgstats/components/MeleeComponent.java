@@ -3,8 +3,12 @@ package mc.rpgstats.components;
 import mc.rpgstats.main.RPGStats;
 import nerdhub.cardinal.components.api.ComponentType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.text.LiteralText;
+
+import java.util.Objects;
 
 public class MeleeComponent implements IStatComponent {
     private final PlayerEntity player;
@@ -61,5 +65,11 @@ public class MeleeComponent implements IStatComponent {
     @Override
     public String getName() {
         return "melee";
+    }
+
+    @Override
+    public void onLevelUp() {
+        Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + 0.1);
+        player.sendMessage(new LiteralText("+0.1 Melee damage"), false);
     }
 }

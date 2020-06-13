@@ -5,9 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BlockBreakMixin",
+    "KillMixin",
     "PotionDrinkMixin",
     "PotionSplashMixin",
-    "KillMixin",
     "ShieldMixin"
   ],
   "injectors": {

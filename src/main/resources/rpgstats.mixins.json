@@ -11,7 +11,8 @@
     "KillMixin",
     "PotionDrinkMixin",
     "PotionSplashMixin",
-    "ShieldMixin"
+    "ShieldMixin",
+    "TakeDamageMixin"
   ],
   "injectors": {
     "defaultRequire": 1

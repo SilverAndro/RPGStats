@@ -6,7 +6,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 
 import java.util.Objects;
@@ -75,6 +74,12 @@ public class DefenceComponent implements IStatComponent {
         if (getLevel() % 4 == 0) {
             Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) + 1);
             player.sendMessage(new LiteralText("§a+1§r Health"), false);
+        }
+
+        if (level == 25) {
+            player.sendMessage(new LiteralText("§aNimble§r - 5% chance to avoid damage"), false);
+        } else if (level == 50) {
+            player.sendMessage(new LiteralText("§aNimble II§r - 10% chance to avoid damage"), false);
         }
     }
 }

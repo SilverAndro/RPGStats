@@ -5,7 +5,7 @@ import nerdhub.cardinal.components.api.ComponentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
 
 public class FarmingComponent implements IStatComponent {
     private final PlayerEntity player;
@@ -66,6 +66,6 @@ public class FarmingComponent implements IStatComponent {
 
     @Override
     public void onLevelUp() {
-
+        player.sendMessage(new LiteralText("§a+1§r Bonemeal efficiency"), false);
     }
 }

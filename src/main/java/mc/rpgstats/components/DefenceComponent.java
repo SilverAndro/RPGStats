@@ -71,10 +71,10 @@ public class DefenceComponent implements IStatComponent {
     @Override
     public void onLevelUp() {
         Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) + 0.01);
-        player.sendMessage(new LiteralText("+0.01 Knockback resistance"), false);
+        player.sendMessage(new LiteralText("§a+0.01§r Knockback resistance"), false);
         if (getLevel() % 4 == 0) {
             Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) + 1);
-            player.sendMessage(new LiteralText("+1 Health"), false);
+            player.sendMessage(new LiteralText("§a+1§r Health"), false);
         }
     }
 }

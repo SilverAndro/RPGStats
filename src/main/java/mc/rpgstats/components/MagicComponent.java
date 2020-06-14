@@ -70,5 +70,10 @@ public class MagicComponent implements IStatComponent {
         if (level % 3 == 0) {
             player.sendMessage(new LiteralText("§a+1§r Potion drink speed"), false);
         }
+        if (level == 25) {
+            player.sendMessage(new LiteralText("§aVax§r - Immune to poison"), false);
+        } else if (level == 50) {
+            player.sendMessage(new LiteralText("§aDead inside§r - Immune to wither"), false);
+        }
     }
 }

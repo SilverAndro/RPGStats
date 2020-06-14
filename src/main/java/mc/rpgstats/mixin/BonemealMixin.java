@@ -44,15 +44,15 @@ public class BonemealMixin {
 
                     if (biome == Biomes.WARM_OCEAN || biome == Biomes.DEEP_WARM_OCEAN) {
                         if (i == 0 && facing != null && facing.getAxis().isHorizontal()) {
-                            blockState = (BlockState) ((Block) BlockTags.WALL_CORALS.getRandom(world.random)).getDefaultState().with(DeadCoralWallFanBlock.FACING, facing);
+                            blockState = BlockTags.WALL_CORALS.getRandom(world.random).getDefaultState().with(DeadCoralWallFanBlock.FACING, facing);
                         } else if (RANDOM.nextInt(4) == 0) {
-                            blockState = ((Block) BlockTags.UNDERWATER_BONEMEALS.getRandom(RANDOM)).getDefaultState();
+                            blockState = BlockTags.UNDERWATER_BONEMEALS.getRandom(RANDOM).getDefaultState();
                         }
                     }
 
                     if (blockState.getBlock().isIn(BlockTags.WALL_CORALS)) {
                         for (k = 0; !blockState.canPlaceAt(world, blockPos2) && k < 4; ++k) {
-                            blockState = (BlockState) blockState.with(DeadCoralWallFanBlock.FACING, Direction.Type.HORIZONTAL.random(RANDOM));
+                            blockState = blockState.with(DeadCoralWallFanBlock.FACING, Direction.Type.HORIZONTAL.random(RANDOM));
                         }
                     }
 

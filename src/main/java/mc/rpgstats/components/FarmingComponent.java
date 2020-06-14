@@ -67,5 +67,10 @@ public class FarmingComponent implements IStatComponent {
     @Override
     public void onLevelUp() {
         player.sendMessage(new LiteralText("§a+1§r Bonemeal efficiency"), false);
+        if (level == 25) {
+            player.sendMessage(new LiteralText("§aNurturing§r - Shift rapidly to grow nearby crops"), false);
+        } else if (level == 50) {
+            player.sendMessage(new LiteralText("§aNurturing II§r - Increased range"), false);
+        }
     }
 }

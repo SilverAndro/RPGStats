@@ -65,6 +65,11 @@ public class RangedComponent implements IStatComponent {
     }
 
     @Override
+    public String getCapName() {
+        return "Ranged";
+    }
+
+    @Override
     public void onLevelUp() {
         player.sendMessage(new LiteralText("§a+1§r Bow accuracy"), false);
         if (level == 25) {

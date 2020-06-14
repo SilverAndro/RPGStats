@@ -68,6 +68,11 @@ public class DefenceComponent implements IStatComponent {
     }
 
     @Override
+    public String getCapName() {
+        return "Defence";
+    }
+
+    @Override
     public void onLevelUp() {
         Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) + 0.01);
         player.sendMessage(new LiteralText("§a+0.01§r Knockback resistance"), false);

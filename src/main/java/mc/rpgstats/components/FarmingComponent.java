@@ -65,6 +65,11 @@ public class FarmingComponent implements IStatComponent {
     }
 
     @Override
+    public String getCapName() {
+        return "Farming";
+    }
+
+    @Override
     public void onLevelUp() {
         player.sendMessage(new LiteralText("§a+1§r Bonemeal efficiency"), false);
         if (level == 25) {

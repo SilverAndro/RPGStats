@@ -1,5 +1,6 @@
 package mc.rpgstats.main;
 
+import mc.rpgstats.command.StatsCommand;
 import mc.rpgstats.components.*;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
@@ -8,6 +9,7 @@ import nerdhub.cardinal.components.api.event.EntityComponentCallback;
 import nerdhub.cardinal.components.api.util.EntityComponents;
 import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
@@ -19,7 +21,6 @@ public class RPGStats implements ModInitializer {
 	public static final ComponentType<DefenceComponent> DEFENCE_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:defence"), DefenceComponent.class);
 	public static final ComponentType<FarmingComponent> FARMING_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:farming"), FarmingComponent.class);
 	public static final ComponentType<MagicComponent> MAGIC_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:magic"), MagicComponent.class);
-
 	@Override
 	public void onInitialize() {
 		// Init components on players
@@ -35,6 +36,11 @@ public class RPGStats implements ModInitializer {
 		EntityComponents.setRespawnCopyStrategy(DEFENCE_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
 		EntityComponents.setRespawnCopyStrategy(FARMING_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
 		EntityComponents.setRespawnCopyStrategy(MAGIC_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
+
+		// Command
+		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
+			StatsCommand.register(dispatcher);
+		});
 	}
 
 	// Helper methods for components
@@ -54,13 +60,17 @@ public class RPGStats implements ModInitializer {
 		return type.get(provider).getLevel();
 	}
 
+	public static int calculateXpNeededToReachLevel(int level) {
+		return (int)Math.floor(Math.pow(level, 3) * 0.08) + 70;
+	}
+
 	public static void addXpAndLevelUpIfNeeded(ComponentType<? extends IStatComponent> type, ComponentProvider provider, int addedXP) {
 		int nextXP = getComponentXP(type, provider) + addedXP;
 		int currentLevel = getComponentLevel(type, provider);
 
 		if (currentLevel <= 50) {
 			// Enough to level up
-			double nextXPForLevelUp = Math.floor(Math.pow(currentLevel + 1, 3) * 0.08) + 70;
+			int nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
 			if (nextXP >= nextXPForLevelUp) {
 				nextXP -= nextXPForLevelUp;
 				setComponentLevel(type, provider, currentLevel + 1);
@@ -69,6 +79,17 @@ public class RPGStats implements ModInitializer {
 			}
 
 			setComponentXP(type, provider, nextXP);
+		}
+	}
+
+	public static String getFormattedLevelData(ComponentType<? extends IStatComponent> type, ComponentProvider provider) {
+		int currentLevel = getComponentLevel(type, provider);
+		int xp = getComponentXP(type, provider);
+		if (currentLevel < 50) {
+			int nextXP = calculateXpNeededToReachLevel(currentLevel + 1);
+			return "§6" + type.get(provider).getCapName() + "§r - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
+		} else {
+			return "§6" + type.get(provider).getCapName() + "§r - Level: " + currentLevel;
 		}
 	}
 }

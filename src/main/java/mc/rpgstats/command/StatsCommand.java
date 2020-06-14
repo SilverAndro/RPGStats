@@ -14,10 +14,22 @@ public class StatsCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         //noinspection unchecked
         dispatcher.register(
-                (LiteralArgumentBuilder)((LiteralArgumentBuilder)CommandManager.literal("rpgstats"))
-                        .executes((commandContext) -> {
-            return execute((ServerCommandSource) commandContext.getSource(), (ServerPlayerEntity) ((ServerCommandSource) commandContext.getSource()).getEntityOrThrow());
-        }).then(CommandManager.argument("targets", EntityArgumentType.player()).executes((commandContext) -> execute(commandContext.getSource(), EntityArgumentType.getPlayer(commandContext, "targets")))));
+                (LiteralArgumentBuilder) ((LiteralArgumentBuilder) CommandManager.literal("rpgstats"))
+                        .executes(
+                                (commandContext) -> execute(
+                                        (ServerCommandSource) commandContext.getSource(), (ServerPlayerEntity) ((ServerCommandSource) commandContext.getSource()).getEntityOrThrow()
+                                )
+                        ).then(
+                                CommandManager.argument(
+                                        "targets", EntityArgumentType.player()
+                                )
+                                        .executes(
+                                                (commandContext) -> execute(
+                                                        commandContext.getSource(), EntityArgumentType.getPlayer(commandContext, "targets")
+                                                )
+                                        )
+                        )
+        );
     }
 
     private static int execute(ServerCommandSource source, ServerPlayerEntity target) {

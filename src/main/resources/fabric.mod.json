@@ -10,11 +10,11 @@
   ],
   "contact": {
     "homepage": "https://github.com/P03W/RPGStats",
-    "sources": "https://github.com/P03W/RPGStats/issues"
+    "issues": "https://github.com/P03W/RPGStats/issues"
   },
 
   "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "icon": "assets/rpgstats/icon.png",
 
   "environment": "*",
   "entrypoints": {

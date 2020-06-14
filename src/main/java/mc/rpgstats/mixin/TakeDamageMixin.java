@@ -14,9 +14,14 @@ public class TakeDamageMixin {
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void dodge(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         ServerPlayerEntity spe = (ServerPlayerEntity)(Object)this;
-        int level = RPGStats.getComponentLevel(RPGStats.MELEE_COMPONENT, ComponentProvider.fromEntity(spe));
-        float chance = level >= 25 ? level >= 50 ? 0.10f : 0.05f : 0f;
-        if (spe.getRandom().nextDouble() < chance) {
+        int level = RPGStats.getComponentLevel(RPGStats.DEFENCE_COMPONENT, ComponentProvider.fromEntity(spe));
+        float chance = 0f;
+        if (level >= 50) {
+            chance = 0.1f;
+        } else if (level >= 25) {
+            chance = 0.05f;
+        }
+        if (spe.getRandom().nextDouble() <= chance) {
             cir.cancel();
         }
     }

@@ -65,6 +65,11 @@ public class MagicComponent implements IStatComponent {
     }
 
     @Override
+    public String getCapName() {
+        return "Magic";
+    }
+
+    @Override
     public void onLevelUp() {
         player.sendMessage(new LiteralText("§a+1§r Drunk potion duration"), false);
         if (level % 3 == 0) {

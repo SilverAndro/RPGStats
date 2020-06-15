@@ -25,12 +25,12 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Cardinal components base
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.4.0-nightly.1.16-pre2"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.4.0-nightly.1.16-pre2"
+	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.4.0-nightly.1.16-pre5"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.4.0-nightly.1.16-pre5"
 
 	// Cardinal components entity
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:2.4.0-nightly.1.16-pre2"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:2.4.0-nightly.1.16-pre2"
+	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:2.4.0-nightly.1.16-pre5"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:2.4.0-nightly.1.16-pre5"
 }
 
 processResources {

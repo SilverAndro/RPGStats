@@ -12,6 +12,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ShieldMixin {
     @Inject(at = @At("HEAD"), method = "damageShield")
     private void onShieldUse(float amount, CallbackInfo ci) {
-        RPGStats.addXpAndLevelUpIfNeeded(RPGStats.DEFENCE_COMPONENT, ComponentProvider.fromEntity((PlayerEntity)(Object)this), Math.max(1, (int)Math.floor(amount / 2)));
+        RPGStats.addXpAndLevelUpIfNeeded(RPGStats.DEFENCE_COMPONENT, ComponentProvider.fromEntity((PlayerEntity)(Object)this), Math.max(1, (int)Math.floor(amount / 2.5)));
     }
 }

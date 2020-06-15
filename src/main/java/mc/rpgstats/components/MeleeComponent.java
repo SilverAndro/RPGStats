@@ -74,7 +74,7 @@ public class MeleeComponent implements IStatComponent {
     @Override
     public void onLevelUp() {
         Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + 0.1);
-        player.sendMessage(new LiteralText("§a+0.1§r Melee damage"), false);
+        player.sendMessage(new LiteralText("§a+0.12§r Melee damage"), false);
 
         if (level == 25) {
             player.sendMessage(new LiteralText("§aBloodthirst§r - Regain 1 heart after killing a monster"), false);

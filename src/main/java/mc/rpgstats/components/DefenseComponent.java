@@ -10,12 +10,12 @@ import net.minecraft.text.LiteralText;
 
 import java.util.Objects;
 
-public class DefenceComponent implements IStatComponent {
+public class DefenseComponent implements IStatComponent {
     private final PlayerEntity player;
     private int xp = 0;
     private int level = 0;
 
-    public DefenceComponent(PlayerEntity player) {
+    public DefenseComponent(PlayerEntity player) {
         this.player = player;
     }
 
@@ -39,7 +39,7 @@ public class DefenceComponent implements IStatComponent {
 
     @Override
     public ComponentType<?> getComponentType() {
-        return RPGStats.DEFENCE_COMPONENT;
+        return RPGStats.DEFENSE_COMPONENT;
     }
 
     @Override
@@ -64,12 +64,12 @@ public class DefenceComponent implements IStatComponent {
 
     @Override
     public String getName() {
-        return "defence";
+        return "defense";
     }
 
     @Override
     public String getCapName() {
-        return "Defence";
+        return "Defense";
     }
 
     @Override

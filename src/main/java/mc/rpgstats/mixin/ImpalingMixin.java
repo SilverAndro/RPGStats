@@ -6,6 +6,7 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
 import net.minecraft.entity.EntityGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -24,13 +25,14 @@ public class ImpalingMixin {
     )
     private static void cursedManip(ItemStack stack, EntityGroup group, CallbackInfoReturnable<Float> cir, MutableFloat mutableFloat) {
         if (EnchantmentHelper.get(stack).containsKey(Enchantments.IMPALING) && !(group == EntityGroup.AQUATIC)) {
-            System.out.println(stack.getHolder());
-            if (RPGStats.getComponentLevel(RPGStats.RANGED_COMPONENT, ComponentProvider.fromEntity(stack.getHolder())) >= 25) {
-                int level = EnchantmentHelper.get(stack).get(Enchantments.IMPALING);
-                System.out.println(level);
-                System.out.println(mutableFloat.getValue());
-                mutableFloat.add(level * 2.5F);
-                System.out.println(mutableFloat.getValue());
+            if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
+                if (RPGStats.getComponentLevel(RPGStats.RANGED_COMPONENT, ComponentProvider.fromEntity(stack.getHolder())) >= 25) {
+                    int level = EnchantmentHelper.get(stack).get(Enchantments.IMPALING);
+                    System.out.println(level);
+                    System.out.println(mutableFloat.getValue());
+                    mutableFloat.add(level * 2.5F);
+                    System.out.println(mutableFloat.getValue());
+                }
             }
         }
     }

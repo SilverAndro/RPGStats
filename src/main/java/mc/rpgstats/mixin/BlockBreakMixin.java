@@ -20,6 +20,35 @@ public class BlockBreakMixin {
             if (block instanceof PlantBlock || block instanceof PumpkinBlock || block instanceof MelonBlock) {
                 RPGStats.addXpAndLevelUpIfNeeded(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(player), 1);
             }
+            
+            if (block instanceof OreBlock) {
+                if (
+                    block == Blocks.COAL_ORE ||
+                        block == Blocks.NETHER_GOLD_ORE
+                ) {
+                    RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(player), 1);
+                } else if (
+                    block == Blocks.IRON_ORE ||
+                        block == Blocks.NETHER_QUARTZ_ORE
+                ) {
+                    RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(player), 2);
+                } else if (
+                    block == Blocks.GOLD_ORE ||
+                        block == Blocks.LAPIS_ORE ||
+                        block == Blocks.REDSTONE_ORE
+                ) {
+                    RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(player), 3);
+                } else if (block == Blocks.EMERALD_ORE) {
+                    RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(player), 4);
+                } else if (
+                    block == Blocks.DIAMOND_ORE ||
+                        block == Blocks.ANCIENT_DEBRIS
+                ) {
+                    RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(player), 5);
+                } else {
+                    RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(player), 2);
+                }
+            }
         }
     }
 }

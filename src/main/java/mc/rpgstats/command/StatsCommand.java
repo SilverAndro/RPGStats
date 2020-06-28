@@ -43,6 +43,7 @@ public class StatsCommand {
             spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.DEFENSE_COMPONENT, provider)), false);
             spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.MAGIC_COMPONENT, provider)), false);
             spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.FARMING_COMPONENT, provider)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.MINING_COMPONENT, provider)), false);
         }
         return 1;
     }

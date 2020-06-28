@@ -77,7 +77,7 @@ public class MiningComponent implements IStatComponent {
 
     @Override
     public void onLevelUp() {
-        Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_LUCK) + 0.05);
+        Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_LUCK)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_LUCK) + 0.05);
         player.sendMessage(new LiteralText("§a+0.05§r Luck"), false);
     
         if (level == 25) {

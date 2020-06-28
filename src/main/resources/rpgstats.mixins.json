@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "BlockBreakMixin",
+    "BlockOutlineMixin",
     "BonemealGrowMixin",
     "BonemealMixin",
     "BowAccuracyMixin",
@@ -16,7 +17,8 @@
     "PotionSplashMixin",
     "ShieldMixin",
     "StatusEffectsImmuneMixin",
-    "TakeDamageMixin"
+    "TakeDamageMixin",
+    "UnbreakingEnchantmentMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -24,12 +24,6 @@ public class BonemealGrowMixin {
     @Shadow
     protected Random random;
 
-    @Shadow
-    public World world;
-
-    @Shadow
-    public boolean ignoreCameraFrustum;
-
     @Inject(method = "setSneaking", at = @At("TAIL"))
     public void onShift(boolean sneaking, CallbackInfo ci) {
         //noinspection ConstantConditions

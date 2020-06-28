@@ -10,7 +10,10 @@ import nerdhub.cardinal.components.api.util.EntityComponents;
 import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.server.ServerTickCallback;
+import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
@@ -21,6 +24,10 @@ public class RPGStats implements ModInitializer {
 	public static final ComponentType<DefenseComponent> DEFENSE_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:defence"), DefenseComponent.class);
 	public static final ComponentType<FarmingComponent> FARMING_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:farming"), FarmingComponent.class);
 	public static final ComponentType<MagicComponent> MAGIC_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:magic"), MagicComponent.class);
+	public static final ComponentType<MiningComponent> MINING_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:mining"), MiningComponent.class);
+	
+	private int tickCount = 0;
+	
 	@Override
 	public void onInitialize() {
 		// Init components on players
@@ -29,6 +36,7 @@ public class RPGStats implements ModInitializer {
 		EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> components.put(DEFENSE_COMPONENT, new DefenseComponent(player)));
 		EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> components.put(FARMING_COMPONENT, new FarmingComponent(player)));
 		EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> components.put(MAGIC_COMPONENT, new MagicComponent(player)));
+		EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> components.put(MINING_COMPONENT, new MiningComponent(player)));
 
 		// Keeps stats always
 		EntityComponents.setRespawnCopyStrategy(MELEE_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
@@ -36,10 +44,19 @@ public class RPGStats implements ModInitializer {
 		EntityComponents.setRespawnCopyStrategy(DEFENSE_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
 		EntityComponents.setRespawnCopyStrategy(FARMING_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
 		EntityComponents.setRespawnCopyStrategy(MAGIC_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
+		EntityComponents.setRespawnCopyStrategy(MINING_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
 
 		// Command
 		CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
 			StatsCommand.register(dispatcher);
+		});
+		
+		ServerTickCallback.EVENT.register((MinecraftServer server) -> {
+			tickCount++;
+			if (tickCount >= 10) {
+				PlayerStream.all(server).forEach((player) -> ComponentProvider.fromEntity(player).getComponent(MINING_COMPONENT).sync());
+				tickCount = 0;
+			}
 		});
 	}
 
@@ -77,7 +94,6 @@ public class RPGStats implements ModInitializer {
 				((PlayerEntity)type.get(provider).getEntity()).sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + type.get(provider).getName() + "§r level! You are now level §6" + type.get(provider).getLevel()), false);
 				type.get(provider).onLevelUp();
 			}
-
 			setComponentXP(type, provider, nextXP);
 		}
 	}

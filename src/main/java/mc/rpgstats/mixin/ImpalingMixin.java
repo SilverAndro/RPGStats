@@ -28,10 +28,7 @@ public class ImpalingMixin {
             if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
                 if (RPGStats.getComponentLevel(RPGStats.RANGED_COMPONENT, ComponentProvider.fromEntity(stack.getHolder())) >= 25) {
                     int level = EnchantmentHelper.get(stack).get(Enchantments.IMPALING);
-                    System.out.println(level);
-                    System.out.println(mutableFloat.getValue());
                     mutableFloat.add(level * 2.5F);
-                    System.out.println(mutableFloat.getValue());
                 }
             }
         }

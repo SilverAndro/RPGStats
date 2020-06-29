@@ -5,6 +5,7 @@ import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.minecraft.block.*;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
@@ -72,18 +73,20 @@ public class BonemealMixin {
 
     @Inject(at = @At("HEAD"), method = "useOnFertilizable")
     private static void onGrowable(ItemStack stack, World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        int level = RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(stack.getHolder()));
-        BlockState blockState = world.getBlockState(pos);
-        if (blockState.getBlock() instanceof Fertilizable) {
-            Fertilizable fertilizable = (Fertilizable)blockState.getBlock();
-            if (fertilizable.isFertilizable(world, pos, blockState, world.isClient)) {
-                if (world instanceof ServerWorld) {
-                    if (fertilizable.canGrow(world, world.random, pos, blockState)) {
-                        if (RANDOM.nextDouble() < level * 0.1) {
-                            fertilizable.grow((ServerWorld) world, world.random, pos, blockState);
+        if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
+            int level = RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(stack.getHolder()));
+            BlockState blockState = world.getBlockState(pos);
+            if (blockState.getBlock() instanceof Fertilizable) {
+                Fertilizable fertilizable = (Fertilizable)blockState.getBlock();
+                if (fertilizable.isFertilizable(world, pos, blockState, world.isClient)) {
+                    if (world instanceof ServerWorld) {
+                        if (fertilizable.canGrow(world, world.random, pos, blockState)) {
+                            if (RANDOM.nextDouble() < level * 0.1) {
+                                fertilizable.grow((ServerWorld)world, world.random, pos, blockState);
+                            }
                         }
+                        stack.decrement(1);
                     }
-                    stack.decrement(1);
                 }
             }
         }

@@ -8,6 +8,7 @@ import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -41,7 +42,9 @@ class BowAccuracyMixin {
             ArrowItem arrowItem,
             PersistentProjectileEntity persistentProjectileEntity
     ) {
-        float newDistort = 1.0f - RPGStats.getComponentLevel(RPGStats.RANGED_COMPONENT, ComponentProvider.fromEntity(playerEntity)) / 50f;
-        persistentProjectileEntity.setProperties(playerEntity, playerEntity.pitch, playerEntity.yaw, 0.0F, f * 3.0F, newDistort);
+        if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
+            float newDistort = 1.0f - RPGStats.getComponentLevel(RPGStats.RANGED_COMPONENT, ComponentProvider.fromEntity(playerEntity)) / 50f;
+            persistentProjectileEntity.setProperties(playerEntity, playerEntity.pitch, playerEntity.yaw, 0.0F, f * 3.0F, newDistort);
+        }
     }
 }

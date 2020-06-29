@@ -26,7 +26,7 @@ public class BonemealMixin {
     @Inject(at = @At("HEAD"), method = "useOnGround")
     private static void groundEffectiveness(ItemStack stack, World world, BlockPos blockPos, Direction facing, CallbackInfoReturnable<Boolean> cir) {
         if (world.getBlockState(blockPos).isOf(Blocks.WATER) && world.getFluidState(blockPos).getLevel() == 8) {
-            if (world instanceof ServerWorld) {
+            if (world instanceof ServerWorld && stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
                 int level = RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(stack.getHolder()));
                 cursedLoop:
                 for (int i = 0; i < level; ++i) {

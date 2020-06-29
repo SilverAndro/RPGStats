@@ -90,7 +90,6 @@ public class MiningComponent implements IStatComponent {
     @Override
     public void sync() {
         if (!this.getEntity().world.isClient) {
-            System.out.println(this.getEntity());
             this.syncWith((ServerPlayerEntity)this.getEntity());
         }
     }

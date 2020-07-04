@@ -18,6 +18,7 @@
     "ShieldMixin",
     "StatusEffectsImmuneMixin",
     "TakeDamageMixin",
+    "TotemUseMixin",
     "UnbreakingEnchantmentMixin"
   ],
   "injectors": {

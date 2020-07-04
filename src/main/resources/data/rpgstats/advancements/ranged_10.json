@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Scaredy cat"
+        },
+        "description": {
+            "text": "Gain level 10 in ranged"
+        },
+        "icon": {
+            "item": "minecraft:arrow"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:root"
+}

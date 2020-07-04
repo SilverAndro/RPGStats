@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Animal control"
+        },
+        "description": {
+            "text": "Gain level 25 in farming"
+        },
+        "icon": {
+            "item": "minecraft:cooked_beef"
+        },
+        "frame": "goal",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:farming_10"
+}

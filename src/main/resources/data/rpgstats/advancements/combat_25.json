@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Hack and slash"
+        },
+        "description": {
+            "text": "Gain level 25 in melee"
+        },
+        "icon": {
+            "item": "minecraft:diamond_sword"
+        },
+        "frame": "goal",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:combat_10"
+}

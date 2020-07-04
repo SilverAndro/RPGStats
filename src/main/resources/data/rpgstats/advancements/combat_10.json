@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Fight for your life"
+        },
+        "description": {
+            "text": "Gain 10 levels in melee"
+        },
+        "icon": {
+            "item": "minecraft:iron_sword"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:root"
+}

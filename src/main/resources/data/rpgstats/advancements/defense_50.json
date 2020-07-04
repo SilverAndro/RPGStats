@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Sturdy Dedication"
+        },
+        "description": {
+            "text": "gain level 50 in defense"
+        },
+        "icon": {
+            "item": "minecraft:netherite_chestplate"
+        },
+        "frame": "challenge",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:defense_25"
+}

@@ -63,15 +63,17 @@ public class RPGStats implements ModInitializer {
 		ServerTickCallback.EVENT.register((MinecraftServer server) -> {
 			tickCount++;
 			if (tickCount >= 10) {
+				Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
 				PlayerStream.all(server).forEach(
 					(player) -> {
 						ComponentProvider.fromEntity(player).getComponent(MINING_COMPONENT).sync();
-						Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
 						for (Advancement advancement : collection) {
-							if (!player.getAdvancementTracker().getProgress(advancement).isDone()) {
-								if (AdvancementHelper.shouldGrant(advancement.getId(), player)) {
-									System.out.println("Granting advancement " + advancement.getId());
-									player.getAdvancementTracker().grantCriterion(advancement, "trigger");
+							if (advancement.getId().getNamespace().equals("rpgstats")) {
+								if (!player.getAdvancementTracker().getProgress(advancement).isDone()) {
+									if (AdvancementHelper.shouldGrant(advancement.getId(), player)) {
+										System.out.println("Granting advancement " + advancement.getId());
+										player.getAdvancementTracker().grantCriterion(advancement, "trigger");
+									}
 								}
 							}
 						}

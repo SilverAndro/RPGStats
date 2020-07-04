@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Distant Dedication"
+        },
+        "description": {
+            "text": "Gain level 50 in ranged"
+        },
+        "icon": {
+            "item": "minecraft:spectral_arrow"
+        },
+        "frame": "challenge",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:ranged_25"
+}

@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "A step up"
+        },
+        "description": {
+            "text": "Reach 25 levels in any stat"
+        },
+        "icon": {
+            "item": "minecraft:experience_bottle"
+        },
+        "frame": "goal",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:levels_13"
+}

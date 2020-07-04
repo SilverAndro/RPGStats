@@ -1,4 +1,4 @@
-package mc.rpgstats.components;
+package mc.rpgstats.component;
 
 import nerdhub.cardinal.components.api.util.sync.EntitySyncedComponent;
 

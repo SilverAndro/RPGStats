@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Sub-surface dedication"
+        },
+        "description": {
+            "text": "Reach level 50 in mining"
+        },
+        "icon": {
+            "item": "minecraft:netherite_pickaxe"
+        },
+        "frame": "challenge",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:mining_25"
+}

@@ -1,7 +1,8 @@
 package mc.rpgstats.main;
 
+import mc.rpgstats.advancemnents.AdvancementHelper;
 import mc.rpgstats.command.StatsCommand;
-import mc.rpgstats.components.*;
+import mc.rpgstats.component.*;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
@@ -12,12 +13,19 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.server.ServerTickCallback;
 import net.fabricmc.fabric.api.server.PlayerStream;
+import net.minecraft.advancement.Advancement;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 public class RPGStats implements ModInitializer {
+	public static final String MOD_ID = "rpgstats";
+	
 	// Stat components
 	public static final ComponentType<MeleeComponent> MELEE_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:melee"), MeleeComponent.class);
 	public static final ComponentType<RangedComponent> RANGED_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:ranged"), RangedComponent.class);
@@ -51,10 +59,24 @@ public class RPGStats implements ModInitializer {
 			StatsCommand.register(dispatcher);
 		});
 		
+		// Syncing and advancements
 		ServerTickCallback.EVENT.register((MinecraftServer server) -> {
 			tickCount++;
 			if (tickCount >= 10) {
-				PlayerStream.all(server).forEach((player) -> ComponentProvider.fromEntity(player).getComponent(MINING_COMPONENT).sync());
+				PlayerStream.all(server).forEach(
+					(player) -> {
+						ComponentProvider.fromEntity(player).getComponent(MINING_COMPONENT).sync();
+						Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
+						for (Advancement advancement : collection) {
+							if (!player.getAdvancementTracker().getProgress(advancement).isDone()) {
+								if (AdvancementHelper.shouldGrant(advancement.getId(), player)) {
+									System.out.println("Granting advancement " + advancement.getId());
+									player.getAdvancementTracker().grantCriterion(advancement, "trigger");
+								}
+							}
+						}
+					}
+				);
 				tickCount = 0;
 			}
 		});
@@ -108,4 +130,28 @@ public class RPGStats implements ModInitializer {
 			return "§6" + type.get(provider).getCapName() + "§r - Level: " + currentLevel;
 		}
 	}
+	
+	public static int getHighestLevel(ComponentProvider provider) {
+		return Collections.max(Arrays.asList(
+			getComponentLevel(MELEE_COMPONENT, provider),
+			getComponentLevel(RANGED_COMPONENT, provider),
+			getComponentLevel(MINING_COMPONENT, provider),
+			getComponentLevel(DEFENSE_COMPONENT, provider),
+			getComponentLevel(MAGIC_COMPONENT, provider),
+			getComponentLevel(FARMING_COMPONENT, provider)
+			)
+		);
+	}
+    
+    public static int getLowestLevel(ComponentProvider provider) {
+        return Collections.min(Arrays.asList(
+            getComponentLevel(MELEE_COMPONENT, provider),
+            getComponentLevel(RANGED_COMPONENT, provider),
+            getComponentLevel(MINING_COMPONENT, provider),
+            getComponentLevel(DEFENSE_COMPONENT, provider),
+            getComponentLevel(MAGIC_COMPONENT, provider),
+            getComponentLevel(FARMING_COMPONENT, provider)
+            )
+        );
+    }
 }

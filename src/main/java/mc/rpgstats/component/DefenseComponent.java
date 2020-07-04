@@ -1,4 +1,4 @@
-package mc.rpgstats.components;
+package mc.rpgstats.component;
 
 import mc.rpgstats.main.RPGStats;
 import nerdhub.cardinal.components.api.ComponentType;

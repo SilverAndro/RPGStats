@@ -1,0 +1,27 @@
+{
+    "display": {
+        "title": {
+            "text": "The end of a legend",
+            "bold": true
+        },
+        "description": {
+            "text": "Gain 50 levels in all stats"
+        },
+        "icon": {
+            "item": "minecraft:experience_bottle"
+        },
+        "frame": "challenge",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": true
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "rewards": {
+        "experience": 5000
+    },
+    "parent": "rpgstats:levels_50"
+}

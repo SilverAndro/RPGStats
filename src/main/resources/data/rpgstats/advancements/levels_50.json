@@ -1,0 +1,26 @@
+{
+    "display": {
+        "title": {
+            "text": "A long time coming"
+        },
+        "description": {
+            "text": "Reach level 50 in any stat"
+        },
+        "icon": {
+            "item": "minecraft:experience_bottle"
+        },
+        "frame": "challenge",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "rewards": {
+        "experience": 500
+    },
+    "parent": "rpgstats:levels_25"
+}

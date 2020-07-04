@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Boil and toil"
+        },
+        "description": {
+            "text": "Reach level 25 in magic"
+        },
+        "icon": {
+            "item": "minecraft:fermented_spider_eye"
+        },
+        "frame": "goal",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:magic_10"
+}

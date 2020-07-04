@@ -1,4 +1,4 @@
-package mc.rpgstats.components;
+package mc.rpgstats.component;
 
 import mc.rpgstats.main.RPGStats;
 import nerdhub.cardinal.components.api.ComponentType;
@@ -7,12 +7,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.text.LiteralText;
 
-public class MagicComponent implements IStatComponent {
+public class FarmingComponent implements IStatComponent {
     private final PlayerEntity player;
     private int xp = 0;
     private int level = 0;
 
-    public MagicComponent(PlayerEntity player) {
+    public FarmingComponent(PlayerEntity player) {
         this.player = player;
     }
 
@@ -36,7 +36,7 @@ public class MagicComponent implements IStatComponent {
 
     @Override
     public ComponentType<?> getComponentType() {
-        return RPGStats.MAGIC_COMPONENT;
+        return RPGStats.FARMING_COMPONENT;
     }
 
     @Override
@@ -61,24 +61,21 @@ public class MagicComponent implements IStatComponent {
 
     @Override
     public String getName() {
-        return "magic";
+        return "farming";
     }
 
     @Override
     public String getCapName() {
-        return "Magic";
+        return "Farming";
     }
 
     @Override
     public void onLevelUp() {
-        player.sendMessage(new LiteralText("§a+1§r Drunk potion duration"), false);
-        if (level % 3 == 0) {
-            player.sendMessage(new LiteralText("§a+1§r Potion drink speed"), false);
-        }
+        player.sendMessage(new LiteralText("§a+1§r Bonemeal efficiency"), false);
         if (level == 25) {
-            player.sendMessage(new LiteralText("§aVax§r - Immune to poison"), false);
+            player.sendMessage(new LiteralText("§aNurturing§r - Shift rapidly to grow nearby crops"), false);
         } else if (level == 50) {
-            player.sendMessage(new LiteralText("§aDead inside§r - Immune to wither"), false);
+            player.sendMessage(new LiteralText("§aNurturing II§r - Increased range"), false);
         }
     }
 }

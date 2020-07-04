@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Wizardry!"
+        },
+        "description": {
+            "text": "Reach level 10 magic"
+        },
+        "icon": {
+            "item": "minecraft:splash_potion"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:root"
+}

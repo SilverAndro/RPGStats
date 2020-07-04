@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Start of a legend"
+        },
+        "description": {
+            "text": "Gain your first rpgstats level"
+        },
+        "icon": {
+            "item": "minecraft:experience_bottle"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:root"
+}

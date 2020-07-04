@@ -67,6 +67,7 @@ public class RPGStats implements ModInitializer {
 				PlayerStream.all(server).forEach(
 					(player) -> {
 						ComponentProvider.fromEntity(player).getComponent(MINING_COMPONENT).sync();
+						
 						for (Advancement advancement : collection) {
 							if (advancement.getId().getNamespace().equals("rpgstats")) {
 								if (!player.getAdvancementTracker().getProgress(advancement).isDone()) {

@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Swinging Dedication"
+        },
+        "description": {
+            "text": "Gain level 50 in melee"
+        },
+        "icon": {
+            "item": "minecraft:netherite_sword"
+        },
+        "frame": "challenge",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:combat_25"
+}

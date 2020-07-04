@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Luck or skill?"
+        },
+        "description": {
+            "text": "Gain level 10 in defense"
+        },
+        "icon": {
+            "item": "minecraft:shield"
+        },
+        "frame": "task",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:root"
+}

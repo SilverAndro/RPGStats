@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Death cheated"
+        },
+        "description": {
+            "text": "Gain level 25 in defense"
+        },
+        "icon": {
+            "item": "minecraft:totem_of_undying"
+        },
+        "frame": "goal",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:defense_10"
+}

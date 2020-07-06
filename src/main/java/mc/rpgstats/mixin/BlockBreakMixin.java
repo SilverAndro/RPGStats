@@ -18,7 +18,13 @@ public class BlockBreakMixin {
         if (!world.isClient) {
             Block block = state.getBlock();
             if (block instanceof PlantBlock || block instanceof PumpkinBlock || block instanceof MelonBlock) {
-                RPGStats.addXpAndLevelUpIfNeeded(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(player), 1);
+                if (block instanceof CropBlock) {
+                    if (((CropBlock)block).isMature(state)) {
+                        RPGStats.addXpAndLevelUpIfNeeded(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(player), 1);
+                    }
+                } else {
+                    RPGStats.addXpAndLevelUpIfNeeded(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(player), 1);
+                }
             }
             
             if (block instanceof OreBlock) {

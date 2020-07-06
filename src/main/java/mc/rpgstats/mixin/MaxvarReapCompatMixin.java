@@ -54,7 +54,7 @@ public class MaxvarReapCompatMixin implements IMixinConfigPlugin {
     @Inject(method = "onUse", at = @At("HEAD"))
     public void onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
         if (state.getBlock() instanceof CropBlock) {
-            if (!world.isClient() & ((CropBlock)state.getBlock()).isMature(state)) {
+            if (((CropBlock)state.getBlock()).isMature(state)) {
                 RPGStats.addXpAndLevelUpIfNeeded(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(player), 1);
             }
         }

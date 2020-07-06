@@ -11,7 +11,7 @@ import nerdhub.cardinal.components.api.util.EntityComponents;
 import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.server.ServerTickCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.entity.player.PlayerEntity;
@@ -60,7 +60,7 @@ public class RPGStats implements ModInitializer {
 		});
 		
 		// Syncing and advancements
-		ServerTickCallback.EVENT.register((MinecraftServer server) -> {
+		ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
 			tickCount++;
 			if (tickCount >= 10) {
 				Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();

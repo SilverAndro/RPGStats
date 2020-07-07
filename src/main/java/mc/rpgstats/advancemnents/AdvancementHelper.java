@@ -40,6 +40,8 @@ public class AdvancementHelper {
     public static boolean shouldGrant(Identifier id, ServerPlayerEntity playerEntity) {
         if (id.getPath().startsWith("levels_")) {
             if (id.equals(LEVEL_1)) {
+                System.out.println(RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(playerEntity)));
+                System.out.println(RPGStats.getHighestLevel(ComponentProvider.fromEntity(playerEntity)));
                 return RPGStats.getHighestLevel(ComponentProvider.fromEntity(playerEntity)) >= 1;
             }
             if (id.equals(LEVEL_5)) {

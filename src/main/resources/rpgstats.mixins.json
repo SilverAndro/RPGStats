@@ -23,9 +23,6 @@
     "TotemUseMixin",
     "UnbreakingEnchantmentMixin"
   ],
-  "client": [
-    "BlockOutlineMixin"
-  ],
   "injectors": {
     "defaultRequire": 1
   }

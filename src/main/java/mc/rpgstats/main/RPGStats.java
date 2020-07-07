@@ -138,6 +138,17 @@ public class RPGStats implements ModInitializer {
         }
     }
     
+    public static String getNotFormattedLevelData(ComponentType<? extends IStatComponent> type, ComponentProvider provider) {
+        int currentLevel = getComponentLevel(type, provider);
+        int xp = getComponentXP(type, provider);
+        if (currentLevel < 50) {
+            int nextXP = calculateXpNeededToReachLevel(currentLevel + 1);
+            return type.get(provider).getCapName() + " - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
+        } else {
+            return "" + type.get(provider).getCapName() + " - Level: " + currentLevel;
+        }
+    }
+    
     public static int getHighestLevel(ComponentProvider provider) {
         return Collections.max(Arrays.asList(
             getComponentLevel(MELEE_COMPONENT, provider),

@@ -2,13 +2,10 @@ package mc.rpgstats.component;
 
 import mc.rpgstats.main.RPGStats;
 import nerdhub.cardinal.components.api.ComponentType;
-import net.fabricmc.fabric.api.network.PacketContext;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 
 import java.util.Objects;
@@ -85,22 +82,5 @@ public class MiningComponent implements IStatComponent {
         } else if (level == 50) {
             player.sendMessage(new LiteralText("§aMiners instinct§r - Looking at a block next to lava makes the outline red"), false);
         }
-    }
-    
-    @Override
-    public void sync() {
-        if (!this.getEntity().world.isClient) {
-            this.syncWith((ServerPlayerEntity)this.getEntity());
-        }
-    }
-    
-    @Override
-    public void processPacket(PacketContext ctx, PacketByteBuf buf) {
-        IStatComponent.super.processPacket(ctx, buf);
-    }
-    
-    @Override
-    public void writeToPacket(PacketByteBuf buf) {
-        buf.writeCompoundTag(toTag(new CompoundTag()));
     }
 }

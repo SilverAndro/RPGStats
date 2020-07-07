@@ -20,9 +20,6 @@ public class FarmingComponent implements IStatComponent {
     public void fromTag(CompoundTag tag) {
         this.level = tag.getInt("level");
         this.xp = tag.getInt("xp");
-        System.out.println("FARMING READ");
-        System.out.println("Level " + this.level);
-        System.out.println("Xp " + this.xp);
     }
 
     @Override

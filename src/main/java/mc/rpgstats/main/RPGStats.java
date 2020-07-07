@@ -14,6 +14,8 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.advancement.Advancement;
+import net.minecraft.entity.effect.StatusEffectInstance;
+import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -74,6 +76,11 @@ public class RPGStats implements ModInitializer {
                                     }
                                 }
                             }
+                        }
+                        
+                        if (player.getBlockPos().getY() <= 40 && getComponentLevel(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(player)) >= 50) {
+                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 5 * 20));
+                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 5 * 20, 1));
                         }
                     }
                 );

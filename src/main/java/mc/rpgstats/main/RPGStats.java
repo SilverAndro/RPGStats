@@ -71,7 +71,6 @@ public class RPGStats implements ModInitializer {
                             if (advancement.getId().getNamespace().equals("rpgstats")) {
                                 if (!player.getAdvancementTracker().getProgress(advancement).isDone()) {
                                     if (AdvancementHelper.shouldGrant(advancement.getId(), player)) {
-                                        System.out.println("Granting advancement " + advancement.getId());
                                         player.getAdvancementTracker().grantCriterion(advancement, "trigger");
                                     }
                                 }
@@ -111,7 +110,6 @@ public class RPGStats implements ModInitializer {
     }
     
     public static void addXpAndLevelUp(ComponentType<? extends IStatComponent> type, ServerPlayerEntity entity, int addedXP) {
-        System.out.println("Adding " + addedXP + " xp to component " + type.get(entity).getCapName() + " on entity " + entity);
         ComponentProvider provider = ComponentProvider.fromEntity(entity);
         int nextXP = getComponentXP(type, provider) + addedXP;
         int currentLevel = getComponentLevel(type, provider);

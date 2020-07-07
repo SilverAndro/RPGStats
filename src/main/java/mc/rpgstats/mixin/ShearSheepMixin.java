@@ -22,6 +22,6 @@ public class ShearSheepMixin {
         )
     )
     public void onShearedGrantXP(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
-        RPGStats.addXpAndLevelUpIfNeeded(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(player), 1);
+        RPGStats.addXpAndLevelUp(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(player), 1);
     }
 }

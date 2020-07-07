@@ -9,7 +9,6 @@ import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,26 +32,26 @@ public abstract class KillMixin {
 		if (!le.world.isClient && !le.removed) {
 			Entity entity = source.getAttacker();
 			if (entity instanceof ServerPlayerEntity) {
-				ComponentProvider provider = ComponentProvider.fromEntity(entity);
+				ServerPlayerEntity serverPlayer = (ServerPlayerEntity)entity;
 				if (source.isProjectile()) {
 					if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-						RPGStats.addXpAndLevelUpIfNeeded(RPGStats.RANGED_COMPONENT, provider, 130);
+						RPGStats.addXpAndLevelUp(RPGStats.RANGED_COMPONENT, serverPlayer, 130);
 					} else {
-						RPGStats.addXpAndLevelUpIfNeeded(RPGStats.RANGED_COMPONENT, provider, 1);
+						RPGStats.addXpAndLevelUp(RPGStats.RANGED_COMPONENT, serverPlayer, 1);
 					}
 				} else if (source.getMagic()) {
-					RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MAGIC_COMPONENT, provider, 1);
+					RPGStats.addXpAndLevelUp(RPGStats.MAGIC_COMPONENT, serverPlayer, 1);
 				} else if (!source.isExplosive() && !source.isFire()) {
 					if (le instanceof PassiveEntity) {
-						RPGStats.addXpAndLevelUpIfNeeded(RPGStats.FARMING_COMPONENT, provider, 1);
+						RPGStats.addXpAndLevelUp(RPGStats.FARMING_COMPONENT, serverPlayer, 1);
 					} else {
-						int level = RPGStats.getComponentLevel(RPGStats.MELEE_COMPONENT, provider);
+						int level = RPGStats.getComponentLevel(RPGStats.MELEE_COMPONENT, ComponentProvider.fromEntity(serverPlayer));
 						int duration = level >= 25 ? level >= 50 ? 200 : 100 : 0;
 						((ServerPlayerEntity)entity).addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, duration));
 						if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-							RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MELEE_COMPONENT, provider, 130);
+							RPGStats.addXpAndLevelUp(RPGStats.MELEE_COMPONENT, serverPlayer, 130);
 						} else {
-							RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MELEE_COMPONENT, provider, 1);
+							RPGStats.addXpAndLevelUp(RPGStats.MELEE_COMPONENT, serverPlayer, 1);
 						}
 					}
 				}

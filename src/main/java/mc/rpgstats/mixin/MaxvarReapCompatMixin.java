@@ -1,12 +1,12 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.CropBlock;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -53,9 +53,9 @@ public class MaxvarReapCompatMixin implements IMixinConfigPlugin {
     
     @Inject(method = "onUse", at = @At("HEAD"))
     public void onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
-        if (state.getBlock() instanceof CropBlock) {
+        if (!world.isClient && state.getBlock() instanceof CropBlock) {
             if (((CropBlock)state.getBlock()).isMature(state)) {
-                RPGStats.addXpAndLevelUpIfNeeded(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(player), 1);
+                RPGStats.addXpAndLevelUp(RPGStats.FARMING_COMPONENT, (ServerPlayerEntity)player, 1);
             }
         }
     }

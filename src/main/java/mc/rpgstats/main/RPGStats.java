@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
@@ -67,6 +68,11 @@ public class RPGStats implements ModInitializer {
 				PlayerStream.all(server).forEach(
 					(player) -> {
 						ComponentProvider.fromEntity(player).getComponent(MINING_COMPONENT).sync();
+						ComponentProvider.fromEntity(player).getComponent(MELEE_COMPONENT).sync();
+						ComponentProvider.fromEntity(player).getComponent(FARMING_COMPONENT).sync();
+						ComponentProvider.fromEntity(player).getComponent(RANGED_COMPONENT).sync();
+						ComponentProvider.fromEntity(player).getComponent(DEFENSE_COMPONENT).sync();
+						ComponentProvider.fromEntity(player).getComponent(MAGIC_COMPONENT).sync();
 						
 						for (Advancement advancement : collection) {
 							if (advancement.getId().getNamespace().equals("rpgstats")) {
@@ -106,7 +112,8 @@ public class RPGStats implements ModInitializer {
 		return (int)Math.floor(Math.pow(level, 2) * 0.2) + 70;
 	}
 
-	public static void addXpAndLevelUpIfNeeded(ComponentType<? extends IStatComponent> type, ComponentProvider provider, int addedXP) {
+	public static void addXpAndLevelUp(ComponentType<? extends IStatComponent> type, ServerPlayerEntity entity, int addedXP) {
+		ComponentProvider provider = ComponentProvider.fromEntity(entity);
 		int nextXP = getComponentXP(type, provider) + addedXP;
 		int currentLevel = getComponentLevel(type, provider);
 

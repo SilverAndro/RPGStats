@@ -1,8 +1,10 @@
 package mc.rpgstats.component;
 
-import nerdhub.cardinal.components.api.util.sync.EntitySyncedComponent;
+import dev.onyxstudios.cca.api.v3.util.PlayerComponent;
+import nerdhub.cardinal.components.api.component.Component;
+import net.minecraft.entity.Entity;
 
-public interface IStatComponent extends EntitySyncedComponent {
+public interface IStatComponent extends PlayerComponent<Component> {
     int getXP();
     void setXP(int newXP);
     int getLevel();
@@ -10,4 +12,5 @@ public interface IStatComponent extends EntitySyncedComponent {
     String getName();
     String getCapName();
     void onLevelUp();
+    Entity getEntity();
 }

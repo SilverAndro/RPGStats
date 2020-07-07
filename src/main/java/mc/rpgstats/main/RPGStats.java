@@ -78,8 +78,8 @@ public class RPGStats implements ModInitializer {
                         }
                         
                         if (player.getBlockPos().getY() <= 40 && getComponentLevel(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(player)) >= 50) {
-                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 5 * 20));
-                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 5 * 20, 1));
+                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 13 * 20));
+                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 2 * 20, 1));
                         }
                     }
                 );

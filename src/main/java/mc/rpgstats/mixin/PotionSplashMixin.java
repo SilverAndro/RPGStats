@@ -26,7 +26,7 @@ public class PotionSplashMixin {
         if (!list.isEmpty()) {
             for (LivingEntity le : list) {
                 if (le instanceof ServerPlayerEntity) {
-                    RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(le), 10);
+                    RPGStats.addXpAndLevelUp(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(le), 10);
                 }
             }
         }
@@ -40,7 +40,7 @@ public class PotionSplashMixin {
         if (!list.isEmpty()) {
             for (LivingEntity le : list) {
                 if (le instanceof ServerPlayerEntity) {
-                    RPGStats.addXpAndLevelUpIfNeeded(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(le), 10);
+                    RPGStats.addXpAndLevelUp(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(le), 10);
                 }
             }
         }

@@ -18,7 +18,7 @@ public class BlockBreakMixin {
         if (!world.isClient) {
             ServerPlayerEntity serverPlayer = (ServerPlayerEntity)player;
             Block block = state.getBlock();
-            if (block instanceof PlantBlock || block instanceof PumpkinBlock || block instanceof MelonBlock) {
+            if (block instanceof PlantBlock || block instanceof PumpkinBlock || block instanceof MelonBlock || block instanceof CocoaBlock) {
                 if (block instanceof CropBlock) {
                     if (((CropBlock)block).isMature(state)) {
                         RPGStats.addXpAndLevelUp(RPGStats.FARMING_COMPONENT, serverPlayer, 1);

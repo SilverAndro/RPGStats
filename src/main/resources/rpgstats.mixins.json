@@ -12,7 +12,6 @@
     "ImpalingMixin",
     "ItemStackHolderMixin",
     "KillMixin",
-    "MaxvarReapCompatMixin",
     "PotionDrinkMixin",
     "PotionSplashMixin",
     "ShearSheepMixin",

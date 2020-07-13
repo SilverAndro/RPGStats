@@ -5,6 +5,7 @@ import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.HoeItem;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
@@ -28,7 +29,7 @@ public class BonemealGrowMixin {
     public void onShift(boolean sneaking, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Entity) (Object) this instanceof ServerPlayerEntity) {
-            if (sneaking) {
+            if (sneaking && ((ServerPlayerEntity)(Object)this).getMainHandStack().getItem() instanceof HoeItem) {
                 Entity entity = (Entity) (Object) this;
                 int level = RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(entity));
                 World world = entity.world;

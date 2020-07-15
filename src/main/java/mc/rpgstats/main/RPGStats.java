@@ -22,6 +22,7 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,6 +37,8 @@ public class RPGStats implements ModInitializer {
     public static final ComponentType<FarmingComponent> FARMING_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:farming"), FarmingComponent.class);
     public static final ComponentType<MagicComponent> MAGIC_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:magic"), MagicComponent.class);
     public static final ComponentType<MiningComponent> MINING_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:mining"), MiningComponent.class);
+    
+    public static ArrayList<ServerPlayerEntity> needsStatFix = new ArrayList<>();
     
     private int tickCount = 0;
     
@@ -67,6 +70,16 @@ public class RPGStats implements ModInitializer {
                 Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
                 PlayerStream.all(server).forEach(
                     (player) -> {
+                        if (needsStatFix.contains(player) && player.isAlive()) {
+                            softLevelUp(DEFENSE_COMPONENT, player);
+                            softLevelUp(FARMING_COMPONENT, player);
+                            softLevelUp(MAGIC_COMPONENT, player);
+                            softLevelUp(MELEE_COMPONENT, player);
+                            softLevelUp(MINING_COMPONENT, player);
+                            softLevelUp(RANGED_COMPONENT, player);
+                            needsStatFix.remove(player);
+                        }
+                        
                         for (Advancement advancement : collection) {
                             if (advancement.getId().getNamespace().equals("rpgstats")) {
                                 if (!player.getAdvancementTracker().getProgress(advancement).isDone()) {
@@ -121,7 +134,7 @@ public class RPGStats implements ModInitializer {
                 nextXP -= nextXPForLevelUp;
                 setComponentLevel(type, provider, currentLevel + 1);
                 ((PlayerEntity)type.get(provider).getEntity()).sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + type.get(provider).getName() + "§r level! You are now level §6" + type.get(provider).getLevel()), false);
-                type.get(provider).onLevelUp();
+                type.get(provider).onLevelUp(false);
             }
             setComponentXP(type, provider, nextXP);
         }
@@ -171,5 +184,13 @@ public class RPGStats implements ModInitializer {
             getComponentLevel(FARMING_COMPONENT, provider)
             )
         );
+    }
+    
+    public static void softLevelUp(ComponentType<? extends IStatComponent> type, ServerPlayerEntity player) {
+        int savedLevel = getComponentLevel(type, ComponentProvider.fromEntity(player));
+        for (int i = 1; i <= savedLevel; i++) {
+            setComponentLevel(type, ComponentProvider.fromEntity(player), i);
+            type.get(ComponentProvider.fromEntity(player)).onLevelUp(true);
+        }
     }
 }

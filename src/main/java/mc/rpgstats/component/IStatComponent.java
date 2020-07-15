@@ -11,6 +11,6 @@ public interface IStatComponent extends PlayerComponent<Component> {
     void setLevel(int newLevel);
     String getName();
     String getCapName();
-    void onLevelUp();
+    void onLevelUp(boolean beQuiet);
     Entity getEntity();
 }

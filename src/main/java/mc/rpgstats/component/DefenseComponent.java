@@ -74,7 +74,6 @@ public class DefenseComponent implements IStatComponent {
     
     @Override
     public void onLevelUp(boolean beQuiet) {
-        System.out.println(getLevel());
         Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) + 0.01);
         if (!beQuiet)
             player.sendMessage(new LiteralText("§a+0.01§r Knockback resistance"), false);

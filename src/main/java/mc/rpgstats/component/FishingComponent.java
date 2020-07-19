@@ -10,12 +10,12 @@ import net.minecraft.text.LiteralText;
 
 import java.util.Objects;
 
-public class MiningComponent implements IStatComponent {
+public class FishingComponent implements IStatComponent {
     private final PlayerEntity player;
     private int xp = 0;
     private int level = 0;
     
-    public MiningComponent(PlayerEntity player) {
+    public FishingComponent(PlayerEntity player) {
         this.player = player;
     }
     
@@ -39,7 +39,7 @@ public class MiningComponent implements IStatComponent {
     
     @Override
     public ComponentType<?> getComponentType() {
-        return RPGStats.MINING_COMPONENT;
+        return RPGStats.FISHING_COMPONENT;
     }
     
     @Override
@@ -64,12 +64,12 @@ public class MiningComponent implements IStatComponent {
     
     @Override
     public String getName() {
-        return "mining";
+        return "fishing";
     }
     
     @Override
     public String getCapName() {
-        return "Mining";
+        return "Fishing";
     }
     
     @Override
@@ -78,11 +78,14 @@ public class MiningComponent implements IStatComponent {
         if (!beQuiet)
             player.sendMessage(new LiteralText("§a+0.05§r Luck"), false);
         
+        if (!beQuiet && level % 5 == 0)
+            player.sendMessage(new LiteralText("§a+1§r Fishing speed"), false);
+        
         if (!beQuiet) {
             if (level == 25) {
-                player.sendMessage(new LiteralText("§aMagically infused§r - Extra 5% chance to not consume durability with unbreaking."), false);
+                player.sendMessage(new LiteralText("§aNurturing§r - Shift rapidly to grow nearby crops"), false);
             } else if (level == 50) {
-                player.sendMessage(new LiteralText("§aMiners sight§r - Night vision and haste below y40"), false);
+                player.sendMessage(new LiteralText("§aNurturing II§r - Increased range"), false);
             }
         }
     }

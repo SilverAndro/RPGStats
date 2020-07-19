@@ -19,6 +19,8 @@ public class StatusEffectsImmuneMixin {
             if (level < 25) {
                 return livingEntity.damage(source, amount);
             }
+        } else {
+            return livingEntity.damage(source, amount);
         }
         return false;
     }
@@ -30,6 +32,8 @@ public class StatusEffectsImmuneMixin {
             if (level < 50) {
                 return livingEntity.damage(source, amount);
             }
+        } else {
+            return livingEntity.damage(source, amount);
         }
         return false;
     }

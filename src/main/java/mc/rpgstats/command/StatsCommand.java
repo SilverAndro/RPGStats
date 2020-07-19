@@ -44,6 +44,7 @@ public class StatsCommand {
             spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.MAGIC_COMPONENT, provider)), false);
             spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.FARMING_COMPONENT, provider)), false);
             spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.MINING_COMPONENT, provider)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.FISHING_COMPONENT, provider)), false);
         } else if (target != null) {
             ComponentProvider provider = ComponentProvider.fromEntity(target);
             source.sendFeedback(new LiteralText("Stats for " + target.getEntityName()), false);
@@ -54,6 +55,7 @@ public class StatsCommand {
             source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(RPGStats.MAGIC_COMPONENT, provider)), false);
             source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(RPGStats.FARMING_COMPONENT, provider)), false);
             source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(RPGStats.MINING_COMPONENT, provider)), false);
+            source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(RPGStats.FISHING_COMPONENT, provider)), false);
         } else {
             source.sendError(new LiteralText("A player must be passed when execute from the console"));
         }

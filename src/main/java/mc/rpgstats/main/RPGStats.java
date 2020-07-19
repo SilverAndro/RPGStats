@@ -37,6 +37,7 @@ public class RPGStats implements ModInitializer {
     public static final ComponentType<FarmingComponent> FARMING_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:farming"), FarmingComponent.class);
     public static final ComponentType<MagicComponent> MAGIC_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:magic"), MagicComponent.class);
     public static final ComponentType<MiningComponent> MINING_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:mining"), MiningComponent.class);
+    public static final ComponentType<FishingComponent> FISHING_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:fishing"), FishingComponent.class);
     
     public static ArrayList<ServerPlayerEntity> needsStatFix = new ArrayList<>();
     
@@ -45,12 +46,15 @@ public class RPGStats implements ModInitializer {
     @Override
     public void onInitialize() {
         // Init components on players
-        EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> components.put(MELEE_COMPONENT, new MeleeComponent(player)));
-        EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> components.put(RANGED_COMPONENT, new RangedComponent(player)));
-        EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> components.put(DEFENSE_COMPONENT, new DefenseComponent(player)));
-        EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> components.put(FARMING_COMPONENT, new FarmingComponent(player)));
-        EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> components.put(MAGIC_COMPONENT, new MagicComponent(player)));
-        EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> components.put(MINING_COMPONENT, new MiningComponent(player)));
+        EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> {
+            components.put(MAGIC_COMPONENT, new MagicComponent(player));
+            components.put(MINING_COMPONENT, new MiningComponent(player));
+            components.put(FISHING_COMPONENT, new FishingComponent(player));
+            components.put(FARMING_COMPONENT, new FarmingComponent(player));
+            components.put(DEFENSE_COMPONENT, new DefenseComponent(player));
+            components.put(RANGED_COMPONENT, new RangedComponent(player));
+            components.put(MELEE_COMPONENT, new MeleeComponent(player));
+        });
         
         // Keeps stats always
         EntityComponents.setRespawnCopyStrategy(MELEE_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
@@ -77,6 +81,7 @@ public class RPGStats implements ModInitializer {
                             softLevelUp(MELEE_COMPONENT, player);
                             softLevelUp(MINING_COMPONENT, player);
                             softLevelUp(RANGED_COMPONENT, player);
+                            softLevelUp(FISHING_COMPONENT, player);
                             needsStatFix.remove(player);
                         }
                         
@@ -163,25 +168,29 @@ public class RPGStats implements ModInitializer {
     }
     
     public static int getHighestLevel(ComponentProvider provider) {
-        return Collections.max(Arrays.asList(
-            getComponentLevel(MELEE_COMPONENT, provider),
-            getComponentLevel(RANGED_COMPONENT, provider),
-            getComponentLevel(MINING_COMPONENT, provider),
-            getComponentLevel(DEFENSE_COMPONENT, provider),
-            getComponentLevel(MAGIC_COMPONENT, provider),
-            getComponentLevel(FARMING_COMPONENT, provider)
+        return Collections.max(
+            Arrays.asList(
+                getComponentLevel(MELEE_COMPONENT, provider),
+                getComponentLevel(RANGED_COMPONENT, provider),
+                getComponentLevel(MINING_COMPONENT, provider),
+                getComponentLevel(DEFENSE_COMPONENT, provider),
+                getComponentLevel(MAGIC_COMPONENT, provider),
+                getComponentLevel(FARMING_COMPONENT, provider),
+                getComponentLevel(FISHING_COMPONENT, provider)
             )
         );
     }
     
     public static int getLowestLevel(ComponentProvider provider) {
-        return Collections.min(Arrays.asList(
-            getComponentLevel(MELEE_COMPONENT, provider),
-            getComponentLevel(RANGED_COMPONENT, provider),
-            getComponentLevel(MINING_COMPONENT, provider),
-            getComponentLevel(DEFENSE_COMPONENT, provider),
-            getComponentLevel(MAGIC_COMPONENT, provider),
-            getComponentLevel(FARMING_COMPONENT, provider)
+        return Collections.min(
+            Arrays.asList(
+                getComponentLevel(MELEE_COMPONENT, provider),
+                getComponentLevel(RANGED_COMPONENT, provider),
+                getComponentLevel(MINING_COMPONENT, provider),
+                getComponentLevel(DEFENSE_COMPONENT, provider),
+                getComponentLevel(MAGIC_COMPONENT, provider),
+                getComponentLevel(FARMING_COMPONENT, provider),
+                getComponentLevel(FISHING_COMPONENT, provider)
             )
         );
     }

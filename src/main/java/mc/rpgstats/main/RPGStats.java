@@ -132,7 +132,7 @@ public class RPGStats implements ModInitializer {
         int nextXP = getComponentXP(type, provider) + addedXP;
         int currentLevel = getComponentLevel(type, provider);
         
-        if (currentLevel <= 50) {
+        if (currentLevel < 50) {
             // Enough to level up
             int nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
             if (nextXP >= nextXPForLevelUp) {

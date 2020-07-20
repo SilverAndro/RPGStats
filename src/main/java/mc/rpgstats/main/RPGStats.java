@@ -197,6 +197,11 @@ public class RPGStats implements ModInitializer {
     
     public static void softLevelUp(ComponentType<? extends IStatComponent> type, ServerPlayerEntity player) {
         int savedLevel = getComponentLevel(type, ComponentProvider.fromEntity(player));
+        if (savedLevel > 50) {
+            setComponentLevel(type, ComponentProvider.fromEntity(player), 50);
+            setComponentXP(type, ComponentProvider.fromEntity(player), 0);
+            savedLevel = 50;
+        }
         for (int i = 1; i <= savedLevel; i++) {
             setComponentLevel(type, ComponentProvider.fromEntity(player), i);
             type.get(ComponentProvider.fromEntity(player)).onLevelUp(true);

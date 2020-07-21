@@ -1,0 +1,23 @@
+{
+    "display": {
+        "title": {
+            "text": "Swimming with the fishes"
+        },
+        "description": {
+            "text": "Description"
+        },
+        "icon": {
+            "item": "minecraft:salmon"
+        },
+        "frame": "goal",
+        "show_toast": true,
+        "announce_to_chat": true,
+        "hidden": false
+    },
+    "criteria": {
+        "trigger": {
+            "trigger": "minecraft:impossible"
+        }
+    },
+    "parent": "rpgstats:fishing_10"
+}

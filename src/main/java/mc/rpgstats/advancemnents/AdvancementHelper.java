@@ -37,6 +37,10 @@ public class AdvancementHelper {
     final static Identifier COMBAT_25 = new Identifier(RPGStats.MOD_ID, "combat_25");
     final static Identifier COMBAT_50 = new Identifier(RPGStats.MOD_ID, "combat_50");
     
+    final static Identifier FISHING_10 = new Identifier(RPGStats.MOD_ID, "fishing_10");
+    final static Identifier FISHING_25 = new Identifier(RPGStats.MOD_ID, "fishing_25");
+    final static Identifier FISHING_50 = new Identifier(RPGStats.MOD_ID, "fishing_50");
+    
     public static boolean shouldGrant(Identifier id, ServerPlayerEntity playerEntity) {
         if (id.getPath().startsWith("levels_")) {
             if (id.equals(LEVEL_1)) {
@@ -128,6 +132,18 @@ public class AdvancementHelper {
             }
             if (id.equals(COMBAT_50)) {
                 return RPGStats.getComponentLevel(RPGStats.MELEE_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 50;
+            }
+        }
+    
+        if (id.getPath().startsWith("fishing_")) {
+            if (id.equals(FISHING_10)) {
+                return RPGStats.getComponentLevel(RPGStats.FISHING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 10;
+            }
+            if (id.equals(FISHING_25)) {
+                return RPGStats.getComponentLevel(RPGStats.FISHING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 25;
+            }
+            if (id.equals(FISHING_50)) {
+                return RPGStats.getComponentLevel(RPGStats.FISHING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 50;
             }
         }
         

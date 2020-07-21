@@ -51,6 +51,10 @@ public class ItemEatMixin {
                 
                 le.addStatusEffect(new StatusEffectInstance(goodEffects.get(0), 30 * 20, 0));
             }
+    
+            if (RPGStats.getComponentLevel(RPGStats.FISHING_COMPONENT, ComponentProvider.fromEntity(le)) >= 50) {
+                le.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 1, 0));
+            }
         }
     }
 }

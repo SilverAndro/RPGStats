@@ -9,7 +9,6 @@
     "BonemealMixin",
     "BowAccuracyMixin",
     "BowArrowMixin",
-    "FishingBobberMixin",
     "ImpalingMixin",
     "ItemEatMixin",
     "ItemStackHolderMixin",

@@ -78,14 +78,11 @@ public class FishingComponent implements IStatComponent {
         if (!beQuiet)
             player.sendMessage(new LiteralText("§a+0.05§r Luck"), false);
         
-        if (!beQuiet && level % 5 == 0)
-            player.sendMessage(new LiteralText("§a+1§r Fishing speed"), false);
-        
         if (!beQuiet) {
             if (level == 25) {
                 player.sendMessage(new LiteralText("§aVitamin rich§r - Eating fish grants you a temporary positive effect"), false);
             } else if (level == 50) {
-                player.sendMessage(new LiteralText("§aSwimming with the fishes§r - Increased swimming speed"), false);
+                player.sendMessage(new LiteralText("§aTeach a man to fish§r - Extra saturation when eating"), false);
             }
         }
     }

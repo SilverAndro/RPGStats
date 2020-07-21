@@ -11,6 +11,7 @@
     "BowArrowMixin",
     "FishingBobberMixin",
     "ImpalingMixin",
+    "ItemEatMixin",
     "ItemStackHolderMixin",
     "KillMixin",
     "PotionDrinkMixin",

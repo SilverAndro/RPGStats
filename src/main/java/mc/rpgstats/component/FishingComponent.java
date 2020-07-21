@@ -83,9 +83,9 @@ public class FishingComponent implements IStatComponent {
         
         if (!beQuiet) {
             if (level == 25) {
-                player.sendMessage(new LiteralText("§aNurturing§r - Shift rapidly to grow nearby crops"), false);
+                player.sendMessage(new LiteralText("§aVitamin rich§r - Eating fish grants you a temporary positive effect"), false);
             } else if (level == 50) {
-                player.sendMessage(new LiteralText("§aNurturing II§r - Increased range"), false);
+                player.sendMessage(new LiteralText("§aSwimming with the fishes§r - Increased swimming speed"), false);
             }
         }
     }

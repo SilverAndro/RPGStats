@@ -32,7 +32,7 @@
     "minecraft": ">1.16-"
   },
 
-  "breaks": {
+  "conflicts": {
     "moenchantments": "*"
   },
 

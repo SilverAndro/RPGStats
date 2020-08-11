@@ -2,7 +2,10 @@ package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
-import net.minecraft.block.*;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.DeadCoralWallFanBlock;
+import net.minecraft.block.Fertilizable;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -10,13 +13,17 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
+import net.minecraft.world.biome.BuiltInBiomes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Objects;
+import java.util.Optional;
 import java.util.Random;
 
 @Mixin(BoneMealItem.class)
@@ -42,8 +49,9 @@ public class BonemealMixin {
                             continue cursedLoop;
                         }
                     }
-
-                    if (biome == Biomes.WARM_OCEAN || biome == Biomes.DEEP_WARM_OCEAN) {
+    
+                    Optional<RegistryKey<Biome>> optional = world.method_31081(blockPos2);
+                    if (Objects.equals(optional, Optional.of(BuiltInBiomes.WARM_OCEAN)) || Objects.equals(optional, Optional.of(BuiltInBiomes.DEEP_WARM_OCEAN))) {
                         if (i == 0 && facing != null && facing.getAxis().isHorizontal()) {
                             blockState = BlockTags.WALL_CORALS.getRandom(world.random).getDefaultState().with(DeadCoralWallFanBlock.FACING, facing);
                         } else if (RANDOM.nextInt(4) == 0) {

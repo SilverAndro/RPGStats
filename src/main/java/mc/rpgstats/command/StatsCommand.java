@@ -3,7 +3,7 @@ package mc.rpgstats.command;
 import com.mojang.brigadier.CommandDispatcher;
 import mc.rpgstats.main.RPGStats;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
-import net.minecraft.command.arguments.EntityArgumentType;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;

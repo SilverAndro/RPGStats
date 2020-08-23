@@ -1,7 +1,5 @@
 package mc.rpgstats.component;
 
-import mc.rpgstats.main.RPGStats;
-import nerdhub.cardinal.components.api.ComponentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
@@ -32,11 +30,6 @@ public class MagicComponent implements IStatComponent {
     @Override
     public Entity getEntity() {
         return player;
-    }
-    
-    @Override
-    public ComponentType<?> getComponentType() {
-        return RPGStats.MAGIC_COMPONENT;
     }
     
     @Override

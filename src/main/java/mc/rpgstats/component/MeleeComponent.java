@@ -1,7 +1,5 @@
 package mc.rpgstats.component;
 
-import mc.rpgstats.main.RPGStats;
-import nerdhub.cardinal.components.api.ComponentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -35,11 +33,6 @@ public class MeleeComponent implements IStatComponent {
     @Override
     public Entity getEntity() {
         return player;
-    }
-    
-    @Override
-    public ComponentType<?> getComponentType() {
-        return RPGStats.MELEE_COMPONENT;
     }
     
     @Override

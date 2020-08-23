@@ -105,13 +105,6 @@ public class RPGStats implements ModInitializer {
                 tickCount = 0;
             }
         });
-    
-        LevelUpCallback.EVENT.register((player, type, newLevel) -> {
-            System.out.println("EVENT FIRED");
-            System.out.println(player);
-            System.out.println(type);
-            System.out.println(newLevel);
-        });
     }
     
     // Helper methods for components

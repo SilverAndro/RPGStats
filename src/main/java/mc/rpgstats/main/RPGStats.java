@@ -3,6 +3,7 @@ package mc.rpgstats.main;
 import mc.rpgstats.advancemnents.AdvancementHelper;
 import mc.rpgstats.command.StatsCommand;
 import mc.rpgstats.component.*;
+import mc.rpgstats.event.LevelUpCallback;
 import nerdhub.cardinal.components.api.ComponentRegistry;
 import nerdhub.cardinal.components.api.ComponentType;
 import nerdhub.cardinal.components.api.component.ComponentProvider;
@@ -104,6 +105,13 @@ public class RPGStats implements ModInitializer {
                 tickCount = 0;
             }
         });
+    
+        LevelUpCallback.EVENT.register((player, type, newLevel) -> {
+            System.out.println("EVENT FIRED");
+            System.out.println(player);
+            System.out.println(type);
+            System.out.println(newLevel);
+        });
     }
     
     // Helper methods for components
@@ -140,6 +148,7 @@ public class RPGStats implements ModInitializer {
                 setComponentLevel(type, provider, currentLevel + 1);
                 ((PlayerEntity)type.get(provider).getEntity()).sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + type.get(provider).getName() + "§r level! You are now level §6" + type.get(provider).getLevel()), false);
                 type.get(provider).onLevelUp(false);
+                LevelUpCallback.EVENT.invoker().onLevelUp(entity, type, currentLevel + 1);
             }
             setComponentXP(type, provider, nextXP);
         }

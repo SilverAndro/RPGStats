@@ -24,7 +24,6 @@ import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -32,13 +31,15 @@ public class RPGStats implements ModInitializer {
     public static final String MOD_ID = "rpgstats";
     
     // Stat components
-    public static final ComponentType<MeleeComponent> MELEE_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:melee"), MeleeComponent.class);
-    public static final ComponentType<RangedComponent> RANGED_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:ranged"), RangedComponent.class);
-    public static final ComponentType<DefenseComponent> DEFENSE_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:defence"), DefenseComponent.class);
-    public static final ComponentType<FarmingComponent> FARMING_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:farming"), FarmingComponent.class);
-    public static final ComponentType<MagicComponent> MAGIC_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:magic"), MagicComponent.class);
-    public static final ComponentType<MiningComponent> MINING_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:mining"), MiningComponent.class);
-    public static final ComponentType<FishingComponent> FISHING_COMPONENT = ComponentRegistry.INSTANCE.registerIfAbsent(new Identifier("rpgstats:fishing"), FishingComponent.class);
+    public static final ComponentType<MeleeComponent> MELEE_COMPONENT = registerSkill(new Identifier("rpgstats:melee"), MeleeComponent.class);
+    public static final ComponentType<RangedComponent> RANGED_COMPONENT = registerSkill(new Identifier("rpgstats:ranged"), RangedComponent.class);
+    public static final ComponentType<DefenseComponent> DEFENSE_COMPONENT = registerSkill(new Identifier("rpgstats:defence"), DefenseComponent.class);
+    public static final ComponentType<FarmingComponent> FARMING_COMPONENT = registerSkill(new Identifier("rpgstats:farming"), FarmingComponent.class);
+    public static final ComponentType<MagicComponent> MAGIC_COMPONENT = registerSkill(new Identifier("rpgstats:magic"), MagicComponent.class);
+    public static final ComponentType<MiningComponent> MINING_COMPONENT = registerSkill(new Identifier("rpgstats:mining"), MiningComponent.class);
+    public static final ComponentType<FishingComponent> FISHING_COMPONENT = registerSkill(new Identifier("rpgstats:fishing"), FishingComponent.class);
+    
+    public static ArrayList<ComponentType<? extends IStatComponent>> statList = new ArrayList<>();
     
     public static ArrayList<ServerPlayerEntity> needsStatFix = new ArrayList<>();
     
@@ -169,32 +170,20 @@ public class RPGStats implements ModInitializer {
         }
     }
     
+    public static ArrayList<Integer> getStatLevelsForProvider(ComponentProvider provider) {
+        ArrayList<Integer> result = new ArrayList<>();
+        for (ComponentType<? extends IStatComponent> stat : statList) {
+            result.add(getComponentLevel(stat, provider));
+        }
+        return result;
+    }
+    
     public static int getHighestLevel(ComponentProvider provider) {
-        return Collections.max(
-            Arrays.asList(
-                getComponentLevel(MELEE_COMPONENT, provider),
-                getComponentLevel(RANGED_COMPONENT, provider),
-                getComponentLevel(MINING_COMPONENT, provider),
-                getComponentLevel(DEFENSE_COMPONENT, provider),
-                getComponentLevel(MAGIC_COMPONENT, provider),
-                getComponentLevel(FARMING_COMPONENT, provider),
-                getComponentLevel(FISHING_COMPONENT, provider)
-            )
-        );
+        return Collections.max(getStatLevelsForProvider(provider));
     }
     
     public static int getLowestLevel(ComponentProvider provider) {
-        return Collections.min(
-            Arrays.asList(
-                getComponentLevel(MELEE_COMPONENT, provider),
-                getComponentLevel(RANGED_COMPONENT, provider),
-                getComponentLevel(MINING_COMPONENT, provider),
-                getComponentLevel(DEFENSE_COMPONENT, provider),
-                getComponentLevel(MAGIC_COMPONENT, provider),
-                getComponentLevel(FARMING_COMPONENT, provider),
-                getComponentLevel(FISHING_COMPONENT, provider)
-            )
-        );
+        return Collections.min(getStatLevelsForProvider(provider));
     }
     
     public static void softLevelUp(ComponentType<? extends IStatComponent> type, ServerPlayerEntity player) {
@@ -208,5 +197,11 @@ public class RPGStats implements ModInitializer {
             setComponentLevel(type, ComponentProvider.fromEntity(player), i);
             type.get(ComponentProvider.fromEntity(player)).onLevelUp(true);
         }
+    }
+    
+    public static <T extends IStatComponent> ComponentType<T> registerSkill(Identifier componentID, Class<T> componentClass) {
+        ComponentType<T> componentType = ComponentRegistry.INSTANCE.registerIfAbsent(componentID, componentClass);
+        statList.add(componentType);
+        return componentType;
     }
 }

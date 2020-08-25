@@ -1,6 +1,7 @@
 package mc.rpgstats.main;
 
 import mc.rpgstats.advancemnents.AdvancementHelper;
+import mc.rpgstats.command.CheatCommand;
 import mc.rpgstats.command.StatsCommand;
 import mc.rpgstats.component.*;
 import mc.rpgstats.event.LevelUpCallback;
@@ -67,7 +68,12 @@ public class RPGStats implements ModInitializer {
         EntityComponents.setRespawnCopyStrategy(MINING_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
         
         // Command
-        CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> StatsCommand.register(dispatcher));
+        CommandRegistrationCallback.EVENT.register(
+            (dispatcher, dedicated) -> {
+                StatsCommand.register(dispatcher);
+                CheatCommand.register(dispatcher);
+            }
+        );
         
         // Syncing and advancements
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
@@ -137,12 +143,17 @@ public class RPGStats implements ModInitializer {
         if (currentLevel < 50) {
             // Enough to level up
             int nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
-            if (nextXP >= nextXPForLevelUp) {
+            while (nextXP >= nextXPForLevelUp) {
                 nextXP -= nextXPForLevelUp;
-                setComponentLevel(type, provider, currentLevel + 1);
+                currentLevel += 1;
+                
+                setComponentLevel(type, provider, currentLevel);
                 ((PlayerEntity)type.get(provider).getEntity()).sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + type.get(provider).getName() + "§r level! You are now level §6" + type.get(provider).getLevel()), false);
                 type.get(provider).onLevelUp(false);
-                LevelUpCallback.EVENT.invoker().onLevelUp(entity, type, currentLevel + 1);
+                
+                LevelUpCallback.EVENT.invoker().onLevelUp(entity, type, currentLevel);
+    
+                nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
             }
             setComponentXP(type, provider, nextXP);
         }

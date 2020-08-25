@@ -30,6 +30,8 @@ import java.util.Collections;
 public class RPGStats implements ModInitializer {
     public static final String MOD_ID = "rpgstats";
     
+    public static ArrayList<ComponentType<? extends IStatComponent>> statList = new ArrayList<>();
+    
     // Stat components
     public static final ComponentType<MeleeComponent> MELEE_COMPONENT = registerSkill(new Identifier("rpgstats:melee"), MeleeComponent.class);
     public static final ComponentType<RangedComponent> RANGED_COMPONENT = registerSkill(new Identifier("rpgstats:ranged"), RangedComponent.class);
@@ -38,8 +40,6 @@ public class RPGStats implements ModInitializer {
     public static final ComponentType<MagicComponent> MAGIC_COMPONENT = registerSkill(new Identifier("rpgstats:magic"), MagicComponent.class);
     public static final ComponentType<MiningComponent> MINING_COMPONENT = registerSkill(new Identifier("rpgstats:mining"), MiningComponent.class);
     public static final ComponentType<FishingComponent> FISHING_COMPONENT = registerSkill(new Identifier("rpgstats:fishing"), FishingComponent.class);
-    
-    public static ArrayList<ComponentType<? extends IStatComponent>> statList = new ArrayList<>();
     
     public static ArrayList<ServerPlayerEntity> needsStatFix = new ArrayList<>();
     

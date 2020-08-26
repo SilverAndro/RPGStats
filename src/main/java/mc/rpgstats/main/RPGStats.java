@@ -24,14 +24,13 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
+import java.util.*;
 
 public class RPGStats implements ModInitializer {
     public static final String MOD_ID = "rpgstats";
     
     public static ArrayList<ComponentType<? extends IStatComponent>> statList = new ArrayList<>();
+    public static HashMap<Identifier, Integer> idToComponentIndexMap = new HashMap<>();
     
     // Stat components
     public static final ComponentType<MeleeComponent> MELEE_COMPONENT = registerSkill(new Identifier("rpgstats:melee"), MeleeComponent.class);
@@ -213,6 +212,14 @@ public class RPGStats implements ModInitializer {
     public static <T extends IStatComponent> ComponentType<T> registerSkill(Identifier componentID, Class<T> componentClass) {
         ComponentType<T> componentType = ComponentRegistry.INSTANCE.registerIfAbsent(componentID, componentClass);
         statList.add(componentType);
+        System.out.println(componentID);
+        System.out.println(componentType);
+        System.out.println(statList.indexOf(componentType));
+        idToComponentIndexMap.put(componentID, statList.indexOf(componentType));
         return componentType;
+    }
+    
+    public static ComponentType<? extends IStatComponent> statFromID(Identifier ID) {
+        return statList.get(idToComponentIndexMap.get(ID));
     }
 }

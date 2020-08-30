@@ -22,13 +22,13 @@ public class CheatCommand {
         dispatcher.register(
             // Base
             CommandManager.literal("rpgcheat")
-                // Choose skill
                 .then(
-                    // Select skill
-                    CommandManager.argument("skill", string())
-                        .suggests(new SkillSuggestionProvider())
+                    // Target player
+                    CommandManager.argument("targets", EntityArgumentType.players())
                         .then(
-                            CommandManager.argument("targets", EntityArgumentType.players())
+                            // Select skill
+                            CommandManager.argument("skill", string())
+                                .suggests(new SkillSuggestionProvider())
                                 // Add xp/levels
                                 .then(
                                     CommandManager.literal("add")

@@ -142,7 +142,7 @@ public class RPGStats implements ModInitializer {
         if (currentLevel < 50) {
             // Enough to level up
             int nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
-            while (nextXP >= nextXPForLevelUp) {
+            while (nextXP >= nextXPForLevelUp && currentLevel < 50) {
                 nextXP -= nextXPForLevelUp;
                 currentLevel += 1;
                 

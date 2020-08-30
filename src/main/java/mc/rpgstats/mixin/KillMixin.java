@@ -39,8 +39,12 @@ public abstract class KillMixin {
 						RPGStats.addXpAndLevelUp(RPGStats.FARMING_COMPONENT, serverPlayer, 1);
 					} else {
 						int level = RPGStats.getComponentLevel(RPGStats.MELEE_COMPONENT, ComponentProvider.fromEntity(serverPlayer));
+						
 						int duration = level >= 25 ? level >= 50 ? 200 : 100 : 0;
-						((ServerPlayerEntity)entity).addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, duration));
+						if (duration > 0) {
+							((ServerPlayerEntity)entity).addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, duration));
+						}
+						
 						if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
 							RPGStats.addXpAndLevelUp(RPGStats.MELEE_COMPONENT, serverPlayer, 130);
 						} else {

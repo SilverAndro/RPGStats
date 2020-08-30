@@ -22,6 +22,8 @@ public class CheatCommand {
         dispatcher.register(
             // Base
             CommandManager.literal("rpgcheat")
+                // OP only
+                .requires((serverCommandSource) -> serverCommandSource.hasPermissionLevel(2))
                 .then(
                     // Target player
                     CommandManager.argument("targets", EntityArgumentType.players())
@@ -102,8 +104,6 @@ public class CheatCommand {
                         )
                 )
         );
-    
-        CommandManager.literal("rpgcheat").requires((serverCommandSource) -> serverCommandSource.hasPermissionLevel(2));
     }
     
     private static int executeAdd(ServerCommandSource source, Identifier id, Collection<ServerPlayerEntity> targets, CommandType type, int amount) {

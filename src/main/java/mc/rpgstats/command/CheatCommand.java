@@ -59,17 +59,17 @@ public class CheatCommand {
                                         // Set Levels
                                         .then(
                                             CommandManager.literal("levels")
-                                        )
-                                        .then(
-                                            CommandManager.argument("amount", IntegerArgumentType.integer(0, 50))
-                                                .executes(
-                                                    (commandContext) -> executeSet(
-                                                        commandContext.getSource(),
-                                                        new Identifier(StringArgumentType.getString(commandContext, "skill")),
-                                                        EntityArgumentType.getPlayers(commandContext, "targets"),
-                                                        CommandType.LEVELS,
-                                                        IntegerArgumentType.getInteger(commandContext, "amount")
-                                                    )
+                                                .then(
+                                                    CommandManager.argument("amount", IntegerArgumentType.integer(0))
+                                                        .executes(
+                                                            (commandContext) -> executeSet(
+                                                                commandContext.getSource(),
+                                                                new Identifier(StringArgumentType.getString(commandContext, "skill")),
+                                                                EntityArgumentType.getPlayers(commandContext, "targets"),
+                                                                CommandType.LEVELS,
+                                                                IntegerArgumentType.getInteger(commandContext, "amount")
+                                                            )
+                                                        )
                                                 )
                                         )
                                 )

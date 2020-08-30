@@ -33,15 +33,17 @@ public class StatsCommand {
     private static int execute(ServerCommandSource source, ServerPlayerEntity target) {
         if (source.getEntity() instanceof ServerPlayerEntity && target != null) {
             ComponentProvider provider = ComponentProvider.fromEntity(target);
-            target.sendMessage(new LiteralText("§aRPGStats >§r Stats for " + target.getEntityName()), false);
+            ServerPlayerEntity spe = (ServerPlayerEntity)source.getEntity();
             
-            target.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.MELEE_COMPONENT, provider)), false);
-            target.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.RANGED_COMPONENT, provider)), false);
-            target.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.DEFENSE_COMPONENT, provider)), false);
-            target.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.MAGIC_COMPONENT, provider)), false);
-            target.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.FARMING_COMPONENT, provider)), false);
-            target.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.MINING_COMPONENT, provider)), false);
-            target.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.FISHING_COMPONENT, provider)), false);
+            spe.sendMessage(new LiteralText("§aRPGStats >§r Stats for " + target.getEntityName()), false);
+            
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.MELEE_COMPONENT, provider)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.RANGED_COMPONENT, provider)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.DEFENSE_COMPONENT, provider)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.MAGIC_COMPONENT, provider)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.FARMING_COMPONENT, provider)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.MINING_COMPONENT, provider)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(RPGStats.FISHING_COMPONENT, provider)), false);
         } else if (target != null) {
             if (source.getEntity() == null) {
                 ComponentProvider provider = ComponentProvider.fromEntity(target);

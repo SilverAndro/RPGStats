@@ -47,6 +47,8 @@ public class RPGStats implements ModInitializer {
     
     @Override
     public void onInitialize() {
+        System.out.println("RPGStats is starting...");
+        
         // Init components on players
         EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> {
             components.put(MAGIC_COMPONENT, new MagicComponent(player));
@@ -111,6 +113,8 @@ public class RPGStats implements ModInitializer {
                 tickCount = 0;
             }
         });
+    
+        System.out.println("RPGStats is done loading");
     }
     
     // Helper methods for components
@@ -212,9 +216,6 @@ public class RPGStats implements ModInitializer {
     public static <T extends IStatComponent> ComponentType<T> registerSkill(Identifier componentID, Class<T> componentClass) {
         ComponentType<T> componentType = ComponentRegistry.INSTANCE.registerIfAbsent(componentID, componentClass);
         statList.add(componentType);
-        System.out.println(componentID);
-        System.out.println(componentType);
-        System.out.println(statList.indexOf(componentType));
         idToComponentIndexMap.put(componentID, statList.indexOf(componentType));
         return componentType;
     }

@@ -102,6 +102,8 @@ public class CheatCommand {
                         )
                 )
         );
+    
+        CommandManager.literal("rpgcheat").requires((serverCommandSource) -> serverCommandSource.hasPermissionLevel(2));
     }
     
     private static int executeAdd(ServerCommandSource source, Identifier id, Collection<ServerPlayerEntity> targets, CommandType type, int amount) {

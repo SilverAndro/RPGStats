@@ -32,8 +32,9 @@ public class PotionDrinkMixin {
                 effect.shouldShowParticles(),
                 effect.shouldShowIcon()
             ));
+        } else {
+            return livingEntity.addStatusEffect(effect);
         }
-        return false;
     }
     
     @Inject(at = @At("HEAD"), method = "getMaxUseTime", cancellable = true)

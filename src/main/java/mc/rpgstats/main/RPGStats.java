@@ -60,14 +60,6 @@ public class RPGStats implements ModInitializer {
             components.put(MELEE_COMPONENT, new MeleeComponent(player));
         });
         
-        // Keeps stats always
-        EntityComponents.setRespawnCopyStrategy(MELEE_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
-        EntityComponents.setRespawnCopyStrategy(RANGED_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
-        EntityComponents.setRespawnCopyStrategy(DEFENSE_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
-        EntityComponents.setRespawnCopyStrategy(FARMING_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
-        EntityComponents.setRespawnCopyStrategy(MAGIC_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
-        EntityComponents.setRespawnCopyStrategy(MINING_COMPONENT, RespawnCopyStrategy.ALWAYS_COPY);
-        
         // Command
         CommandRegistrationCallback.EVENT.register(
             (dispatcher, dedicated) -> {
@@ -217,6 +209,7 @@ public class RPGStats implements ModInitializer {
         ComponentType<T> componentType = ComponentRegistry.INSTANCE.registerIfAbsent(componentID, componentClass);
         statList.add(componentType);
         idToComponentIndexMap.put(componentID, statList.indexOf(componentType));
+        EntityComponents.setRespawnCopyStrategy(componentType, RespawnCopyStrategy.ALWAYS_COPY);
         return componentType;
     }
     

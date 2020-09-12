@@ -16,7 +16,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BuiltInBiomes;
+import net.minecraft.world.biome.BiomeKeys;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -51,7 +51,7 @@ public class BonemealMixin {
                     }
     
                     Optional<RegistryKey<Biome>> optional = world.method_31081(blockPos2);
-                    if (Objects.equals(optional, Optional.of(BuiltInBiomes.WARM_OCEAN)) || Objects.equals(optional, Optional.of(BuiltInBiomes.DEEP_WARM_OCEAN))) {
+                    if (Objects.equals(optional, Optional.of(BiomeKeys.WARM_OCEAN)) || Objects.equals(optional, Optional.of(BiomeKeys.DEEP_WARM_OCEAN))) {
                         if (i == 0 && facing != null && facing.getAxis().isHorizontal()) {
                             blockState = BlockTags.WALL_CORALS.getRandom(world.random).getDefaultState().with(DeadCoralWallFanBlock.FACING, facing);
                         } else if (RANDOM.nextInt(4) == 0) {

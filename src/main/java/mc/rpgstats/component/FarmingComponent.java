@@ -69,9 +69,9 @@ public class FarmingComponent implements IStatComponent {
         
         if (!beQuiet) {
             if (level == 25) {
-                player.sendMessage(new LiteralText("§aNurturing§r - Shift rapidly to grow nearby crops"), false);
+                player.sendMessage(new LiteralText("§aNurturing§r - Shift rapidly to grow nearby crops (while holding hoe)"), false);
             } else if (level == 50) {
-                player.sendMessage(new LiteralText("§aNurturing II§r - Increased range"), false);
+                player.sendMessage(new LiteralText("§aNurturing II§r - Nurturing has increased range"), false);
             }
         }
     }

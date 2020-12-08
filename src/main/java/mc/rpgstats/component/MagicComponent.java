@@ -64,13 +64,13 @@ public class MagicComponent implements IStatComponent {
     
     @Override
     public void onLevelUp(boolean beQuiet) {
-        if (!beQuiet)
-            player.sendMessage(new LiteralText("§a+1§r Drunk potion duration"), false);
-        
         if (!beQuiet) {
+            player.sendMessage(new LiteralText("§a+1§r Drunk potion duration"), false);
+            
             if (level % 3 == 0) {
                 player.sendMessage(new LiteralText("§a+1§r Potion drink speed"), false);
             }
+            
             if (level == 25) {
                 player.sendMessage(new LiteralText("§aVax§r - Immune to poison"), false);
             } else if (level == 50) {

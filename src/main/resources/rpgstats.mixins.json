@@ -4,6 +4,7 @@
   "package": "mc.rpgstats.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "ApplyDamageMixin",
     "BlockBreakMixin",
     "BonemealGrowMixin",
     "BonemealMixin",

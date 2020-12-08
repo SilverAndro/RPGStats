@@ -11,6 +11,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Random;
+
 @Mixin(Block.class)
 public class BlockBreakMixin {
     @Inject(at = @At("HEAD"), method = "onBreak")
@@ -27,8 +29,9 @@ public class BlockBreakMixin {
                     RPGStats.addXpAndLevelUp(RPGStats.FARMING_COMPONENT, serverPlayer, 1);
                 }
             }
-            
-            if (block instanceof OreBlock) {
+    
+            Random random = new Random();
+            if (block instanceof OreBlock && random.nextBoolean()) {
                 if (
                     block == Blocks.COAL_ORE ||
                         block == Blocks.NETHER_GOLD_ORE

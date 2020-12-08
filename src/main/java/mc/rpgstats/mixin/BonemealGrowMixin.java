@@ -29,7 +29,7 @@ public class BonemealGrowMixin {
     public void onShift(boolean sneaking, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Entity) (Object) this instanceof ServerPlayerEntity) {
-            if (sneaking && ((ServerPlayerEntity)(Object)this).getMainHandStack().getItem() instanceof HoeItem) {
+            if (sneaking && ((ServerPlayerEntity)(Object)this).getMainHandStack().getItem() instanceof HoeItem && new Random().nextBoolean()) {
                 Entity entity = (Entity) (Object) this;
                 int level = RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(entity));
                 World world = entity.world;

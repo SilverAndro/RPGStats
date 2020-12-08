@@ -68,10 +68,10 @@ public class FishingComponent implements IStatComponent {
     @Override
     public void onLevelUp(boolean beQuiet) {
         Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_LUCK)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_LUCK) + 0.05);
-        if (!beQuiet)
-            player.sendMessage(new LiteralText("§a+0.05§r Luck"), false);
         
         if (!beQuiet) {
+            player.sendMessage(new LiteralText("§a+0.05§r Luck"), false);
+            
             if (level == 25) {
                 player.sendMessage(new LiteralText("§aVitamin rich§r - Eating fish grants you a temporary positive effect"), false);
             } else if (level == 50) {

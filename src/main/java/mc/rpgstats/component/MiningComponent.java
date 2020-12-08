@@ -68,10 +68,10 @@ public class MiningComponent implements IStatComponent {
     @Override
     public void onLevelUp(boolean beQuiet) {
         Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_LUCK)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_LUCK) + 0.05);
-        if (!beQuiet)
-            player.sendMessage(new LiteralText("§a+0.05§r Luck"), false);
         
         if (!beQuiet) {
+            player.sendMessage(new LiteralText("§a+0.05§r Luck"), false);
+            
             if (level == 25) {
                 player.sendMessage(new LiteralText("§aMagically infused§r - Extra 5% chance to not consume durability with unbreaking."), false);
             } else if (level == 50) {

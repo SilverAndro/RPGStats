@@ -127,7 +127,7 @@ public class RPGStats implements ModInitializer {
     }
     
     public static int calculateXpNeededToReachLevel(int level) {
-        return (int)Math.floor(Math.pow(level, 2) * 0.3) + 100;
+        return (int)Math.floor(Math.pow(level, 2.05) * 0.5) + 80;
     }
     
     public static void addXpAndLevelUp(ComponentType<? extends IStatComponent> type, ServerPlayerEntity entity, int addedXP) {

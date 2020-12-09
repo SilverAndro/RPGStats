@@ -1,7 +1,7 @@
 package mc.rpgstats.advancemnents;
 
 import mc.rpgstats.main.RPGStats;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
+import mc.rpgstats.main.StatComponents;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
@@ -44,106 +44,106 @@ public class AdvancementHelper {
     public static boolean shouldGrant(Identifier id, ServerPlayerEntity playerEntity) {
         if (id.getPath().startsWith("levels_")) {
             if (id.equals(LEVEL_1)) {
-                return RPGStats.getHighestLevel(ComponentProvider.fromEntity(playerEntity)) >= 1;
+                return RPGStats.getHighestLevel(playerEntity) >= 1;
             }
             if (id.equals(LEVEL_5)) {
-                return RPGStats.getHighestLevel(ComponentProvider.fromEntity(playerEntity)) >= 5;
+                return RPGStats.getHighestLevel(playerEntity) >= 5;
             }
             if (id.equals(LEVEL_13)) {
-                return RPGStats.getHighestLevel(ComponentProvider.fromEntity(playerEntity)) >= 13;
+                return RPGStats.getHighestLevel(playerEntity) >= 13;
             }
             if (id.equals(LEVEL_25)) {
-                return RPGStats.getHighestLevel(ComponentProvider.fromEntity(playerEntity)) >= 25;
+                return RPGStats.getHighestLevel(playerEntity) >= 25;
             }
             if (id.equals(LEVEL_50)) {
-                return RPGStats.getHighestLevel(ComponentProvider.fromEntity(playerEntity)) >= 50;
+                return RPGStats.getHighestLevel(playerEntity) >= 50;
             }
             if (id.equals(LEVELS_MAX)) {
-                return RPGStats.getLowestLevel(ComponentProvider.fromEntity(playerEntity)) >= 50;
+                return RPGStats.getLowestLevel(playerEntity) >= 50;
             }
         }
     
         if (id.getPath().startsWith("magic_")) {
             if (id.equals(MAGIC_10)) {
-                return RPGStats.getComponentLevel(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 10;
+                return RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, playerEntity) >= 10;
             }
             if (id.equals(MAGIC_25)) {
-                return RPGStats.getComponentLevel(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 25;
+                return RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, playerEntity) >= 25;
             }
             if (id.equals(MAGIC_50)) {
-                return RPGStats.getComponentLevel(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 50;
+                return RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, playerEntity) >= 50;
             }
         }
     
         if (id.getPath().startsWith("mining_")) {
             if (id.equals(MINING_10)) {
-                return RPGStats.getComponentLevel(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 10;
+                return RPGStats.getComponentLevel(StatComponents.MINING_COMPONENT, playerEntity) >= 10;
             }
             if (id.equals(MINING_25)) {
-                return RPGStats.getComponentLevel(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 25;
+                return RPGStats.getComponentLevel(StatComponents.MINING_COMPONENT, playerEntity) >= 25;
             }
             if (id.equals(MINING_50)) {
-                return RPGStats.getComponentLevel(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 50;
+                return RPGStats.getComponentLevel(StatComponents.MINING_COMPONENT, playerEntity) >= 50;
             }
         }
     
         if (id.getPath().startsWith("ranged_")) {
             if (id.equals(RANGED_10)) {
-                return RPGStats.getComponentLevel(RPGStats.RANGED_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 10;
+                return RPGStats.getComponentLevel(StatComponents.RANGED_COMPONENT, playerEntity) >= 10;
             }
             if (id.equals(RANGED_25)) {
-                return RPGStats.getComponentLevel(RPGStats.RANGED_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 25;
+                return RPGStats.getComponentLevel(StatComponents.RANGED_COMPONENT, playerEntity) >= 25;
             }
             if (id.equals(RANGED_50)) {
-                return RPGStats.getComponentLevel(RPGStats.RANGED_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 50;
+                return RPGStats.getComponentLevel(StatComponents.RANGED_COMPONENT, playerEntity) >= 50;
             }
         }
     
         if (id.getPath().startsWith("farming_")) {
             if (id.equals(FARMING_10)) {
-                return RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 10;
+                return RPGStats.getComponentLevel(StatComponents.FARMING_COMPONENT, playerEntity) >= 10;
             }
             if (id.equals(FARMING_25)) {
-                return RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 25;
+                return RPGStats.getComponentLevel(StatComponents.FARMING_COMPONENT, playerEntity) >= 25;
             }
             if (id.equals(FARMING_50)) {
-                return RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 50;
+                return RPGStats.getComponentLevel(StatComponents.FARMING_COMPONENT, playerEntity) >= 50;
             }
         }
     
         if (id.getPath().startsWith("defense_")) {
             if (id.equals(DEFENSE_10)) {
-                return RPGStats.getComponentLevel(RPGStats.DEFENSE_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 10;
+                return RPGStats.getComponentLevel(StatComponents.DEFENSE_COMPONENT, playerEntity) >= 10;
             }
             if (id.equals(DEFENSE_25)) {
-                return RPGStats.getComponentLevel(RPGStats.DEFENSE_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 25;
+                return RPGStats.getComponentLevel(StatComponents.DEFENSE_COMPONENT, playerEntity) >= 25;
             }
             if (id.equals(DEFENSE_50)) {
-                return RPGStats.getComponentLevel(RPGStats.DEFENSE_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 50;
+                return RPGStats.getComponentLevel(StatComponents.DEFENSE_COMPONENT, playerEntity) >= 50;
             }
         }
     
         if (id.getPath().startsWith("combat_")) {
             if (id.equals(COMBAT_10)) {
-                return RPGStats.getComponentLevel(RPGStats.MELEE_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 10;
+                return RPGStats.getComponentLevel(StatComponents.MELEE_COMPONENT, playerEntity) >= 10;
             }
             if (id.equals(COMBAT_25)) {
-                return RPGStats.getComponentLevel(RPGStats.MELEE_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 25;
+                return RPGStats.getComponentLevel(StatComponents.MELEE_COMPONENT, playerEntity) >= 25;
             }
             if (id.equals(COMBAT_50)) {
-                return RPGStats.getComponentLevel(RPGStats.MELEE_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 50;
+                return RPGStats.getComponentLevel(StatComponents.MELEE_COMPONENT, playerEntity) >= 50;
             }
         }
     
         if (id.getPath().startsWith("fishing_")) {
             if (id.equals(FISHING_10)) {
-                return RPGStats.getComponentLevel(RPGStats.FISHING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 10;
+                return RPGStats.getComponentLevel(StatComponents.FISHING_COMPONENT, playerEntity) >= 10;
             }
             if (id.equals(FISHING_25)) {
-                return RPGStats.getComponentLevel(RPGStats.FISHING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 25;
+                return RPGStats.getComponentLevel(StatComponents.FISHING_COMPONENT, playerEntity) >= 25;
             }
             if (id.equals(FISHING_50)) {
-                return RPGStats.getComponentLevel(RPGStats.FISHING_COMPONENT, ComponentProvider.fromEntity(playerEntity)) >= 50;
+                return RPGStats.getComponentLevel(StatComponents.FISHING_COMPONENT, playerEntity) >= 50;
             }
         }
         

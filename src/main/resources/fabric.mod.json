@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "rpgstats",
   "version": "${version}",
-
   "name": "RPGStats",
   "description": "RPGStats, Made for 1.16 Modfest",
   "authors": [
@@ -12,38 +11,44 @@
     "homepage": "https://github.com/P03W/RPGStats",
     "issues": "https://github.com/P03W/RPGStats/issues"
   },
-
   "license": "CC0-1.0",
   "icon": "assets/rpgstats/icon.png",
-
   "environment": "*",
   "entrypoints": {
     "main": [
       "mc.rpgstats.main.RPGStats"
+    ],
+    "cardinal-components": [
+      "mc.rpgstats.main.StatComponents"
     ]
   },
   "mixins": [
     "rpgstats.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
     "minecraft": ">1.16-"
   },
-
   "conflicts": {
     "moenchantments": "*"
   },
-
   "suggests": {
     "flamingo": "*"
   },
-
   "custom": {
     "modupdater": {
       "strategy": "curseforge",
       "projectID": 389800
-    }
+    },
+    "cardinal-components": [
+      "rpgstats:melee",
+      "rpgstats:ranged",
+      "rpgstats:defence",
+      "rpgstats:farming",
+      "rpgstats:magic",
+      "rpgstats:mining",
+      "rpgstats:fishing"
+    ]
   }
 }

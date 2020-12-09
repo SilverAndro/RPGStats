@@ -1,6 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
+import mc.rpgstats.main.StatComponents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.FishingBobberEntity;
 import net.minecraft.item.ItemStack;
@@ -23,9 +24,9 @@ public class FishingBobberMixin {
     public void onCatchItem(ItemStack usedItem, CallbackInfoReturnable<Integer> cir, PlayerEntity playerEntity, int i, LootContext.Builder builder, LootTable lootTable, List list, Iterator var7, ItemStack itemStack) {
         if (!playerEntity.world.isClient) {
             if (itemStack.getItem().isIn(ItemTags.FISHES)) {
-                RPGStats.addXpAndLevelUp(RPGStats.FISHING_COMPONENT, (ServerPlayerEntity)playerEntity, 3);
+                RPGStats.addXpAndLevelUp(StatComponents.FISHING_COMPONENT, (ServerPlayerEntity)playerEntity, 3);
             } else  {
-                RPGStats.addXpAndLevelUp(RPGStats.FISHING_COMPONENT, (ServerPlayerEntity)playerEntity, 1);
+                RPGStats.addXpAndLevelUp(StatComponents.FISHING_COMPONENT, (ServerPlayerEntity)playerEntity, 1);
             }
         }
     }

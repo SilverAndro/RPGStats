@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
+import mc.rpgstats.main.StatComponents;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +15,7 @@ public class TakeDamageMixin {
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void dodge(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         ServerPlayerEntity spe = (ServerPlayerEntity)(Object)this;
-        int level = RPGStats.getComponentLevel(RPGStats.DEFENSE_COMPONENT, ComponentProvider.fromEntity(spe));
+        int level = RPGStats.getComponentLevel(StatComponents.DEFENSE_COMPONENT, spe);
         float chance = 0f;
         if (level >= 50) {
             chance = 0.1f;

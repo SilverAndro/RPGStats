@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
+import mc.rpgstats.main.StatComponents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
@@ -15,7 +15,7 @@ public class StatusEffectsImmuneMixin {
     @Redirect(method = "applyUpdateEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", ordinal = 0))
     public boolean negatePoison(LivingEntity livingEntity, DamageSource source, float amount) {
         if (livingEntity instanceof ServerPlayerEntity) {
-            int level = RPGStats.getComponentLevel(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(livingEntity));
+            int level = RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
             if (level < 25) {
                 return livingEntity.damage(source, amount);
             }
@@ -28,7 +28,7 @@ public class StatusEffectsImmuneMixin {
     @Redirect(method = "applyUpdateEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", ordinal = 1))
     public boolean negateWither(LivingEntity livingEntity, DamageSource source, float amount) {
         if (livingEntity instanceof ServerPlayerEntity) {
-            int level = RPGStats.getComponentLevel(RPGStats.MAGIC_COMPONENT, ComponentProvider.fromEntity(livingEntity));
+            int level = RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
             if (level < 50) {
                 return livingEntity.damage(source, amount);
             }

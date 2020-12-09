@@ -15,16 +15,15 @@ public class RangedComponent implements IStatComponent {
     }
     
     @Override
-    public void fromTag(CompoundTag tag) {
+    public void readFromNbt(CompoundTag tag) {
         this.level = tag.getInt("level");
         this.xp = tag.getInt("xp");
     }
     
     @Override
-    public CompoundTag toTag(CompoundTag tag) {
+    public void writeToNbt(CompoundTag tag) {
         tag.putInt("xp", this.xp);
         tag.putInt("level", this.level);
-        return tag;
     }
     
     @Override

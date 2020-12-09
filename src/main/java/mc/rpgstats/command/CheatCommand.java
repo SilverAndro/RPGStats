@@ -3,10 +3,9 @@ package mc.rpgstats.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import mc.rpgstats.component.IStatComponent;
 import mc.rpgstats.main.RPGStats;
-import nerdhub.cardinal.components.api.ComponentType;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -108,13 +107,12 @@ public class CheatCommand {
     
     private static int executeAdd(ServerCommandSource source, Identifier id, Collection<ServerPlayerEntity> targets, CommandType type, int amount) {
         for (ServerPlayerEntity target : targets) {
-            ComponentType<? extends IStatComponent> statFromID = RPGStats.statFromID(id);
+            ComponentKey<? extends IStatComponent> statFromID = RPGStats.statFromID(id);
             if (type == CommandType.XP) {
                 RPGStats.addXpAndLevelUp(statFromID, target, amount);
             }
             if (type == CommandType.LEVELS) {
-                ComponentProvider provider = ComponentProvider.fromEntity(target);
-                RPGStats.setComponentLevel(statFromID, provider, RPGStats.getComponentXP(statFromID, provider) + amount);
+                RPGStats.setComponentLevel(statFromID, target, RPGStats.getComponentXP(statFromID, target) + amount);
             }
         }
         return 1;
@@ -122,13 +120,12 @@ public class CheatCommand {
     
     private static int executeSet(ServerCommandSource source, Identifier id, Collection<ServerPlayerEntity> targets, CommandType type, int amount) {
         for (ServerPlayerEntity target : targets) {
-            ComponentType<? extends IStatComponent> statFromID = RPGStats.statFromID(id);
-            ComponentProvider provider = ComponentProvider.fromEntity(target);
+            ComponentKey<? extends IStatComponent> statFromID = RPGStats.statFromID(id);
             if (type == CommandType.XP) {
-                RPGStats.setComponentXP(statFromID, provider, amount);
+                RPGStats.setComponentXP(statFromID, target, amount);
             }
             if (type == CommandType.LEVELS) {
-                RPGStats.setComponentLevel(statFromID, provider, amount);
+                RPGStats.setComponentLevel(statFromID, target, amount);
             }
         }
         return 1;

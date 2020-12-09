@@ -1,7 +1,7 @@
 package mc.rpgstats.event;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import mc.rpgstats.component.IStatComponent;
-import nerdhub.cardinal.components.api.ComponentType;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,5 +19,5 @@ public interface LevelUpCallback {
             }
         });
     
-    void onLevelUp(PlayerEntity player, ComponentType<? extends IStatComponent> type, int newLevel);
+    void onLevelUp(PlayerEntity player, ComponentKey<? extends IStatComponent> type, int newLevel);
 }

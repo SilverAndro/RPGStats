@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
+import mc.rpgstats.main.StatComponents;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
@@ -28,17 +28,17 @@ public abstract class KillMixin {
 				ServerPlayerEntity serverPlayer = (ServerPlayerEntity)entity;
 				if (source.isProjectile()) {
 					if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-						RPGStats.addXpAndLevelUp(RPGStats.RANGED_COMPONENT, serverPlayer, 130);
+						RPGStats.addXpAndLevelUp(StatComponents.RANGED_COMPONENT, serverPlayer, 130);
 					} else {
-						RPGStats.addXpAndLevelUp(RPGStats.RANGED_COMPONENT, serverPlayer, 1);
+						RPGStats.addXpAndLevelUp(StatComponents.RANGED_COMPONENT, serverPlayer, 1);
 					}
 				} else if (source.getMagic()) {
-					RPGStats.addXpAndLevelUp(RPGStats.MAGIC_COMPONENT, serverPlayer, 1);
+					RPGStats.addXpAndLevelUp(StatComponents.MAGIC_COMPONENT, serverPlayer, 1);
 				} else if (!source.isExplosive() && !source.isFire()) {
 					if (le instanceof PassiveEntity) {
-						RPGStats.addXpAndLevelUp(RPGStats.FARMING_COMPONENT, serverPlayer, 1);
+						RPGStats.addXpAndLevelUp(StatComponents.FARMING_COMPONENT, serverPlayer, 1);
 					} else {
-						int level = RPGStats.getComponentLevel(RPGStats.MELEE_COMPONENT, ComponentProvider.fromEntity(serverPlayer));
+						int level = RPGStats.getComponentLevel(StatComponents.MELEE_COMPONENT, serverPlayer);
 						
 						int duration = level >= 25 ? level >= 50 ? 200 : 100 : 0;
 						if (duration > 0) {
@@ -46,9 +46,9 @@ public abstract class KillMixin {
 						}
 						
 						if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-							RPGStats.addXpAndLevelUp(RPGStats.MELEE_COMPONENT, serverPlayer, 130);
+							RPGStats.addXpAndLevelUp(StatComponents.MELEE_COMPONENT, serverPlayer, 130);
 						} else {
-							RPGStats.addXpAndLevelUp(RPGStats.MELEE_COMPONENT, serverPlayer, 1);
+							RPGStats.addXpAndLevelUp(StatComponents.MELEE_COMPONENT, serverPlayer, 1);
 						}
 					}
 				}

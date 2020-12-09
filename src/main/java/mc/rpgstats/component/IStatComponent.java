@@ -1,6 +1,6 @@
 package mc.rpgstats.component;
 
-import nerdhub.cardinal.components.api.component.Component;
+import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.entity.Entity;
 
 public interface IStatComponent extends Component {

@@ -1,6 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
+import mc.rpgstats.main.StatComponents;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -23,10 +24,10 @@ public class BlockBreakMixin {
             if (block instanceof PlantBlock || block instanceof PumpkinBlock || block instanceof MelonBlock || block instanceof CocoaBlock) {
                 if (block instanceof CropBlock) {
                     if (((CropBlock)block).isMature(state)) {
-                        RPGStats.addXpAndLevelUp(RPGStats.FARMING_COMPONENT, serverPlayer, 1);
+                        RPGStats.addXpAndLevelUp(StatComponents.FARMING_COMPONENT, serverPlayer, 1);
                     }
                 } else {
-                    RPGStats.addXpAndLevelUp(RPGStats.FARMING_COMPONENT, serverPlayer, 1);
+                    RPGStats.addXpAndLevelUp(StatComponents.FARMING_COMPONENT, serverPlayer, 1);
                 }
             }
     
@@ -36,27 +37,27 @@ public class BlockBreakMixin {
                     block == Blocks.COAL_ORE ||
                         block == Blocks.NETHER_GOLD_ORE
                 ) {
-                    RPGStats.addXpAndLevelUp(RPGStats.MINING_COMPONENT, serverPlayer, 1);
+                    RPGStats.addXpAndLevelUp(StatComponents.MINING_COMPONENT, serverPlayer, 1);
                 } else if (
                     block == Blocks.IRON_ORE ||
                         block == Blocks.NETHER_QUARTZ_ORE
                 ) {
-                    RPGStats.addXpAndLevelUp(RPGStats.MINING_COMPONENT, serverPlayer, 2);
+                    RPGStats.addXpAndLevelUp(StatComponents.MINING_COMPONENT, serverPlayer, 2);
                 } else if (
                     block == Blocks.GOLD_ORE ||
                         block == Blocks.LAPIS_ORE ||
                         block == Blocks.REDSTONE_ORE
                 ) {
-                    RPGStats.addXpAndLevelUp(RPGStats.MINING_COMPONENT, serverPlayer, 3);
+                    RPGStats.addXpAndLevelUp(StatComponents.MINING_COMPONENT, serverPlayer, 3);
                 } else if (block == Blocks.EMERALD_ORE) {
-                    RPGStats.addXpAndLevelUp(RPGStats.MINING_COMPONENT, serverPlayer, 4);
+                    RPGStats.addXpAndLevelUp(StatComponents.MINING_COMPONENT, serverPlayer, 4);
                 } else if (
                     block == Blocks.DIAMOND_ORE ||
                         block == Blocks.ANCIENT_DEBRIS
                 ) {
-                    RPGStats.addXpAndLevelUp(RPGStats.MINING_COMPONENT, serverPlayer, 5);
+                    RPGStats.addXpAndLevelUp(StatComponents.MINING_COMPONENT, serverPlayer, 5);
                 } else {
-                    RPGStats.addXpAndLevelUp(RPGStats.MINING_COMPONENT, serverPlayer, 2);
+                    RPGStats.addXpAndLevelUp(StatComponents.MINING_COMPONENT, serverPlayer, 2);
                 }
             }
         }

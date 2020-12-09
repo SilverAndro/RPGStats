@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
+import mc.rpgstats.main.StatComponents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
 import net.minecraft.entity.Entity;
@@ -30,8 +30,8 @@ public class BonemealGrowMixin {
         //noinspection ConstantConditions
         if ((Entity) (Object) this instanceof ServerPlayerEntity) {
             if (sneaking && ((ServerPlayerEntity)(Object)this).getMainHandStack().getItem() instanceof HoeItem && new Random().nextBoolean()) {
-                Entity entity = (Entity) (Object) this;
-                int level = RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(entity));
+                Entity entity = (Entity)(Object)this;
+                int level = RPGStats.getComponentLevel(StatComponents.FARMING_COMPONENT, (ServerPlayerEntity)entity);
                 World world = entity.world;
                 int amount = level >= 25 ? level >= 50 ? 5 : 3 : 0;
                 BlockPos blockPos = entity.getBlockPos();

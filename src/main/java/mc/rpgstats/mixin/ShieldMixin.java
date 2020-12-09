@@ -1,6 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
+import mc.rpgstats.main.StatComponents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,6 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ShieldMixin {
     @Inject(at = @At("HEAD"), method = "damageShield")
     private void onShieldUse(float amount, CallbackInfo ci) {
-        RPGStats.addXpAndLevelUp(RPGStats.DEFENSE_COMPONENT, (ServerPlayerEntity)(Object)this, Math.max(1, (int)Math.floor(amount / 2.5)));
+        RPGStats.addXpAndLevelUp(StatComponents.DEFENSE_COMPONENT, (ServerPlayerEntity)(Object)this, Math.max(1, (int)Math.floor(amount / 2.5)));
     }
 }

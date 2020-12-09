@@ -1,16 +1,11 @@
 package mc.rpgstats.main;
 
+import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import mc.rpgstats.advancemnents.AdvancementHelper;
 import mc.rpgstats.command.CheatCommand;
 import mc.rpgstats.command.StatsCommand;
-import mc.rpgstats.component.*;
+import mc.rpgstats.component.IStatComponent;
 import mc.rpgstats.event.LevelUpCallback;
-import nerdhub.cardinal.components.api.ComponentRegistry;
-import nerdhub.cardinal.components.api.ComponentType;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
-import nerdhub.cardinal.components.api.event.EntityComponentCallback;
-import nerdhub.cardinal.components.api.util.EntityComponents;
-import nerdhub.cardinal.components.api.util.RespawnCopyStrategy;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -24,22 +19,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class RPGStats implements ModInitializer {
     public static final String MOD_ID = "rpgstats";
-    
-    public static ArrayList<ComponentType<? extends IStatComponent>> statList = new ArrayList<>();
-    public static HashMap<Identifier, Integer> idToComponentIndexMap = new HashMap<>();
-    
-    // Stat components
-    public static final ComponentType<MeleeComponent> MELEE_COMPONENT = registerSkill(new Identifier("rpgstats:melee"), MeleeComponent.class);
-    public static final ComponentType<RangedComponent> RANGED_COMPONENT = registerSkill(new Identifier("rpgstats:ranged"), RangedComponent.class);
-    public static final ComponentType<DefenseComponent> DEFENSE_COMPONENT = registerSkill(new Identifier("rpgstats:defence"), DefenseComponent.class);
-    public static final ComponentType<FarmingComponent> FARMING_COMPONENT = registerSkill(new Identifier("rpgstats:farming"), FarmingComponent.class);
-    public static final ComponentType<MagicComponent> MAGIC_COMPONENT = registerSkill(new Identifier("rpgstats:magic"), MagicComponent.class);
-    public static final ComponentType<MiningComponent> MINING_COMPONENT = registerSkill(new Identifier("rpgstats:mining"), MiningComponent.class);
-    public static final ComponentType<FishingComponent> FISHING_COMPONENT = registerSkill(new Identifier("rpgstats:fishing"), FishingComponent.class);
     
     public static ArrayList<ServerPlayerEntity> needsStatFix = new ArrayList<>();
     
@@ -48,17 +33,6 @@ public class RPGStats implements ModInitializer {
     @Override
     public void onInitialize() {
         System.out.println("RPGStats is starting...");
-        
-        // Init components on players
-        EntityComponentCallback.event(PlayerEntity.class).register((player, components) -> {
-            components.put(MAGIC_COMPONENT, new MagicComponent(player));
-            components.put(MINING_COMPONENT, new MiningComponent(player));
-            components.put(FISHING_COMPONENT, new FishingComponent(player));
-            components.put(FARMING_COMPONENT, new FarmingComponent(player));
-            components.put(DEFENSE_COMPONENT, new DefenseComponent(player));
-            components.put(RANGED_COMPONENT, new RangedComponent(player));
-            components.put(MELEE_COMPONENT, new MeleeComponent(player));
-        });
         
         // Command
         CommandRegistrationCallback.EVENT.register(
@@ -71,18 +45,18 @@ public class RPGStats implements ModInitializer {
         // Syncing and advancements
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
             tickCount++;
-            if (tickCount >= 10) {
+            if (tickCount >= 50) {
                 Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
                 PlayerStream.all(server).forEach(
                     (player) -> {
                         if (needsStatFix.contains(player) && player.isAlive()) {
-                            softLevelUp(DEFENSE_COMPONENT, player);
-                            softLevelUp(FARMING_COMPONENT, player);
-                            softLevelUp(MAGIC_COMPONENT, player);
-                            softLevelUp(MELEE_COMPONENT, player);
-                            softLevelUp(MINING_COMPONENT, player);
-                            softLevelUp(RANGED_COMPONENT, player);
-                            softLevelUp(FISHING_COMPONENT, player);
+                            softLevelUp(StatComponents.DEFENSE_COMPONENT, player);
+                            softLevelUp(StatComponents.FARMING_COMPONENT, player);
+                            softLevelUp(StatComponents.MAGIC_COMPONENT, player);
+                            softLevelUp(StatComponents.MELEE_COMPONENT, player);
+                            softLevelUp(StatComponents.MINING_COMPONENT, player);
+                            softLevelUp(StatComponents.RANGED_COMPONENT, player);
+                            softLevelUp(StatComponents.FISHING_COMPONENT, player);
                             needsStatFix.remove(player);
                         }
                         
@@ -96,7 +70,7 @@ public class RPGStats implements ModInitializer {
                             }
                         }
                         
-                        if (player.getBlockPos().getY() <= 40 && getComponentLevel(RPGStats.MINING_COMPONENT, ComponentProvider.fromEntity(player)) >= 50) {
+                        if (player.getBlockPos().getY() <= 40 && getComponentLevel(StatComponents.MINING_COMPONENT, player) >= 50) {
                             player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 13 * 20));
                             player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 2 * 20, 1));
                         }
@@ -110,30 +84,29 @@ public class RPGStats implements ModInitializer {
     }
     
     // Helper methods for components
-    public static void setComponentXP(ComponentType<? extends IStatComponent> type, ComponentProvider provider, int newValue) {
-        type.get(provider).setXP(newValue);
+    public static void setComponentXP(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player, int newValue) {
+        type.get(player).setXP(newValue);
     }
     
-    public static int getComponentXP(ComponentType<? extends IStatComponent> type, ComponentProvider provider) {
-        return type.get(provider).getXP();
+    public static int getComponentXP(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player) {
+        return type.get(player).getXP();
     }
     
-    public static void setComponentLevel(ComponentType<? extends IStatComponent> type, ComponentProvider provider, int newValue) {
-        type.get(provider).setLevel(newValue);
+    public static void setComponentLevel(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player, int newValue) {
+        type.get(player).setLevel(newValue);
     }
     
-    public static int getComponentLevel(ComponentType<? extends IStatComponent> type, ComponentProvider provider) {
-        return type.get(provider).getLevel();
+    public static int getComponentLevel(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player) {
+        return type.get(player).getLevel();
     }
     
     public static int calculateXpNeededToReachLevel(int level) {
         return (int)Math.floor(Math.pow(level, 2.05) * 0.5) + 80;
     }
     
-    public static void addXpAndLevelUp(ComponentType<? extends IStatComponent> type, ServerPlayerEntity entity, int addedXP) {
-        ComponentProvider provider = ComponentProvider.fromEntity(entity);
-        int nextXP = getComponentXP(type, provider) + addedXP;
-        int currentLevel = getComponentLevel(type, provider);
+    public static void addXpAndLevelUp(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player, int addedXP) {
+        int nextXP = getComponentXP(type, player) + addedXP;
+        int currentLevel = getComponentLevel(type, player);
         
         if (currentLevel < 50) {
             // Enough to level up
@@ -142,78 +115,70 @@ public class RPGStats implements ModInitializer {
                 nextXP -= nextXPForLevelUp;
                 currentLevel += 1;
                 
-                setComponentLevel(type, provider, currentLevel);
-                ((PlayerEntity)type.get(provider).getEntity()).sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + type.get(provider).getName() + "§r level! You are now level §6" + type.get(provider).getLevel()), false);
-                type.get(provider).onLevelUp(false);
+                setComponentLevel(type, player, currentLevel);
+                ((PlayerEntity)type.get(player).getEntity()).sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + type.get(player).getName() + "§r level! You are now level §6" + type.get(player).getLevel()), false);
+                type.get(player).onLevelUp(false);
                 
-                LevelUpCallback.EVENT.invoker().onLevelUp(entity, type, currentLevel);
+                LevelUpCallback.EVENT.invoker().onLevelUp(player, type, currentLevel);
     
                 nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
             }
-            setComponentXP(type, provider, nextXP);
+            setComponentXP(type, player, nextXP);
         }
     }
     
-    public static String getFormattedLevelData(ComponentType<? extends IStatComponent> type, ComponentProvider provider) {
-        int currentLevel = getComponentLevel(type, provider);
-        int xp = getComponentXP(type, provider);
+    public static String getFormattedLevelData(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player) {
+        int currentLevel = getComponentLevel(type, player);
+        int xp = getComponentXP(type, player);
         if (currentLevel < 50) {
             int nextXP = calculateXpNeededToReachLevel(currentLevel + 1);
-            return "§6" + type.get(provider).getCapName() + "§r - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
+            return "§6" + type.get(player).getCapName() + "§r - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
         } else {
-            return "§6" + type.get(provider).getCapName() + "§r - Level: " + currentLevel;
+            return "§6" + type.get(player).getCapName() + "§r - Level: " + currentLevel;
         }
     }
     
-    public static String getNotFormattedLevelData(ComponentType<? extends IStatComponent> type, ComponentProvider provider) {
-        int currentLevel = getComponentLevel(type, provider);
-        int xp = getComponentXP(type, provider);
+    public static String getNotFormattedLevelData(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player) {
+        int currentLevel = getComponentLevel(type, player);
+        int xp = getComponentXP(type, player);
         if (currentLevel < 50) {
             int nextXP = calculateXpNeededToReachLevel(currentLevel + 1);
-            return type.get(provider).getCapName() + " - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
+            return type.get(player).getCapName() + " - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
         } else {
-            return "" + type.get(provider).getCapName() + " - Level: " + currentLevel;
+            return "" + type.get(player).getCapName() + " - Level: " + currentLevel;
         }
     }
     
-    public static ArrayList<Integer> getStatLevelsForProvider(ComponentProvider provider) {
+    public static ArrayList<Integer> getStatLevelsForPlayer(ServerPlayerEntity player) {
         ArrayList<Integer> result = new ArrayList<>();
-        for (ComponentType<? extends IStatComponent> stat : statList) {
-            result.add(getComponentLevel(stat, provider));
+        for (ComponentKey<? extends IStatComponent> stat : StatComponents.statList) {
+            result.add(getComponentLevel(stat, player));
         }
         return result;
     }
     
-    public static int getHighestLevel(ComponentProvider provider) {
-        return Collections.max(getStatLevelsForProvider(provider));
+    public static int getHighestLevel(ServerPlayerEntity player) {
+        return Collections.max(getStatLevelsForPlayer(player));
     }
     
-    public static int getLowestLevel(ComponentProvider provider) {
-        return Collections.min(getStatLevelsForProvider(provider));
+    public static int getLowestLevel(ServerPlayerEntity player) {
+        return Collections.min(getStatLevelsForPlayer(player));
     }
     
-    public static void softLevelUp(ComponentType<? extends IStatComponent> type, ServerPlayerEntity player) {
-        int savedLevel = getComponentLevel(type, ComponentProvider.fromEntity(player));
+    public static void softLevelUp(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player) {
+        int savedLevel = getComponentLevel(type, player);
         if (savedLevel > 50) {
-            setComponentLevel(type, ComponentProvider.fromEntity(player), 50);
-            setComponentXP(type, ComponentProvider.fromEntity(player), 0);
+            setComponentLevel(type, player, 50);
+            setComponentXP(type, player, 0);
             savedLevel = 50;
         }
         for (int i = 1; i <= savedLevel; i++) {
-            setComponentLevel(type, ComponentProvider.fromEntity(player), i);
-            type.get(ComponentProvider.fromEntity(player)).onLevelUp(true);
+            setComponentLevel(type, player, i);
+            type.get(player).onLevelUp(true);
         }
     }
     
-    public static <T extends IStatComponent> ComponentType<T> registerSkill(Identifier componentID, Class<T> componentClass) {
-        ComponentType<T> componentType = ComponentRegistry.INSTANCE.registerIfAbsent(componentID, componentClass);
-        statList.add(componentType);
-        idToComponentIndexMap.put(componentID, statList.indexOf(componentType));
-        EntityComponents.setRespawnCopyStrategy(componentType, RespawnCopyStrategy.ALWAYS_COPY);
-        return componentType;
-    }
-    
-    public static ComponentType<? extends IStatComponent> statFromID(Identifier ID) {
-        return statList.get(idToComponentIndexMap.get(ID));
+    public static ComponentKey<? extends IStatComponent> statFromID(Identifier ID) {
+        return StatComponents.statList.get(StatComponents.idToComponentIndexMap.get(ID));
     }
 }

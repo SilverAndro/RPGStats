@@ -1,6 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
+import mc.rpgstats.main.StatComponents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.SweetBerryBushBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -27,7 +28,7 @@ public class SweetBerryHarvestMixin {
     )
     public void grantXpOnHarvestBerry(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
         if (!world.isClient) {
-            RPGStats.addXpAndLevelUp(RPGStats.FARMING_COMPONENT, (ServerPlayerEntity)player, 1);
+            RPGStats.addXpAndLevelUp(StatComponents.FARMING_COMPONENT, (ServerPlayerEntity)player, 1);
         }
     }
 }

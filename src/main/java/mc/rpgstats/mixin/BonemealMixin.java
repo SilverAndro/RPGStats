@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
-import nerdhub.cardinal.components.api.component.ComponentProvider;
+import mc.rpgstats.main.StatComponents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.DeadCoralWallFanBlock;
@@ -34,17 +34,15 @@ public class BonemealMixin {
     private static void groundEffectiveness(ItemStack stack, World world, BlockPos blockPos, Direction facing, CallbackInfoReturnable<Boolean> cir) {
         if (world.getBlockState(blockPos).isOf(Blocks.WATER) && world.getFluidState(blockPos).getLevel() == 8) {
             if (world instanceof ServerWorld && stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
-                int level = RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(stack.getHolder()));
+                int level = RPGStats.getComponentLevel(StatComponents.FARMING_COMPONENT, (ServerPlayerEntity)stack.getHolder());
                 cursedLoop:
                 for (int i = 0; i < level; ++i) {
                     BlockPos blockPos2 = blockPos;
-                    Biome biome = world.getBiome(blockPos);
                     BlockState blockState = Blocks.SEAGRASS.getDefaultState();
 
                     int k;
                     for (k = 0; k < i / (level / 50); ++k) {
                         blockPos2 = blockPos2.add(RANDOM.nextInt(3) - 1, (RANDOM.nextInt(3) - 1) * RANDOM.nextInt(3) / 2, RANDOM.nextInt(3) - 1);
-                        biome = world.getBiome(blockPos2);
                         if (world.getBlockState(blockPos2).isFullCube(world, blockPos2)) {
                             continue cursedLoop;
                         }
@@ -82,7 +80,7 @@ public class BonemealMixin {
     @Inject(at = @At("HEAD"), method = "useOnFertilizable")
     private static void onGrowable(ItemStack stack, World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
-            int level = RPGStats.getComponentLevel(RPGStats.FARMING_COMPONENT, ComponentProvider.fromEntity(stack.getHolder()));
+            int level = RPGStats.getComponentLevel(StatComponents.FARMING_COMPONENT, (ServerPlayerEntity)stack.getHolder());
             BlockState blockState = world.getBlockState(pos);
             if (blockState.getBlock() instanceof Fertilizable) {
                 Fertilizable fertilizable = (Fertilizable)blockState.getBlock();

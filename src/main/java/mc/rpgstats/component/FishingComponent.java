@@ -18,19 +18,6 @@ public class FishingComponent implements IStatComponent {
     }
     
     @Override
-    public void fromTag(CompoundTag tag) {
-        this.level = tag.getInt("level");
-        this.xp = tag.getInt("xp");
-    }
-    
-    @Override
-    public CompoundTag toTag(CompoundTag tag) {
-        tag.putInt("xp", this.xp);
-        tag.putInt("level", this.level);
-        return tag;
-    }
-    
-    @Override
     public Entity getEntity() {
         return player;
     }
@@ -78,5 +65,17 @@ public class FishingComponent implements IStatComponent {
                 player.sendMessage(new LiteralText("§aTeach a man to fish§r - Extra saturation when eating"), false);
             }
         }
+    }
+    
+    @Override
+    public void readFromNbt(CompoundTag tag) {
+        this.level = tag.getInt("level");
+        this.xp = tag.getInt("xp");
+    }
+    
+    @Override
+    public void writeToNbt(CompoundTag tag) {
+        tag.putInt("xp", this.xp);
+        tag.putInt("level", this.level);
     }
 }

@@ -1,6 +1,7 @@
 package mc.rpgstats.main;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import io.netty.buffer.Unpooled;
 import mc.rpgstats.advancemnents.AdvancementHelper;
 import mc.rpgstats.command.CheatCommand;
 import mc.rpgstats.command.StatsCommand;
@@ -9,11 +10,13 @@ import mc.rpgstats.event.LevelUpCallback;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
@@ -25,6 +28,7 @@ import java.util.Collections;
 
 public class RPGStats implements ModInitializer {
     public static final String MOD_ID = "rpgstats";
+    public static final Identifier SYNC_STATS_PACKET_ID = new Identifier(MOD_ID, "sync_stats");
     
     public static ArrayList<ServerPlayerEntity> needsStatFix = new ArrayList<>();
     
@@ -68,6 +72,28 @@ public class RPGStats implements ModInitializer {
                                     }
                                 }
                             }
+                        }
+                        
+                        // Client has the mod installed
+                        if (ServerSidePacketRegistry.INSTANCE.canPlayerReceive(player, SYNC_STATS_PACKET_ID)) {
+                            int count = StatComponents.statList.size();
+    
+                            PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+                            
+                            // How many stats in packet
+                            passedData.writeInt(count);
+                            // For each stat
+                            for (Identifier statIdent : StatComponents.idToComponentIndexMap.keySet()) {
+                                // Write the stat identifier
+                                passedData.writeIdentifier(statIdent);
+                                // Get the actual key
+                                ComponentKey<? extends IStatComponent> stat = statFromID(statIdent);
+                                // Write the level and XP
+                                passedData.writeInt(getComponentLevel(stat, player));
+                                passedData.writeInt(getComponentXP(stat, player));
+                            }
+                            
+                            ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, SYNC_STATS_PACKET_ID, passedData);
                         }
                         
                         if (player.getBlockPos().getY() <= 40 && getComponentLevel(StatComponents.MINING_COMPONENT, player) >= 50) {

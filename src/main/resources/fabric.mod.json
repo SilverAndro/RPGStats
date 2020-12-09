@@ -18,6 +18,9 @@
     "main": [
       "mc.rpgstats.main.RPGStats"
     ],
+    "client": [
+      "mc.rpgstats.main.RPGStatsClient"
+    ],
     "cardinal-components": [
       "mc.rpgstats.main.StatComponents"
     ]

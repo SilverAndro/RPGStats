@@ -2,6 +2,7 @@ package mc.rpgstats.main;
 
 import mc.rpgstats.client.screen.RPGStatDisplayGUI;
 import mc.rpgstats.client.screen.RPGStatDisplayScreen;
+import mc.rpgstats.component.IStatComponent;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
@@ -13,9 +14,10 @@ import net.minecraft.util.Pair;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.HashMap;
+import java.util.Optional;
 
 public class RPGStatsClient implements ClientModInitializer {
-    public static HashMap<Identifier, Pair<Integer, Integer>> currentStats = new HashMap<>();
+    public static HashMap<IStatComponent, Pair<Integer, Integer>> currentStats = new HashMap<>();
     
     private static KeyBinding openGUIKeybind;
     
@@ -32,7 +34,9 @@ public class RPGStatsClient implements ClientModInitializer {
                 Identifier statIdent = byteBuf.readIdentifier();
                 int level = byteBuf.readInt();
                 int xp = byteBuf.readInt();
-                currentStats.put(statIdent, new Pair<>(level, xp));
+    
+                Optional<? extends IStatComponent> possible = RPGStats.statFromID(statIdent).maybeGet(client.player);
+                possible.ifPresent(iStatComponent -> currentStats.put(iStatComponent, new Pair<>(level, xp)));
             }
         });
     

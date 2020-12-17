@@ -14,6 +14,10 @@ repositories {
 	maven {
 		url "https://dl.bintray.com/ladysnake/libs"
 	}
+	maven {
+		name = "CottonMC"
+		url = "https://server.bbkr.space/artifactory/libs-release"
+	}
 }
 
 dependencies {
@@ -24,13 +28,17 @@ dependencies {
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
+	// LibGui
+	modImplementation "io.github.cottonmc:LibGui:${project.libgui_version}"
+	include "io.github.cottonmc:LibGui:${project.libgui_version}"
+
 	// Cardinal components base
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.7.9"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:2.7.9"
+	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-base:${project.cca_version}"
 
 	// Cardinal components entity
-	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:2.7.9"
-	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:2.7.9"
+	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
+	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 }
 
 processResources {

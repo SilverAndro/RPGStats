@@ -10,8 +10,8 @@ import mc.rpgstats.event.LevelUpCallback;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.fabricmc.fabric.api.server.PlayerStream;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -51,7 +51,7 @@ public class RPGStats implements ModInitializer {
             tickCount++;
             if (tickCount >= 10) {
                 Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
-                PlayerStream.all(server).forEach(
+                PlayerLookup.all(server).forEach(
                     (player) -> {
                         if (needsStatFix.contains(player) && player.isAlive()) {
                             softLevelUp(StatComponents.DEFENSE_COMPONENT, player);
@@ -75,7 +75,7 @@ public class RPGStats implements ModInitializer {
                         }
                         
                         // Client has the mod installed
-                        if (ServerSidePacketRegistry.INSTANCE.canPlayerReceive(player, SYNC_STATS_PACKET_ID)) {
+                        if (ServerPlayNetworking.canSend(player, SYNC_STATS_PACKET_ID)) {
                             int count = StatComponents.statList.size();
     
                             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
@@ -93,7 +93,7 @@ public class RPGStats implements ModInitializer {
                                 passedData.writeInt(getComponentXP(stat, player));
                             }
                             
-                            ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, SYNC_STATS_PACKET_ID, passedData);
+                            ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, passedData);
                         }
                         
                         if (player.getBlockPos().getY() <= 40 && getComponentLevel(StatComponents.MINING_COMPONENT, player) >= 50) {

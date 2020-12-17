@@ -3,11 +3,14 @@ package mc.rpgstats.command;
 import com.mojang.brigadier.CommandDispatcher;
 import mc.rpgstats.main.RPGStats;
 import mc.rpgstats.main.StatComponents;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.util.Formatting;
 
 public class StatsCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
@@ -18,14 +21,28 @@ public class StatsCommand {
                         commandContext.getSource(), (ServerPlayerEntity)commandContext.getSource().getEntity()
                     )
                 ).then(
-                CommandManager.argument(
-                    "targets", EntityArgumentType.player()
+                CommandManager.literal("GUI").executes(
+                    (commandContext) -> {
+                        ServerCommandSource source = commandContext.getSource();
+                        ServerPlayerEntity player = source.getPlayer();
+                        if (ServerPlayNetworking.canSend(player, RPGStats.OPEN_GUI) && false) {
+                            ServerPlayNetworking.send(player, RPGStats.OPEN_GUI, PacketByteBufs.empty());
+                            return 1;
+                        } else {
+                            player.sendMessage(new LiteralText("You don't have RPGStats installed on your client, cant open GUI").formatted(Formatting.RED), false);
+                            return 0;
+                        }
+                    }
                 )
-                    .executes(
-                        (commandContext) -> execute(
-                            commandContext.getSource(), EntityArgumentType.getPlayer(commandContext, "targets")
+            ).then(CommandManager.literal("for")
+                .then(
+                    CommandManager.argument("targets", EntityArgumentType.player())
+                        .executes(
+                            (commandContext) -> execute(
+                                commandContext.getSource(), EntityArgumentType.getPlayer(commandContext, "targets")
+                            )
                         )
-                    )
+                )
             )
         );
     }
@@ -46,7 +63,7 @@ public class StatsCommand {
         } else if (target != null) {
             if (source.getEntity() == null) {
                 source.sendFeedback(new LiteralText("Stats for " + target.getEntityName()), false);
-    
+                
                 source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(StatComponents.MELEE_COMPONENT, target)), false);
                 source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(StatComponents.RANGED_COMPONENT, target)), false);
                 source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(StatComponents.DEFENSE_COMPONENT, target)), false);
@@ -59,7 +76,7 @@ public class StatsCommand {
                 ServerPlayerEntity targeted = (ServerPlayerEntity)source.getEntity();
                 
                 spe.sendMessage(new LiteralText("§aRPGStats >§r Stats for " + targeted.getEntityName()), false);
-    
+                
                 spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.MELEE_COMPONENT, targeted)), false);
                 spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.RANGED_COMPONENT, targeted)), false);
                 spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.DEFENSE_COMPONENT, targeted)), false);

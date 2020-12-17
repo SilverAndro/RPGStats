@@ -29,6 +29,7 @@ import java.util.Collections;
 public class RPGStats implements ModInitializer {
     public static final String MOD_ID = "rpgstats";
     public static final Identifier SYNC_STATS_PACKET_ID = new Identifier(MOD_ID, "sync_stats");
+    public static final Identifier OPEN_GUI = new Identifier(MOD_ID, "open_gui");
     
     public static ArrayList<ServerPlayerEntity> needsStatFix = new ArrayList<>();
     

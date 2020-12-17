@@ -50,7 +50,7 @@ public class RPGStats implements ModInitializer {
         // Syncing and advancements
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
             tickCount++;
-            if (tickCount >= 10) {
+            if (tickCount >= 20) {
                 Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
                 PlayerLookup.all(server).forEach(
                     (player) -> {

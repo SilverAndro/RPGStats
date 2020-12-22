@@ -7,6 +7,8 @@ import mc.rpgstats.command.CheatCommand;
 import mc.rpgstats.command.StatsCommand;
 import mc.rpgstats.component.IStatComponent;
 import mc.rpgstats.event.LevelUpCallback;
+import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
+import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -33,11 +35,16 @@ public class RPGStats implements ModInitializer {
     
     public static ArrayList<ServerPlayerEntity> needsStatFix = new ArrayList<>();
     
+    public static RPGStatsConfig configUnsafe;
+    
     private int tickCount = 0;
     
     @Override
     public void onInitialize() {
         System.out.println("RPGStats is starting...");
+        
+        // Config
+        AutoConfig.register(RPGStatsConfig.class, JanksonConfigSerializer::new);
         
         // Command
         CommandRegistrationCallback.EVENT.register(
@@ -128,7 +135,8 @@ public class RPGStats implements ModInitializer {
     }
     
     public static int calculateXpNeededToReachLevel(int level) {
-        return (int)Math.floor(Math.pow(level, 2.05) * 0.5) + 80;
+        RPGStatsConfig config = getConfig();
+        return (int)Math.floor(Math.pow(level, config.scaling.power) * config.scaling.scale) + config.scaling.base;
     }
     
     public static void addXpAndLevelUp(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player, int addedXP) {
@@ -207,5 +215,12 @@ public class RPGStats implements ModInitializer {
     
     public static ComponentKey<? extends IStatComponent> statFromID(Identifier ID) {
         return StatComponents.statList.get(StatComponents.idToComponentIndexMap.get(ID));
+    }
+    
+    public static RPGStatsConfig getConfig() {
+        if (configUnsafe == null) {
+            configUnsafe = AutoConfig.getConfigHolder(RPGStatsConfig.class).getConfig();
+        }
+        return configUnsafe;
     }
 }

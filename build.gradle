@@ -39,6 +39,12 @@ dependencies {
 	// Cardinal components entity
 	modImplementation "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
+
+	// Auto config
+	modApi("me.sargunvohra.mcmods:autoconfig1u:3.3.1") {
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	include "me.sargunvohra.mcmods:autoconfig1u:3.3.1"
 }
 
 processResources {

@@ -4,7 +4,6 @@ import mc.rpgstats.main.RPGStats;
 import mc.rpgstats.main.StatComponents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PotionItem;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -24,7 +23,7 @@ public class PotionDrinkMixin {
         )
     )
     private boolean onFinishedUsing(LivingEntity livingEntity, StatusEffectInstance effect) {
-        if (livingEntity instanceof PlayerEntity) {
+        if (livingEntity instanceof ServerPlayerEntity) {
             return livingEntity.addStatusEffect(new StatusEffectInstance(
                 effect.getEffectType(),
                 effect.getDuration() + (RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity) * 2),
@@ -40,9 +39,9 @@ public class PotionDrinkMixin {
     
     @Inject(at = @At("HEAD"), method = "getMaxUseTime", cancellable = true)
     private void getUseTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
-        if (stack.getHolder() != null && stack.getHolder() instanceof PlayerEntity) {
-            PlayerEntity holder = (PlayerEntity)stack.getHolder();
-            cir.setReturnValue((int)(32 - Math.floor(RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, (ServerPlayerEntity)holder) / 3.0f)));
+        if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
+            ServerPlayerEntity holder = (ServerPlayerEntity)stack.getHolder();
+            cir.setReturnValue((int)(32 - Math.floor(RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, holder) / 3.0f)));
         }
     }
 }

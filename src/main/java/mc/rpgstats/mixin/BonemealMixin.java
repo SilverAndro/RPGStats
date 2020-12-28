@@ -32,7 +32,7 @@ public class BonemealMixin {
 
     @Inject(at = @At("HEAD"), method = "useOnGround")
     private static void groundEffectiveness(ItemStack stack, World world, BlockPos blockPos, Direction facing, CallbackInfoReturnable<Boolean> cir) {
-        if (world.getBlockState(blockPos).isOf(Blocks.WATER) && world.getFluidState(blockPos).getLevel() == 8) {
+        if (!world.isClient && world.getBlockState(blockPos).isOf(Blocks.WATER) && world.getFluidState(blockPos).getLevel() == 8) {
             if (world instanceof ServerWorld && stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
                 int level = RPGStats.getComponentLevel(StatComponents.FARMING_COMPONENT, (ServerPlayerEntity)stack.getHolder());
                 cursedLoop:
@@ -79,7 +79,7 @@ public class BonemealMixin {
 
     @Inject(at = @At("HEAD"), method = "useOnFertilizable")
     private static void onGrowable(ItemStack stack, World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
-        if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
+        if (!world.isClient && stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
             int level = RPGStats.getComponentLevel(StatComponents.FARMING_COMPONENT, (ServerPlayerEntity)stack.getHolder());
             BlockState blockState = world.getBlockState(pos);
             if (blockState.getBlock() instanceof Fertilizable) {

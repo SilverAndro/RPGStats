@@ -21,11 +21,14 @@ public class ApplyDamageMixin {
     
     @Inject(method = "applyDamage", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/player/PlayerEntity;applyEnchantmentsToDamage(Lnet/minecraft/entity/damage/DamageSource;F)F", shift = At.Shift.AFTER))
     public void grantXpFromDamageAbsorbedThroughArmorOrEnchants(DamageSource source, float amount, CallbackInfo ci) {
-        float blockedDamage = originalDamage - amount;
-        RPGStats.addXpAndLevelUp(
-            StatComponents.DEFENSE_COMPONENT,
-            (ServerPlayerEntity)(Object)this,
-            (int)Math.floor(Math.pow(blockedDamage/2, 1.3))
-        );
+        //noinspection ConstantConditions
+        if ((Object)this instanceof ServerPlayerEntity) {
+            float blockedDamage = originalDamage - amount;
+            RPGStats.addXpAndLevelUp(
+                StatComponents.DEFENSE_COMPONENT,
+                (ServerPlayerEntity)(Object)this,
+                (int)Math.floor(Math.pow(blockedDamage / 2, 1.3))
+            );
+        }
     }
 }

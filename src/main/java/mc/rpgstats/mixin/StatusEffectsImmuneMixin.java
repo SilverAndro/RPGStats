@@ -14,26 +14,30 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class StatusEffectsImmuneMixin {
     @Redirect(method = "applyUpdateEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", ordinal = 0))
     public boolean negatePoison(LivingEntity livingEntity, DamageSource source, float amount) {
-        if (livingEntity instanceof ServerPlayerEntity) {
-            int level = RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
-            if (level < 25) {
+        if (!livingEntity.world.isClient) {
+            if (livingEntity instanceof ServerPlayerEntity) {
+                int level = RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
+                if (level < 25) {
+                    return livingEntity.damage(source, amount);
+                }
+            } else {
                 return livingEntity.damage(source, amount);
             }
-        } else {
-            return livingEntity.damage(source, amount);
         }
         return false;
     }
 
     @Redirect(method = "applyUpdateEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", ordinal = 1))
     public boolean negateWither(LivingEntity livingEntity, DamageSource source, float amount) {
-        if (livingEntity instanceof ServerPlayerEntity) {
-            int level = RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
-            if (level < 50) {
+        if (!livingEntity.world.isClient) {
+            if (livingEntity instanceof ServerPlayerEntity) {
+                int level = RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
+                if (level < 50) {
+                    return livingEntity.damage(source, amount);
+                }
+            } else {
                 return livingEntity.damage(source, amount);
             }
-        } else {
-            return livingEntity.damage(source, amount);
         }
         return false;
     }

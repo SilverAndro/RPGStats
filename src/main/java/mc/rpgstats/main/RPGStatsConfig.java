@@ -8,6 +8,9 @@ import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Comment;
 public class RPGStatsConfig implements ConfigData {
     LevelScaling scaling = new LevelScaling();
     
+    @Comment("If players should lose all stats on death")
+    public boolean hardcoreMode = false;
+    
     public static class LevelScaling {
         @Comment("Default 2.05")
         double power = 2.05;

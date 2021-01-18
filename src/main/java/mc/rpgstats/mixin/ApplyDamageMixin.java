@@ -24,6 +24,9 @@ public class ApplyDamageMixin {
         //noinspection ConstantConditions
         if ((Object)this instanceof ServerPlayerEntity) {
             float blockedDamage = originalDamage - amount;
+            if (blockedDamage <= 0) {
+                return;
+            }
             RPGStats.addXpAndLevelUp(
                 StatComponents.DEFENSE_COMPONENT,
                 (ServerPlayerEntity)(Object)this,

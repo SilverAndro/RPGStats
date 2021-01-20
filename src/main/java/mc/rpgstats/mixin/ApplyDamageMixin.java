@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
-import mc.rpgstats.main.StatComponents;
+import mc.rpgstats.main.CustomComponents;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -28,7 +28,7 @@ public class ApplyDamageMixin {
                 return;
             }
             RPGStats.addXpAndLevelUp(
-                StatComponents.DEFENSE_COMPONENT,
+                CustomComponents.DEFENSE_COMPONENT,
                 (ServerPlayerEntity)(Object)this,
                 (int)Math.floor(Math.log10(blockedDamage / 2) * 7)
             );

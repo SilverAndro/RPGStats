@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
+import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
-import mc.rpgstats.main.StatComponents;
 import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -24,7 +24,7 @@ public class ShearSheepMixin {
     )
     public void onShearedGrantXP(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (!player.world.isClient) {
-            RPGStats.addXpAndLevelUp(StatComponents.FARMING_COMPONENT, (ServerPlayerEntity)player, 1);
+            RPGStats.addXpAndLevelUp(CustomComponents.FARMING_COMPONENT, (ServerPlayerEntity)player, 1);
         }
     }
 }

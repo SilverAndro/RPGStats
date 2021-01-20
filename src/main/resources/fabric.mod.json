@@ -22,7 +22,7 @@
       "mc.rpgstats.main.RPGStatsClient"
     ],
     "cardinal-components": [
-      "mc.rpgstats.main.StatComponents"
+      "mc.rpgstats.main.CustomComponents"
     ]
   },
   "mixins": [
@@ -51,7 +51,8 @@
       "rpgstats:farming",
       "rpgstats:magic",
       "rpgstats:mining",
-      "rpgstats:fishing"
+      "rpgstats:fishing",
+      "rpgstats:internal"
     ]
   }
 }

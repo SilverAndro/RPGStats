@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
+import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
-import mc.rpgstats.main.StatComponents;
 import net.minecraft.enchantment.UnbreakingEnchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -17,7 +17,7 @@ public class UnbreakingEnchantmentMixin {
     @Inject(method = "shouldPreventDamage", at = @At("RETURN"), cancellable = true)
     private static void bonusUnbreaking(ItemStack item, int level, Random random, CallbackInfoReturnable<Boolean> cir) {
         if (item.getHolder() != null && item.getHolder() instanceof ServerPlayerEntity) {
-            if (RPGStats.getComponentLevel(StatComponents.MINING_COMPONENT, (ServerPlayerEntity)item.getHolder()) >= 25) {
+            if (RPGStats.getComponentLevel(CustomComponents.MINING_COMPONENT, (ServerPlayerEntity)item.getHolder()) >= 25) {
                 if (!cir.getReturnValue() && random.nextFloat() <= 0.05f) {
                     cir.setReturnValue(true);
                 }

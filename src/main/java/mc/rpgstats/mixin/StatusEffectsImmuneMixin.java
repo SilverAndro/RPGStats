@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
-import mc.rpgstats.main.StatComponents;
+import mc.rpgstats.main.CustomComponents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
@@ -16,7 +16,7 @@ public class StatusEffectsImmuneMixin {
     public boolean negatePoison(LivingEntity livingEntity, DamageSource source, float amount) {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
-                int level = RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
+                int level = RPGStats.getComponentLevel(CustomComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
                 if (level < 25) {
                     return livingEntity.damage(source, amount);
                 }
@@ -31,7 +31,7 @@ public class StatusEffectsImmuneMixin {
     public boolean negateWither(LivingEntity livingEntity, DamageSource source, float amount) {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
-                int level = RPGStats.getComponentLevel(StatComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
+                int level = RPGStats.getComponentLevel(CustomComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
                 if (level < 50) {
                     return livingEntity.damage(source, amount);
                 }

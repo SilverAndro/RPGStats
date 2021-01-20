@@ -1,8 +1,9 @@
 package mc.rpgstats.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import mc.rpgstats.component.internal.PlayerPreferencesComponent;
+import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
-import mc.rpgstats.main.StatComponents;
 import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -43,6 +44,19 @@ public class StatsCommand {
                             )
                         )
                 )
+            ).then(CommandManager.literal("toggleSetting")
+                .then(CommandManager.literal("spamSneak")
+                    .executes(
+                        context -> {
+                            System.out.println("hello world");
+                            PlayerPreferencesComponent component = CustomComponents.PREFERENCES.get(context.getSource().getPlayer());
+                            System.out.println("hello world 2");
+                            component.isOptedOutOfButtonSpam = !component.isOptedOutOfButtonSpam;
+                            context.getSource().sendFeedback(new LiteralText("Hold sneak instead of spam: " + component.isOptedOutOfButtonSpam), false);
+                            return 1;
+                        }
+                    )
+                )
             )
         );
     }
@@ -53,37 +67,37 @@ public class StatsCommand {
             
             spe.sendMessage(new LiteralText("§aRPGStats >§r Stats for " + target.getEntityName()), false);
             
-            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.MELEE_COMPONENT, target)), false);
-            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.RANGED_COMPONENT, target)), false);
-            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.DEFENSE_COMPONENT, target)), false);
-            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.MAGIC_COMPONENT, target)), false);
-            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.FARMING_COMPONENT, target)), false);
-            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.MINING_COMPONENT, target)), false);
-            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.FISHING_COMPONENT, target)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.MELEE_COMPONENT, target)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.RANGED_COMPONENT, target)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.DEFENSE_COMPONENT, target)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.MAGIC_COMPONENT, target)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.FARMING_COMPONENT, target)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.MINING_COMPONENT, target)), false);
+            spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.FISHING_COMPONENT, target)), false);
         } else if (target != null) {
             if (source.getEntity() == null) {
                 source.sendFeedback(new LiteralText("Stats for " + target.getEntityName()), false);
                 
-                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(StatComponents.MELEE_COMPONENT, target)), false);
-                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(StatComponents.RANGED_COMPONENT, target)), false);
-                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(StatComponents.DEFENSE_COMPONENT, target)), false);
-                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(StatComponents.MAGIC_COMPONENT, target)), false);
-                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(StatComponents.FARMING_COMPONENT, target)), false);
-                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(StatComponents.MINING_COMPONENT, target)), false);
-                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(StatComponents.FISHING_COMPONENT, target)), false);
+                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(CustomComponents.MELEE_COMPONENT, target)), false);
+                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(CustomComponents.RANGED_COMPONENT, target)), false);
+                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(CustomComponents.DEFENSE_COMPONENT, target)), false);
+                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(CustomComponents.MAGIC_COMPONENT, target)), false);
+                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(CustomComponents.FARMING_COMPONENT, target)), false);
+                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(CustomComponents.MINING_COMPONENT, target)), false);
+                source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(CustomComponents.FISHING_COMPONENT, target)), false);
             } else {
                 ServerPlayerEntity spe = (ServerPlayerEntity)source.getEntity();
                 ServerPlayerEntity targeted = (ServerPlayerEntity)source.getEntity();
                 
                 spe.sendMessage(new LiteralText("§aRPGStats >§r Stats for " + targeted.getEntityName()), false);
                 
-                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.MELEE_COMPONENT, targeted)), false);
-                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.RANGED_COMPONENT, targeted)), false);
-                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.DEFENSE_COMPONENT, targeted)), false);
-                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.MAGIC_COMPONENT, targeted)), false);
-                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.FARMING_COMPONENT, targeted)), false);
-                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.MINING_COMPONENT, targeted)), false);
-                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(StatComponents.FISHING_COMPONENT, targeted)), false);
+                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.MELEE_COMPONENT, targeted)), false);
+                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.RANGED_COMPONENT, targeted)), false);
+                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.DEFENSE_COMPONENT, targeted)), false);
+                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.MAGIC_COMPONENT, targeted)), false);
+                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.FARMING_COMPONENT, targeted)), false);
+                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.MINING_COMPONENT, targeted)), false);
+                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(CustomComponents.FISHING_COMPONENT, targeted)), false);
             }
         } else {
             source.sendError(new LiteralText("A player must be passed when execute from the console"));

@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
+import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
-import mc.rpgstats.main.StatComponents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.item.ItemStack;
@@ -24,6 +24,6 @@ public class TotemUseMixin {
         locals = LocalCapture.CAPTURE_FAILHARD
     )
     public void onUseTotem(DamageSource source, CallbackInfoReturnable<Boolean> cir, ItemStack itemStack, ServerPlayerEntity serverPlayerEntity) {
-        RPGStats.addXpAndLevelUp(StatComponents.DEFENSE_COMPONENT, serverPlayerEntity, 130);
+        RPGStats.addXpAndLevelUp(CustomComponents.DEFENSE_COMPONENT, serverPlayerEntity, 130);
     }
 }

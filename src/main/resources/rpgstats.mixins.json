@@ -3,6 +3,10 @@
   "minVersion": "0.8",
   "package": "mc.rpgstats.mixin",
   "compatibilityLevel": "JAVA_8",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "plugin": "mc.rpgstats.mixin.compat.Plugin",
   "mixins": [
     "ApplyDamageMixin",
     "BlockBreakMixin",
@@ -24,9 +28,6 @@
     "SweetBerryHarvestMixin",
     "TakeDamageMixin",
     "TotemUseMixin",
-    "UnbreakingEnchantmentMixin"
-  ],
-  "injectors": {
-    "defaultRequire": 1
-  }
+    "UnbreakingEnchantmentMixin",
+  ]
 }

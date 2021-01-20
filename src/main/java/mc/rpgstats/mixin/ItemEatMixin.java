@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
-import mc.rpgstats.main.StatComponents;
+import mc.rpgstats.main.CustomComponents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -26,7 +26,7 @@ public class ItemEatMixin {
     public void grantFishEffects(ItemStack stack, World world, LivingEntity targetEntity, CallbackInfo ci) {
         LivingEntity le = (LivingEntity)(Object)this;
         if (le instanceof ServerPlayerEntity) {
-            if (RPGStats.getComponentLevel(StatComponents.FISHING_COMPONENT, (ServerPlayerEntity)le) >= 25 && stack.getItem().isIn(ItemTags.FISHES)) {
+            if (RPGStats.getComponentLevel(CustomComponents.FISHING_COMPONENT, (ServerPlayerEntity)le) >= 25 && stack.getItem().isIn(ItemTags.FISHES)) {
                 List<StatusEffect> goodEffects = Arrays.asList(
                     StatusEffects.ABSORPTION,
                     StatusEffects.CONDUIT_POWER,
@@ -52,7 +52,7 @@ public class ItemEatMixin {
                 le.addStatusEffect(new StatusEffectInstance(goodEffects.get(0), 30 * 20, 0));
             }
     
-            if (RPGStats.getComponentLevel(StatComponents.FISHING_COMPONENT, (ServerPlayerEntity)le) >= 50) {
+            if (RPGStats.getComponentLevel(CustomComponents.FISHING_COMPONENT, (ServerPlayerEntity)le) >= 50) {
                 le.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 1, 0));
             }
         }

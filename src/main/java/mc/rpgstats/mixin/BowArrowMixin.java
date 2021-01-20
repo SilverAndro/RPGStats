@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import mc.rpgstats.main.RPGStats;
-import mc.rpgstats.main.StatComponents;
+import mc.rpgstats.main.CustomComponents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
@@ -26,7 +26,7 @@ public class BowArrowMixin {
     
     @ModifyVariable(method = "onStoppedUsing", at = @At(value = "INVOKE_ASSIGN", ordinal = 1), ordinal = 0)
     public boolean createArrowIfHasNix(boolean bl) {
-        if (itemUser != null && RPGStats.getComponentLevel(StatComponents.RANGED_COMPONENT, itemUser) >= 50) {
+        if (itemUser != null && RPGStats.getComponentLevel(CustomComponents.RANGED_COMPONENT, itemUser) >= 50) {
             return true;
         }
         return bl;

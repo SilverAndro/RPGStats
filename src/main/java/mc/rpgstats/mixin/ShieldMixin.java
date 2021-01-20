@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
+import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
-import mc.rpgstats.main.StatComponents;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,7 +15,7 @@ public class ShieldMixin {
     private void onShieldUse(float amount, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Object)this instanceof ServerPlayerEntity) {
-            RPGStats.addXpAndLevelUp(StatComponents.DEFENSE_COMPONENT, (ServerPlayerEntity)(Object)this, Math.max(1, (int)Math.floor(amount / 2.5)));
+            RPGStats.addXpAndLevelUp(CustomComponents.DEFENSE_COMPONENT, (ServerPlayerEntity)(Object)this, Math.max(1, (int)Math.floor(amount / 2.5)));
         }
     }
 }

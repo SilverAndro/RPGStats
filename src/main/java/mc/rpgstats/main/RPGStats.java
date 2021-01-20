@@ -6,7 +6,9 @@ import mc.rpgstats.advancemnents.AdvancementHelper;
 import mc.rpgstats.command.CheatCommand;
 import mc.rpgstats.command.StatsCommand;
 import mc.rpgstats.component.IStatComponent;
+import mc.rpgstats.component.internal.PlayerPreferencesComponent;
 import mc.rpgstats.event.LevelUpCallback;
+import mc.rpgstats.mixin_logic.OnSneakLogic;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
@@ -57,18 +59,23 @@ public class RPGStats implements ModInitializer {
         // Syncing and advancements
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
             tickCount++;
-            if (tickCount >= 20) {
+            if (tickCount >= 10) {
                 Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
                 PlayerLookup.all(server).forEach(
                     (player) -> {
+                        PlayerPreferencesComponent preferences = CustomComponents.PREFERENCES.get(player);
+                        if (preferences.isOptedOutOfButtonSpam && player.isSneaking()) {
+                            OnSneakLogic.doLogic(true, player);
+                        }
+                        
                         if (needsStatFix.contains(player) && player.isAlive()) {
-                            softLevelUp(StatComponents.DEFENSE_COMPONENT, player);
-                            softLevelUp(StatComponents.FARMING_COMPONENT, player);
-                            softLevelUp(StatComponents.MAGIC_COMPONENT, player);
-                            softLevelUp(StatComponents.MELEE_COMPONENT, player);
-                            softLevelUp(StatComponents.MINING_COMPONENT, player);
-                            softLevelUp(StatComponents.RANGED_COMPONENT, player);
-                            softLevelUp(StatComponents.FISHING_COMPONENT, player);
+                            softLevelUp(CustomComponents.DEFENSE_COMPONENT, player);
+                            softLevelUp(CustomComponents.FARMING_COMPONENT, player);
+                            softLevelUp(CustomComponents.MAGIC_COMPONENT, player);
+                            softLevelUp(CustomComponents.MELEE_COMPONENT, player);
+                            softLevelUp(CustomComponents.MINING_COMPONENT, player);
+                            softLevelUp(CustomComponents.RANGED_COMPONENT, player);
+                            softLevelUp(CustomComponents.FISHING_COMPONENT, player);
                             needsStatFix.remove(player);
                         }
                         
@@ -84,14 +91,14 @@ public class RPGStats implements ModInitializer {
                         
                         // Client has the mod installed
                         if (ServerPlayNetworking.canSend(player, SYNC_STATS_PACKET_ID)) {
-                            int count = StatComponents.statList.size();
+                            int count = CustomComponents.statList.size();
     
                             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
                             
                             // How many stats in packet
                             passedData.writeInt(count);
                             // For each stat
-                            for (Identifier statIdent : StatComponents.idToComponentIndexMap.keySet()) {
+                            for (Identifier statIdent : CustomComponents.idToComponentIndexMap.keySet()) {
                                 // Write the stat identifier
                                 passedData.writeIdentifier(statIdent);
                                 // Get the actual key
@@ -104,7 +111,7 @@ public class RPGStats implements ModInitializer {
                             ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, passedData);
                         }
                         
-                        if (player.getBlockPos().getY() <= 40 && getComponentLevel(StatComponents.MINING_COMPONENT, player) >= 50) {
+                        if (player.getBlockPos().getY() <= 40 && getComponentLevel(CustomComponents.MINING_COMPONENT, player) >= 50) {
                             player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 13 * 20));
                             player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 2 * 20, 1));
                         }
@@ -186,7 +193,7 @@ public class RPGStats implements ModInitializer {
     
     public static ArrayList<Integer> getStatLevelsForPlayer(ServerPlayerEntity player) {
         ArrayList<Integer> result = new ArrayList<>();
-        for (ComponentKey<? extends IStatComponent> stat : StatComponents.statList) {
+        for (ComponentKey<? extends IStatComponent> stat : CustomComponents.statList) {
             result.add(getComponentLevel(stat, player));
         }
         return result;
@@ -214,7 +221,7 @@ public class RPGStats implements ModInitializer {
     }
     
     public static ComponentKey<? extends IStatComponent> statFromID(Identifier ID) {
-        return StatComponents.statList.get(StatComponents.idToComponentIndexMap.get(ID));
+        return CustomComponents.statList.get(CustomComponents.idToComponentIndexMap.get(ID));
     }
     
     public static RPGStatsConfig getConfig() {

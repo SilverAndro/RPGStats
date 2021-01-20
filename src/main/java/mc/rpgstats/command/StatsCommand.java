@@ -48,9 +48,7 @@ public class StatsCommand {
                 .then(CommandManager.literal("spamSneak")
                     .executes(
                         context -> {
-                            System.out.println("hello world");
                             PlayerPreferencesComponent component = CustomComponents.PREFERENCES.get(context.getSource().getPlayer());
-                            System.out.println("hello world 2");
                             component.isOptedOutOfButtonSpam = !component.isOptedOutOfButtonSpam;
                             context.getSource().sendFeedback(new LiteralText("Hold sneak instead of spam: " + component.isOptedOutOfButtonSpam), false);
                             return 1;

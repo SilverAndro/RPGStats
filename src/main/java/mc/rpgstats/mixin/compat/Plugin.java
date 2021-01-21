@@ -22,7 +22,7 @@ public class Plugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.contains("harvest_scythes")) {
-            return FabricLoader.getInstance().isModLoaded("harvest");
+            return FabricLoader.getInstance().isModLoaded("harvest_scythes");
         }
         return true;
     }

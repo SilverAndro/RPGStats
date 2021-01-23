@@ -2,9 +2,11 @@ package mc.rpgstats.event;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import mc.rpgstats.component.IStatComponent;
+import mc.rpgstats.main.RPGStats;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 /**
  * Callback for player level up
@@ -14,6 +16,7 @@ import net.minecraft.entity.player.PlayerEntity;
 public interface LevelUpCallback {
     Event<LevelUpCallback> EVENT = EventFactory.createArrayBacked(LevelUpCallback.class,
         (listeners) -> (player, type, newLevel) -> {
+            RPGStats.levelUpCriterion.trigger((ServerPlayerEntity)player);
             for (LevelUpCallback listener : listeners) {
                 listener.onLevelUp(player, type, newLevel);
             }

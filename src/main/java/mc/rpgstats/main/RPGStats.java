@@ -3,11 +3,13 @@ package mc.rpgstats.main;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import io.netty.buffer.Unpooled;
 import mc.rpgstats.advancemnents.AdvancementHelper;
+import mc.rpgstats.advancemnents.LevelUpCriterion;
 import mc.rpgstats.command.CheatCommand;
 import mc.rpgstats.command.StatsCommand;
 import mc.rpgstats.component.IStatComponent;
 import mc.rpgstats.component.internal.PlayerPreferencesComponent;
 import mc.rpgstats.event.LevelUpCallback;
+import mc.rpgstats.mixin.accessor.CriteriaAccessor;
 import mc.rpgstats.mixin_logic.OnSneakLogic;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
@@ -37,6 +39,8 @@ public class RPGStats implements ModInitializer {
     
     public static ArrayList<ServerPlayerEntity> needsStatFix = new ArrayList<>();
     
+    public static LevelUpCriterion levelUpCriterion = new LevelUpCriterion();
+    
     public static RPGStatsConfig configUnsafe;
     
     private int tickCount = 0;
@@ -44,6 +48,10 @@ public class RPGStats implements ModInitializer {
     @Override
     public void onInitialize() {
         System.out.println("RPGStats is starting...");
+        
+        // Criterion
+        assert CriteriaAccessor.getValues() != null;
+        CriteriaAccessor.getValues().put(LevelUpCriterion.ID, levelUpCriterion);
         
         // Config
         AutoConfig.register(RPGStatsConfig.class, JanksonConfigSerializer::new);

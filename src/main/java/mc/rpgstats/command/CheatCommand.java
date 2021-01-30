@@ -10,6 +10,7 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
 import java.util.Collection;
@@ -115,6 +116,7 @@ public class CheatCommand {
                 RPGStats.setComponentLevel(statFromID, target, RPGStats.getComponentXP(statFromID, target) + amount);
             }
         }
+        source.sendFeedback(new LiteralText(amount + " XP added to stat " + id + " for " + targets.size() + " targets."), true);
         return 1;
     }
     
@@ -128,6 +130,7 @@ public class CheatCommand {
                 RPGStats.setComponentLevel(statFromID, target, amount);
             }
         }
+        source.sendFeedback(new LiteralText("XP set for stat " + id + " to " + amount + " for " + targets.size() + " targets."), true);
         return 1;
     }
     

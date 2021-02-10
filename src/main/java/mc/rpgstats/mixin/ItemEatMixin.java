@@ -26,7 +26,8 @@ public class ItemEatMixin {
     public void grantFishEffects(ItemStack stack, World world, LivingEntity targetEntity, CallbackInfo ci) {
         LivingEntity le = (LivingEntity)(Object)this;
         if (le instanceof ServerPlayerEntity) {
-            if (RPGStats.getComponentLevel(CustomComponents.FISHING_COMPONENT, (ServerPlayerEntity)le) >= 25 && stack.getItem().isIn(ItemTags.FISHES)) {
+            int level = RPGStats.getComponentLevel(CustomComponents.FISHING_COMPONENT, (ServerPlayerEntity)le);
+            if (level >= 25 && stack.getItem().isIn(ItemTags.FISHES) && RPGStats.getConfig().toggles.fishing.enableLv25Buff) {
                 List<StatusEffect> goodEffects = Arrays.asList(
                     StatusEffects.ABSORPTION,
                     StatusEffects.CONDUIT_POWER,
@@ -46,13 +47,13 @@ public class ItemEatMixin {
                     StatusEffects.WATER_BREATHING
                 );
     
-                // lazy
+                // im lazy
                 Collections.shuffle(goodEffects);
                 
                 le.addStatusEffect(new StatusEffectInstance(goodEffects.get(0), 30 * 20, 0));
             }
     
-            if (RPGStats.getComponentLevel(CustomComponents.FISHING_COMPONENT, (ServerPlayerEntity)le) >= 50) {
+            if (level >= 50 && RPGStats.getConfig().toggles.fishing.enableLv50Buff) {
                 le.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 1, 0));
             }
         }

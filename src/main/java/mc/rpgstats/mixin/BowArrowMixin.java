@@ -26,7 +26,11 @@ public class BowArrowMixin {
     
     @ModifyVariable(method = "onStoppedUsing", at = @At(value = "INVOKE_ASSIGN", ordinal = 1), ordinal = 0)
     public boolean createArrowIfHasNix(boolean bl) {
-        if (itemUser != null && RPGStats.getComponentLevel(CustomComponents.RANGED_COMPONENT, itemUser) >= 50) {
+        if (
+            itemUser != null
+            && RPGStats.getComponentLevel(CustomComponents.RANGED_COMPONENT, itemUser) >= 50
+            && RPGStats.getConfig().toggles.ranged.enableLv50Buff
+        ) {
             return true;
         }
         return bl;

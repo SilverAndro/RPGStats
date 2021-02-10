@@ -40,7 +40,14 @@ public abstract class KillMixin {
 					} else {
 						int level = RPGStats.getComponentLevel(CustomComponents.MELEE_COMPONENT, serverPlayer);
 						
-						int duration = level >= 25 ? level >= 50 ? 200 : 100 : 0;
+						int duration = 0;
+						if (level >= 25 && RPGStats.getConfig().toggles.melee.enableLv25Buff) {
+							duration = 100;
+						}
+						if (level >= 50 && RPGStats.getConfig().toggles.melee.enableLv50Buff) {
+							duration = 200;
+						}
+						
 						if (duration > 0) {
 							((ServerPlayerEntity)entity).addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, duration));
 						}

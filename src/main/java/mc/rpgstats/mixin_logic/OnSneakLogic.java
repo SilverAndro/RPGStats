@@ -19,7 +19,15 @@ public class OnSneakLogic {
         if (isSneaking && playerEntity.getMainHandStack().getItem() instanceof HoeItem && new Random().nextBoolean()) {
             int level = RPGStats.getComponentLevel(CustomComponents.FARMING_COMPONENT, playerEntity);
             World world = playerEntity.world;
-            int amount = level >= 25 ? level >= 50 ? 5 : 3 : 0;
+            int amount = 0;
+            
+            if (level >= 25 && RPGStats.getConfig().toggles.farming.enableLv25Buff) {
+                amount = 3;
+            }
+            if (level >= 50 && RPGStats.getConfig().toggles.farming.enableLv50Buff) {
+                amount = 5;
+            }
+            
             BlockPos blockPos = playerEntity.getBlockPos();
         
             if (amount > 0) {

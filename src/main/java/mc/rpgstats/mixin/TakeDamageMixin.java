@@ -17,9 +17,9 @@ public class TakeDamageMixin {
         ServerPlayerEntity spe = (ServerPlayerEntity)(Object)this;
         int level = RPGStats.getComponentLevel(CustomComponents.DEFENSE_COMPONENT, spe);
         float chance = 0f;
-        if (level >= 50) {
+        if (level >= 50 && RPGStats.getConfig().toggles.defense.enableLv50Buff) {
             chance = 0.1f;
-        } else if (level >= 25) {
+        } else if (level >= 25 && RPGStats.getConfig().toggles.defense.enableLv25Buff) {
             chance = 0.05f;
         }
         if (spe.getRandom().nextDouble() <= chance) {

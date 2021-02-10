@@ -17,7 +17,7 @@ public class StatusEffectsImmuneMixin {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
                 int level = RPGStats.getComponentLevel(CustomComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
-                if (level < 25) {
+                if (level < 25 || !RPGStats.getConfig().toggles.magic.enableLv25Buff) {
                     return livingEntity.damage(source, amount);
                 }
             } else {
@@ -32,7 +32,7 @@ public class StatusEffectsImmuneMixin {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
                 int level = RPGStats.getComponentLevel(CustomComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
-                if (level < 50) {
+                if (level < 50 || !RPGStats.getConfig().toggles.magic.enableLv50Buff) {
                     return livingEntity.damage(source, amount);
                 }
             } else {

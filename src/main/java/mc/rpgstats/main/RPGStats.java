@@ -41,7 +41,7 @@ public class RPGStats implements ModInitializer {
     
     public static LevelUpCriterion levelUpCriterion = new LevelUpCriterion();
     
-    public static RPGStatsConfig configUnsafe;
+    private static RPGStatsConfig configUnsafe;
     
     private int tickCount = 0;
     
@@ -119,7 +119,11 @@ public class RPGStats implements ModInitializer {
                             ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, passedData);
                         }
                         
-                        if (player.getBlockPos().getY() <= 40 && getComponentLevel(CustomComponents.MINING_COMPONENT, player) >= 50) {
+                        if (
+                            player.getBlockPos().getY() <= 40
+                            && getComponentLevel(CustomComponents.MINING_COMPONENT, player) >= 50
+                            && getConfig().toggles.mining.enableLv50Buff
+                        ) {
                             player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 13 * 20));
                             player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 2 * 20, 1));
                         }

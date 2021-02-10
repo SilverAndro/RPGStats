@@ -23,10 +23,13 @@ public class ImpalingMixin {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private static void cursedManip(ItemStack stack, EntityGroup group, CallbackInfoReturnable<Float> cir, MutableFloat mutableFloat) {
+    private static void makeImpalingEffectAll(ItemStack stack, EntityGroup group, CallbackInfoReturnable<Float> cir, MutableFloat mutableFloat) {
         if (EnchantmentHelper.get(stack).containsKey(Enchantments.IMPALING) && !(group == EntityGroup.AQUATIC)) {
             if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
-                if (RPGStats.getComponentLevel(CustomComponents.RANGED_COMPONENT, (ServerPlayerEntity)stack.getHolder()) >= 25) {
+                if (
+                    RPGStats.getComponentLevel(CustomComponents.RANGED_COMPONENT, (ServerPlayerEntity)stack.getHolder()) >= 25
+                    && RPGStats.getConfig().toggles.ranged.enableLv25Buff
+                ) {
                     int level = EnchantmentHelper.get(stack).get(Enchantments.IMPALING);
                     mutableFloat.add(level * 2.5F);
                 }

@@ -41,7 +41,7 @@ public class BonemealMixin {
                     BlockState blockState = Blocks.SEAGRASS.getDefaultState();
 
                     int k;
-                    for (k = 0; k < i / (level / 50); ++k) {
+                    for (k = 0; k < i / ((level + 1) / 50); ++k) {
                         blockPos2 = blockPos2.add(RANDOM.nextInt(3) - 1, (RANDOM.nextInt(3) - 1) * RANDOM.nextInt(3) / 2, RANDOM.nextInt(3) - 1);
                         if (world.getBlockState(blockPos2).isFullCube(world, blockPos2)) {
                             continue cursedLoop;
@@ -84,7 +84,7 @@ public class BonemealMixin {
             BlockState blockState = world.getBlockState(pos);
             if (blockState.getBlock() instanceof Fertilizable) {
                 Fertilizable fertilizable = (Fertilizable)blockState.getBlock();
-                if (fertilizable.isFertilizable(world, pos, blockState, world.isClient)) {
+                if (fertilizable.isFertilizable(world, pos, blockState, false)) {
                     if (world instanceof ServerWorld) {
                         if (fertilizable.canGrow(world, world.random, pos, blockState)) {
                             if (RANDOM.nextDouble() < level * 0.1) {

@@ -155,7 +155,15 @@ public class RPGStats implements ModInitializer {
     
     public static int calculateXpNeededToReachLevel(int level) {
         RPGStatsConfig config = getConfig();
-        return (int)Math.floor(Math.pow(level, config.scaling.power) * config.scaling.scale) + config.scaling.base;
+        if (config.scaling.isCumulative) {
+            int required = 0;
+            for (int i = 1; i <= level; i++) {
+                required += (int)Math.floor(Math.pow(i, config.scaling.power) * config.scaling.scale) + config.scaling.base;
+            }
+            return required;
+        } else {
+            return (int)Math.floor(Math.pow(level, config.scaling.power) * config.scaling.scale) + config.scaling.base;
+        }
     }
     
     public static void addXpAndLevelUp(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player, int addedXP) {

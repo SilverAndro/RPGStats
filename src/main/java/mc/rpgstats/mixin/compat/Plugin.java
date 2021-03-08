@@ -24,6 +24,10 @@ public class Plugin implements IMixinConfigPlugin {
         if (mixinClassName.contains("harvest_scythes")) {
             return FabricLoader.getInstance().isModLoaded("harvest_scythes");
         }
+        
+        if (mixinClassName.contains("harvest")) {
+            return FabricLoader.getInstance().isModLoaded("harvest");
+        }
         return true;
     }
     

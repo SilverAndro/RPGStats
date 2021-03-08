@@ -22,6 +22,8 @@ public class RPGStatsConfig implements ConfigData {
         public double scale = 0.5;
         @Comment("Default 80")
         public int base = 80;
+        @Comment("If the required amount should be the requirements from previous levels combined + new one instead of just solving once")
+        public boolean isCumulative = false;
     }
     
     public static class LevelBuffToggles {

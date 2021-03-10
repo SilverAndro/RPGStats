@@ -15,8 +15,12 @@
         "hidden": false
     },
     "criteria": {
-        "trigger": {
-            "trigger": "minecraft:impossible"
+        "levelup": {
+            "trigger": "rpgstats:player_level",
+            "conditions": {
+                "stat": "rpgstats:_any",
+                "level": 25
+            }
         }
     },
     "parent": "rpgstats:levels_13"

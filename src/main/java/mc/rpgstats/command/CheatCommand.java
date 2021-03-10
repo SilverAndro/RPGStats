@@ -5,6 +5,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import mc.rpgstats.component.IStatComponent;
+import mc.rpgstats.event.LevelUpCallback;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
@@ -128,6 +129,7 @@ public class CheatCommand {
             }
             if (type == CommandType.LEVELS) {
                 RPGStats.setComponentLevel(statFromID, target, amount);
+                LevelUpCallback.EVENT.invoker().onLevelUp(target, statFromID, amount);
             }
         }
         source.sendFeedback(new LiteralText("XP set for stat " + id + " to " + amount + " for " + targets.size() + " targets."), true);

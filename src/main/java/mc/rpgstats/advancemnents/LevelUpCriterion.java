@@ -41,7 +41,7 @@ public class LevelUpCriterion extends AbstractCriterion<LevelUpCriterion.LevelCr
         }
         
         public boolean matches(ServerPlayerEntity player) {
-            if (id == ANY_ID) {
+            if (id.equals(ANY_ID)) {
                 return RPGStats.getHighestLevel(player) >= level;
             } else {
                 ComponentKey<? extends IStatComponent> componentKey = RPGStats.statFromID(id);

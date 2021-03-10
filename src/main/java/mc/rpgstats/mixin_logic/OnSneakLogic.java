@@ -16,6 +16,7 @@ public class OnSneakLogic {
     public static void doLogic(boolean isSneaking, ServerPlayerEntity playerEntity) {
         Random random = new Random();
     
+        // Check if all conditions met
         if (isSneaking && playerEntity.getMainHandStack().getItem() instanceof HoeItem && new Random().nextBoolean()) {
             int level = RPGStats.getComponentLevel(CustomComponents.FARMING_COMPONENT, playerEntity);
             World world = playerEntity.world;
@@ -30,6 +31,8 @@ public class OnSneakLogic {
             
             BlockPos blockPos = playerEntity.getBlockPos();
         
+            // If we should do stuff
+            // In a 3x3 or 5x5 area, there is a 90% chance to grow any Fertilizable blocks
             if (amount > 0) {
                 for (int y = -1; y <= 1; y++) {
                     for (int x = -amount; x <= amount; x++) {

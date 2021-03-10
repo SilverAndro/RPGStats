@@ -2,7 +2,6 @@ package mc.rpgstats.main;
 
 import dev.onyxstudios.cca.api.v3.component.ComponentKey;
 import io.netty.buffer.Unpooled;
-import mc.rpgstats.advancemnents.AdvancementHelper;
 import mc.rpgstats.advancemnents.LevelUpCriterion;
 import mc.rpgstats.command.CheatCommand;
 import mc.rpgstats.command.StatsCommand;
@@ -36,6 +35,8 @@ public class RPGStats implements ModInitializer {
     public static final String MOD_ID = "rpgstats";
     public static final Identifier SYNC_STATS_PACKET_ID = new Identifier(MOD_ID, "sync_stats");
     public static final Identifier OPEN_GUI = new Identifier(MOD_ID, "open_gui");
+    
+    final static Identifier LEVELS_MAX = new Identifier(RPGStats.MOD_ID, "levels_max");
     
     public static ArrayList<ServerPlayerEntity> needsStatFix = new ArrayList<>();
     
@@ -88,9 +89,9 @@ public class RPGStats implements ModInitializer {
                         }
                         
                         for (Advancement advancement : collection) {
-                            if (advancement.getId().getNamespace().equals("rpgstats")) {
+                            if (advancement.getId().equals(LEVELS_MAX)) {
                                 if (!player.getAdvancementTracker().getProgress(advancement).isDone()) {
-                                    if (AdvancementHelper.shouldGrant(advancement.getId(), player)) {
+                                    if (getLowestLevel(player) >= 50) {
                                         player.getAdvancementTracker().grantCriterion(advancement, "trigger");
                                     }
                                 }

@@ -15,8 +15,12 @@
         "hidden": false
     },
     "criteria": {
-        "trigger": {
-            "trigger": "minecraft:impossible"
+        "levelup": {
+            "trigger": "rpgstats:player_level",
+            "conditions": {
+                "stat": "rpgstats:fishing",
+                "level": 10
+            }
         }
     },
     "parent": "rpgstats:root"

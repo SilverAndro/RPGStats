@@ -30,6 +30,7 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 
 public class RPGStats implements ModInitializer {
     public static final String MOD_ID = "rpgstats";
@@ -45,97 +46,6 @@ public class RPGStats implements ModInitializer {
     private static RPGStatsConfig configUnsafe;
     
     private int tickCount = 0;
-    
-    @Override
-    public void onInitialize() {
-        System.out.println("RPGStats is starting...");
-        
-        // Criterion
-        assert CriteriaAccessor.getValues() != null;
-        CriteriaAccessor.getValues().put(LevelUpCriterion.ID, levelUpCriterion);
-        
-        // Config
-        AutoConfig.register(RPGStatsConfig.class, JanksonConfigSerializer::new);
-        
-        // Command
-        CommandRegistrationCallback.EVENT.register(
-            (dispatcher, dedicated) -> {
-                StatsCommand.register(dispatcher);
-                CheatCommand.register(dispatcher);
-            }
-        );
-        
-        // Syncing and advancements
-        ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
-            tickCount++;
-            if (tickCount >= 10) {
-                Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
-                PlayerLookup.all(server).forEach(
-                    (player) -> {
-                        PlayerPreferencesComponent preferences = CustomComponents.PREFERENCES.get(player);
-                        if (preferences.isOptedOutOfButtonSpam && player.isSneaking()) {
-                            OnSneakLogic.doLogic(true, player);
-                        }
-                        
-                        if (needsStatFix.contains(player) && player.isAlive()) {
-                            softLevelUp(CustomComponents.DEFENSE_COMPONENT, player);
-                            softLevelUp(CustomComponents.FARMING_COMPONENT, player);
-                            softLevelUp(CustomComponents.MAGIC_COMPONENT, player);
-                            softLevelUp(CustomComponents.MELEE_COMPONENT, player);
-                            softLevelUp(CustomComponents.MINING_COMPONENT, player);
-                            softLevelUp(CustomComponents.RANGED_COMPONENT, player);
-                            softLevelUp(CustomComponents.FISHING_COMPONENT, player);
-                            needsStatFix.remove(player);
-                        }
-                        
-                        for (Advancement advancement : collection) {
-                            if (advancement.getId().equals(LEVELS_MAX)) {
-                                if (!player.getAdvancementTracker().getProgress(advancement).isDone()) {
-                                    if (getLowestLevel(player) >= 50) {
-                                        player.getAdvancementTracker().grantCriterion(advancement, "trigger");
-                                    }
-                                }
-                            }
-                        }
-                        
-                        // Client has the mod installed
-                        if (ServerPlayNetworking.canSend(player, SYNC_STATS_PACKET_ID)) {
-                            int count = CustomComponents.statList.size();
-    
-                            PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-                            
-                            // How many stats in packet
-                            passedData.writeInt(count);
-                            // For each stat
-                            for (Identifier statIdent : CustomComponents.idToComponentIndexMap.keySet()) {
-                                // Write the stat identifier
-                                passedData.writeIdentifier(statIdent);
-                                // Get the actual key
-                                ComponentKey<? extends IStatComponent> stat = statFromID(statIdent);
-                                // Write the level and XP
-                                passedData.writeInt(getComponentLevel(stat, player));
-                                passedData.writeInt(getComponentXP(stat, player));
-                            }
-                            
-                            ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, passedData);
-                        }
-                        
-                        if (
-                            player.getBlockPos().getY() <= 40
-                            && getComponentLevel(CustomComponents.MINING_COMPONENT, player) >= 50
-                            && getConfig().toggles.mining.enableLv50Buff
-                        ) {
-                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 13 * 20));
-                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 2 * 20, 1));
-                        }
-                    }
-                );
-                tickCount = 0;
-            }
-        });
-    
-        System.out.println("RPGStats is done loading");
-    }
     
     // Helper methods for components
     public static void setComponentXP(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player, int newValue) {
@@ -183,7 +93,7 @@ public class RPGStats implements ModInitializer {
                 type.get(player).onLevelUp(false);
                 
                 LevelUpCallback.EVENT.invoker().onLevelUp(player, type, currentLevel);
-    
+                
                 nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
             }
             setComponentXP(type, player, nextXP);
@@ -250,5 +160,101 @@ public class RPGStats implements ModInitializer {
             configUnsafe = AutoConfig.getConfigHolder(RPGStatsConfig.class).getConfig();
         }
         return configUnsafe;
+    }
+    
+    @Override
+    public void onInitialize() {
+        System.out.println("RPGStats is starting...");
+        
+        // Criterion
+        assert CriteriaAccessor.getValues() != null;
+        CriteriaAccessor.getValues().put(LevelUpCriterion.ID, levelUpCriterion);
+        
+        // Config
+        AutoConfig.register(RPGStatsConfig.class, JanksonConfigSerializer::new);
+        
+        // Command
+        CommandRegistrationCallback.EVENT.register(
+            (dispatcher, dedicated) -> {
+                StatsCommand.register(dispatcher);
+                CheatCommand.register(dispatcher);
+            }
+        );
+        
+        // Syncing and advancements
+        ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
+            tickCount++;
+            if (tickCount >= 10) {
+                Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
+                PlayerLookup.all(server).forEach(
+                    (player) -> {
+                        // Do sneak logic if holding sneak and opted out of spam
+                        PlayerPreferencesComponent preferences = CustomComponents.PREFERENCES.get(player);
+                        if (preferences.isOptedOutOfButtonSpam && player.isSneaking()) {
+                            OnSneakLogic.doLogic(true, player);
+                        }
+                        
+                        // Fix stats for respawning players
+                        if (needsStatFix.contains(player) && player.isAlive()) {
+                            softLevelUp(CustomComponents.DEFENSE_COMPONENT, player);
+                            softLevelUp(CustomComponents.FARMING_COMPONENT, player);
+                            softLevelUp(CustomComponents.MAGIC_COMPONENT, player);
+                            softLevelUp(CustomComponents.MELEE_COMPONENT, player);
+                            softLevelUp(CustomComponents.MINING_COMPONENT, player);
+                            softLevelUp(CustomComponents.RANGED_COMPONENT, player);
+                            softLevelUp(CustomComponents.FISHING_COMPONENT, player);
+                            needsStatFix.remove(player);
+                        }
+                        
+                        // Grant the hidden max level advancement
+                        Optional<Advancement> possible = collection
+                            .stream()
+                            .filter(advancement -> advancement.getId().equals(LEVELS_MAX))
+                            .findFirst();
+                        if (possible.isPresent()) {
+                            if (!player.getAdvancementTracker().getProgress(possible.get()).isDone()) {
+                                if (getLowestLevel(player) >= 50) {
+                                    player.getAdvancementTracker().grantCriterion(possible.get(), "trigger");
+                                }
+                            }
+                        }
+                        
+                        // Client has the mod installed
+                        if (ServerPlayNetworking.canSend(player, SYNC_STATS_PACKET_ID)) {
+                            int count = CustomComponents.statList.size();
+                            
+                            PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+                            
+                            // How many stats in packet
+                            passedData.writeInt(count);
+                            // For each stat
+                            for (Identifier statIdent : CustomComponents.idToComponentIndexMap.keySet()) {
+                                // Write the stat identifier
+                                passedData.writeIdentifier(statIdent);
+                                // Get the actual key
+                                ComponentKey<? extends IStatComponent> stat = statFromID(statIdent);
+                                // Write the level and XP
+                                passedData.writeInt(getComponentLevel(stat, player));
+                                passedData.writeInt(getComponentXP(stat, player));
+                            }
+                            
+                            ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, passedData);
+                        }
+                        
+                        if (
+                            player.getBlockPos().getY() <= 40
+                                && getComponentLevel(CustomComponents.MINING_COMPONENT, player) >= 50
+                                && getConfig().toggles.mining.enableLv50Buff
+                        ) {
+                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 13 * 20));
+                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 2 * 20, 1));
+                        }
+                    }
+                );
+                tickCount = 0;
+            }
+        });
+        
+        System.out.println("RPGStats is done loading");
     }
 }

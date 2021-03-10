@@ -31,7 +31,9 @@ public class RPGStatsClient implements ClientModInitializer {
     
             // Read each stat in turn
             for (int i = 0; i < count; i++) {
+                // Read the identifier
                 Identifier statIdent = byteBuf.readIdentifier();
+                // Read the level and xp
                 int level = byteBuf.readInt();
                 int xp = byteBuf.readInt();
     

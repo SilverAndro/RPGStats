@@ -241,6 +241,7 @@ public class RPGStats implements ModInitializer {
                             ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, passedData);
                         }
                         
+                        // Mining lv 50 effect
                         if (
                             player.getBlockPos().getY() <= 40
                                 && getComponentLevel(CustomComponents.MINING_COMPONENT, player) >= 50

@@ -52,7 +52,8 @@
       "rpgstats:magic",
       "rpgstats:mining",
       "rpgstats:fishing",
-      "rpgstats:internal"
+      "rpgstats:internal",
+      "rpgstats:max_health"
     ]
   }
 }

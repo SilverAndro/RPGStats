@@ -24,8 +24,9 @@ public class RPGStatsClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientPlayNetworking.registerGlobalReceiver(RPGStats.SYNC_STATS_PACKET_ID, (client, handler, byteBuf, packetSender) -> {
-            // Read data
-    
+            // Clear data
+            currentStats.clear();
+            
             // Get the amount of stats to read
             int count = byteBuf.readInt();
     

@@ -26,7 +26,7 @@ public class StatsCommand {
                     (commandContext) -> {
                         ServerCommandSource source = commandContext.getSource();
                         ServerPlayerEntity player = source.getPlayer();
-                        if (ServerPlayNetworking.canSend(player, RPGStats.OPEN_GUI) && false) {
+                        if (ServerPlayNetworking.canSend(player, RPGStats.OPEN_GUI)) {
                             ServerPlayNetworking.send(player, RPGStats.OPEN_GUI, PacketByteBufs.empty());
                             return 1;
                         } else {

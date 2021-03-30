@@ -31,13 +31,17 @@ public class RPGStatsConfig implements ConfigData {
         public boolean enableLv25Buff = true;
     }
     
+    public static class MiningBuffToggles extends LevelBuffToggles {
+        public int effectLevelTrigger = 40;
+    }
+    
     public static class DefaultLevelToggles {
         public LevelBuffToggles magic = new LevelBuffToggles();
         public LevelBuffToggles melee = new LevelBuffToggles();
         public LevelBuffToggles fishing = new LevelBuffToggles();
         public LevelBuffToggles ranged = new LevelBuffToggles();
         public LevelBuffToggles defense = new LevelBuffToggles();
-        public LevelBuffToggles mining = new LevelBuffToggles();
+        public MiningBuffToggles mining = new MiningBuffToggles();
         public LevelBuffToggles farming = new LevelBuffToggles();
     }
 }

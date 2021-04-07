@@ -53,7 +53,8 @@
       "rpgstats:mining",
       "rpgstats:fishing",
       "rpgstats:internal",
-      "rpgstats:max_health"
+      "rpgstats:max_health",
+      "rpgstats:stats"
     ]
   }
 }

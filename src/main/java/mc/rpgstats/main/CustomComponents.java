@@ -25,6 +25,7 @@ public class CustomComponents implements EntityComponentInitializer {
     public static ComponentKey<MiningComponent> MINING_COMPONENT;
     public static ComponentKey<FishingComponent> FISHING_COMPONENT;
     
+    public static ComponentKey<StatsComponent> STATS;
     public static ComponentKey<PlayerPreferencesComponent> PREFERENCES;
     public static ComponentKey<PlayerHealthAttachComponent> MAX_HEALTH;
     
@@ -38,12 +39,16 @@ public class CustomComponents implements EntityComponentInitializer {
         MINING_COMPONENT = registerSkill(new Identifier("rpgstats:mining"), MiningComponent.class);
         FISHING_COMPONENT = registerSkill(new Identifier("rpgstats:fishing"), FishingComponent.class);
         
+        STATS = ComponentRegistry.getOrCreate(new Identifier("rpgstats:stats"), StatsComponent.class);
+        
         PREFERENCES = ComponentRegistry.getOrCreate(new Identifier("rpgstats:internal"), PlayerPreferencesComponent.class);
         registry.registerForPlayers(PREFERENCES, PlayerPreferencesComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
         MAX_HEALTH = ComponentRegistry.getOrCreate(new Identifier("rpgstats:max_health"), PlayerHealthAttachComponent.class);
         registry.registerForPlayers(MAX_HEALTH, PlayerHealthAttachComponent::new, RespawnCopyStrategy.LOSSLESS_ONLY);
         
         if (RPGStats.getConfig().hardcoreMode) {
+            registry.registerForPlayers(STATS, StatsComponent::new, RespawnCopyStrategy.LOSSLESS_ONLY);
+            
             registry.registerForPlayers(MELEE_COMPONENT, MeleeComponent::new, RespawnCopyStrategy.LOSSLESS_ONLY);
             registry.registerForPlayers(RANGED_COMPONENT, RangedComponent::new, RespawnCopyStrategy.LOSSLESS_ONLY);
             registry.registerForPlayers(DEFENSE_COMPONENT, DefenseComponent::new, RespawnCopyStrategy.LOSSLESS_ONLY);
@@ -52,6 +57,8 @@ public class CustomComponents implements EntityComponentInitializer {
             registry.registerForPlayers(MINING_COMPONENT, MiningComponent::new, RespawnCopyStrategy.LOSSLESS_ONLY);
             registry.registerForPlayers(FISHING_COMPONENT, FishingComponent::new, RespawnCopyStrategy.LOSSLESS_ONLY);
         } else {
+            registry.registerForPlayers(STATS, StatsComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
+            
             registry.registerForPlayers(MELEE_COMPONENT, MeleeComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
             registry.registerForPlayers(RANGED_COMPONENT, RangedComponent::new, RespawnCopyStrategy.ALWAYS_COPY);
             registry.registerForPlayers(DEFENSE_COMPONENT, DefenseComponent::new, RespawnCopyStrategy.ALWAYS_COPY);

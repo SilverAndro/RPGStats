@@ -42,6 +42,7 @@ import java.util.Optional;
 public class RPGStats implements ModInitializer {
     public static final String MOD_ID = "rpgstats";
     public static final Identifier SYNC_STATS_PACKET_ID = new Identifier(MOD_ID, "sync_stats");
+    public static final Identifier SYNC_NAMES_PACKET_ID = new Identifier(MOD_ID, "sync_names");
     public static final Identifier OPEN_GUI = new Identifier(MOD_ID, "open_gui");
     
     final static Identifier LEVELS_MAX = new Identifier(RPGStats.MOD_ID, "levels_max");
@@ -181,10 +182,6 @@ public class RPGStats implements ModInitializer {
         }
     }
     
-    public static ComponentKey<? extends IStatComponent> statFromID(Identifier ID) {
-        return CustomComponents.oldComponentStatList.get(CustomComponents.oldComponentIdToComponentIndexMap.get(ID));
-    }
-    
     public static RPGStatsConfig getConfig() {
         if (configUnsafe == null) {
             configUnsafe = AutoConfig.getConfigHolder(RPGStatsConfig.class).getConfig();
@@ -284,22 +281,27 @@ public class RPGStats implements ModInitializer {
                         
                         // Client has the mod installed
                         if (ServerPlayNetworking.canSend(player, SYNC_STATS_PACKET_ID)) {
-                            int count = CustomComponents.oldComponentStatList.size();
-                            
-                            PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+                            int count = CustomComponents.customComponents.size();
+    
+                            PacketByteBuf nameData = new PacketByteBuf(Unpooled.buffer());
+                            PacketByteBuf statData = new PacketByteBuf(Unpooled.buffer());
                             
                             // How many stats in packet
-                            passedData.writeInt(count);
+                            statData.writeInt(count);
+                            nameData.writeInt(count);
                             // For each stat
-                            for (Identifier statId : CustomComponents.oldComponentIdToComponentIndexMap.keySet()) {
+                            for (Identifier statId : CustomComponents.customComponents.keySet()) {
                                 // Write the stat identifier
-                                passedData.writeIdentifier(statId);
+                                statData.writeIdentifier(statId);
+                                nameData.writeIdentifier(statId);
                                 // Write the level and XP
-                                passedData.writeInt(getComponentLevel(statId, player));
-                                passedData.writeInt(getComponentXP(statId, player));
+                                statData.writeInt(getComponentLevel(statId, player));
+                                statData.writeInt(getComponentXP(statId, player));
+                                nameData.writeString(CustomComponents.customComponents.get(statId));
                             }
                             
-                            ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, passedData);
+                            ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, statData);
+                            ServerPlayNetworking.send(player, SYNC_NAMES_PACKET_ID, nameData);
                         }
                         
                         // Mining lv 50 effect

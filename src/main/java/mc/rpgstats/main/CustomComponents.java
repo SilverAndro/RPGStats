@@ -16,9 +16,6 @@ import java.util.HashMap;
 public class CustomComponents implements EntityComponentInitializer {
     public static HashMap<Identifier, String> customComponents = new HashMap<>();
     
-    public static ArrayList<ComponentKey<? extends IStatComponent>> oldComponentStatList = new ArrayList<>();
-    public static HashMap<Identifier, Integer> oldComponentIdToComponentIndexMap = new HashMap<>();
-    
     public static ComponentKey<MeleeComponent> MELEE_COMPONENT;
     public static ComponentKey<RangedComponent> RANGED_COMPONENT;
     public static ComponentKey<DefenseComponent> DEFENSE_COMPONENT;
@@ -72,9 +69,6 @@ public class CustomComponents implements EntityComponentInitializer {
     }
     
     public static <T extends IStatComponent> ComponentKey<T> registerSkill(Identifier componentID, Class<T> componentClass) {
-        ComponentKey<T> componentType = ComponentRegistry.getOrCreate(componentID, componentClass);
-        oldComponentStatList.add(componentType);
-        oldComponentIdToComponentIndexMap.put(componentID, oldComponentStatList.indexOf(componentType));
-        return componentType;
+        return ComponentRegistry.getOrCreate(componentID, componentClass);
     }
 }

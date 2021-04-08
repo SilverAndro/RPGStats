@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 public class SkillSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        for (Identifier skillID : CustomComponents.idToComponentIndexMap.keySet()) {
+        for (Identifier skillID : CustomComponents.oldComponentIdToComponentIndexMap.keySet()) {
             builder.suggest('"' + skillID.toString() + '"');
         }
         return builder.buildFuture();

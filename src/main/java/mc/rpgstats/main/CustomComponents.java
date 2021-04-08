@@ -12,10 +12,13 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 
 public class CustomComponents implements EntityComponentInitializer {
-    public static ArrayList<ComponentKey<? extends IStatComponent>> statList = new ArrayList<>();
-    public static HashMap<Identifier, Integer> idToComponentIndexMap = new HashMap<>();
+    public static HashSet<Identifier> customComponents = new HashSet<>();
+    
+    public static ArrayList<ComponentKey<? extends IStatComponent>> oldComponentStatList = new ArrayList<>();
+    public static HashMap<Identifier, Integer> oldComponentIdToComponentIndexMap = new HashMap<>();
     
     public static ComponentKey<MeleeComponent> MELEE_COMPONENT;
     public static ComponentKey<RangedComponent> RANGED_COMPONENT;
@@ -71,8 +74,8 @@ public class CustomComponents implements EntityComponentInitializer {
     
     public static <T extends IStatComponent> ComponentKey<T> registerSkill(Identifier componentID, Class<T> componentClass) {
         ComponentKey<T> componentType = ComponentRegistry.getOrCreate(componentID, componentClass);
-        statList.add(componentType);
-        idToComponentIndexMap.put(componentID, statList.indexOf(componentType));
+        oldComponentStatList.add(componentType);
+        oldComponentIdToComponentIndexMap.put(componentID, oldComponentStatList.indexOf(componentType));
         return componentType;
     }
 }

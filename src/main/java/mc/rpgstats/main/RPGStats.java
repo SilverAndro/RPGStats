@@ -132,7 +132,7 @@ public class RPGStats implements ModInitializer {
     
     public static ArrayList<Integer> getStatLevelsForPlayer(ServerPlayerEntity player) {
         ArrayList<Integer> result = new ArrayList<>();
-        for (ComponentKey<? extends IStatComponent> stat : CustomComponents.statList) {
+        for (ComponentKey<? extends IStatComponent> stat : CustomComponents.oldComponentStatList) {
             result.add(getComponentLevel(stat, player));
         }
         return result;
@@ -160,7 +160,7 @@ public class RPGStats implements ModInitializer {
     }
     
     public static ComponentKey<? extends IStatComponent> statFromID(Identifier ID) {
-        return CustomComponents.statList.get(CustomComponents.idToComponentIndexMap.get(ID));
+        return CustomComponents.oldComponentStatList.get(CustomComponents.oldComponentIdToComponentIndexMap.get(ID));
     }
     
     public static RPGStatsConfig getConfig() {
@@ -198,6 +198,8 @@ public class RPGStats implements ModInitializer {
     
             @Override
             public void apply(ResourceManager manager) {
+                CustomComponents.customComponents.clear();
+                
                 for(Identifier id : manager.findResources("rpgstats", path -> path.endsWith(".stat"))) {
                     try (InputStream stream = manager.getResource(id).getInputStream()) {
                         final char[] buffer = new char[8192];
@@ -207,7 +209,9 @@ public class RPGStats implements ModInitializer {
                             while ((charsRead = reader.read(buffer, 0, buffer.length)) > 0) {
                                 result.append(buffer, 0, charsRead);
                             }
-                            System.out.println(result);
+    
+                            String[] text = result.toString().split("\n");
+                            handleLines(text);
                         }
                     } catch(Throwable e) {
                         RuntimeException clean = new RuntimeException("Failed to read " + id);
@@ -258,14 +262,14 @@ public class RPGStats implements ModInitializer {
                         
                         // Client has the mod installed
                         if (ServerPlayNetworking.canSend(player, SYNC_STATS_PACKET_ID)) {
-                            int count = CustomComponents.statList.size();
+                            int count = CustomComponents.oldComponentStatList.size();
                             
                             PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
                             
                             // How many stats in packet
                             passedData.writeInt(count);
                             // For each stat
-                            for (Identifier statIdent : CustomComponents.idToComponentIndexMap.keySet()) {
+                            for (Identifier statIdent : CustomComponents.oldComponentIdToComponentIndexMap.keySet()) {
                                 // Write the stat identifier
                                 passedData.writeIdentifier(statIdent);
                                 // Get the actual key
@@ -294,5 +298,22 @@ public class RPGStats implements ModInitializer {
         });
         
         System.out.println("RPGStats is done loading");
+    }
+    
+    private void handleLines(String[] text) {
+        for (String line : text) {
+            line = line.replace("\r", "");
+            Identifier possible;
+            if (!line.startsWith("-")) {
+                possible = Identifier.tryParse(line);
+            } else {
+                possible = Identifier.tryParse(line.substring(1));
+            }
+            if (possible != null) {
+                CustomComponents.customComponents.add(possible);
+            } else {
+                throw new RuntimeException(line);
+            }
+        }
     }
 }

@@ -2,10 +2,10 @@ package mc.rpgstats.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import com.mojang.brigadier.arguments.StringArgumentType;
 import mc.rpgstats.event.LevelUpCallback;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -14,7 +14,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.Collection;
 
-import static com.mojang.brigadier.arguments.StringArgumentType.string;
+import static net.minecraft.command.argument.IdentifierArgumentType.identifier;
 
 public class CheatCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
@@ -28,7 +28,7 @@ public class CheatCommand {
                     CommandManager.argument("targets", EntityArgumentType.players())
                         .then(
                             // Select skill
-                            CommandManager.argument("skill", string())
+                            CommandManager.argument("skill", identifier())
                                 .suggests(new SkillSuggestionProvider())
                                 // Add xp/levels
                                 .then(
@@ -40,7 +40,7 @@ public class CheatCommand {
                                                         .executes(
                                                             (commandContext) -> executeAdd(
                                                                 commandContext.getSource(),
-                                                                new Identifier(StringArgumentType.getString(commandContext, "skill")),
+                                                                IdentifierArgumentType.getIdentifier(commandContext, "skill"),
                                                                 EntityArgumentType.getPlayers(commandContext, "targets"),
                                                                 CommandType.XP,
                                                                 IntegerArgumentType.getInteger(commandContext, "amount")
@@ -55,7 +55,7 @@ public class CheatCommand {
                                                         .executes(
                                                             (commandContext) -> executeAdd(
                                                                 commandContext.getSource(),
-                                                                new Identifier(StringArgumentType.getString(commandContext, "skill")),
+                                                                IdentifierArgumentType.getIdentifier(commandContext, "skill"),
                                                                 EntityArgumentType.getPlayers(commandContext, "targets"),
                                                                 CommandType.LEVELS,
                                                                 IntegerArgumentType.getInteger(commandContext, "amount")
@@ -75,7 +75,7 @@ public class CheatCommand {
                                                         .executes(
                                                             (commandContext) -> executeSet(
                                                                 commandContext.getSource(),
-                                                                new Identifier(StringArgumentType.getString(commandContext, "skill")),
+                                                                IdentifierArgumentType.getIdentifier(commandContext, "skill"),
                                                                 EntityArgumentType.getPlayers(commandContext, "targets"),
                                                                 CommandType.XP,
                                                                 IntegerArgumentType.getInteger(commandContext, "amount")
@@ -91,7 +91,7 @@ public class CheatCommand {
                                                         .executes(
                                                             (commandContext) -> executeSet(
                                                                 commandContext.getSource(),
-                                                                new Identifier(StringArgumentType.getString(commandContext, "skill")),
+                                                                IdentifierArgumentType.getIdentifier(commandContext, "skill"),
                                                                 EntityArgumentType.getPlayers(commandContext, "targets"),
                                                                 CommandType.LEVELS,
                                                                 IntegerArgumentType.getInteger(commandContext, "amount")

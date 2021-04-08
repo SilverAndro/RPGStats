@@ -28,7 +28,7 @@ public class BowArrowMixin {
     public boolean createArrowIfHasNix(boolean bl) {
         if (
             itemUser != null
-            && RPGStats.getComponentLevel(CustomComponents.RANGED_COMPONENT, itemUser) >= 50
+            && RPGStats.getComponentLevel(CustomComponents.RANGED_COMPONENT.getId(), itemUser) >= 50
             && RPGStats.getConfig().toggles.ranged.enableLv50Buff
         ) {
             return true;

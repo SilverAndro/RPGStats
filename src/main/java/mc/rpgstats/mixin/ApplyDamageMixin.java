@@ -28,7 +28,7 @@ public class ApplyDamageMixin {
                 return;
             }
             RPGStats.addXpAndLevelUp(
-                CustomComponents.DEFENSE_COMPONENT,
+                CustomComponents.DEFENSE_COMPONENT.getId(),
                 (ServerPlayerEntity)(Object)this,
                 Math.min(Math.max(1, (int)Math.floor(Math.log10(blockedDamage / 2) * 7)), 15)
             );

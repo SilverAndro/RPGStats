@@ -25,7 +25,13 @@ public class StatsComponent implements Component {
             Identifier identifier = Identifier.tryParse(s);
             if (identifier != null) {
                 int[] tagEntry = compoundTag.getIntArray(s);
-                entries.add(new StatsEntry(Identifier.tryParse(s), tagEntry[0], tagEntry[1]));
+                if (tagEntry.length == 2) {
+                    entries.add(new StatsEntry(Identifier.tryParse(s), tagEntry[0], tagEntry[1]));
+                } else if (tagEntry.length == 1) {
+                    entries.add(new StatsEntry(Identifier.tryParse(s), tagEntry[0], 0));
+                } else if(tagEntry.length == 0) {
+                    entries.add(new StatsEntry(Identifier.tryParse(s), 0, 0));
+                }
             } else {
                 System.err.println("Failed to parse stat identifier: " + s);
             }

@@ -23,7 +23,7 @@ public class GrantFarmingOnSimpleHarvest {
     )
     private static void giveFarmingXpOnSimpleHarvest(PlayerEntity player, World world, Hand hand, BlockHitResult blockHitResult, CallbackInfoReturnable<ActionResult> cir) {
         if (player instanceof ServerPlayerEntity) {
-            RPGStats.addXpAndLevelUp(CustomComponents.FARMING_COMPONENT, (ServerPlayerEntity)player, 1);
+            RPGStats.addXpAndLevelUp(CustomComponents.FARMING_COMPONENT.getId(), (ServerPlayerEntity)player, 1);
         }
     }
 }

@@ -23,7 +23,6 @@ public class DataFixerMixin {
                         !key.equals("rpgstats:max_health") &&
                         !key.equals("rpgstats:internal")
                 ) {
-                    System.out.println(key);
                     newTag.put(key, components.getCompound(key));
                 }
             }

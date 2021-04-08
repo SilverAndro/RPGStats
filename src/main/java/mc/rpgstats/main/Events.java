@@ -8,11 +8,13 @@ import mc.rpgstats.event.LevelUpCallback;
 import mc.rpgstats.mixin_logic.OnSneakLogic;
 import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.advancement.Advancement;
+import net.minecraft.block.*;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
@@ -20,6 +22,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
@@ -30,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 
 import static mc.rpgstats.main.RPGStats.softLevelUp;
 
@@ -289,6 +293,55 @@ public class Events {
                     } else if (newLevel == 50) {
                         player.sendMessage(new LiteralText("§aNix§r - You no longer need arrows"), false);
                     }
+                }
+            }
+        });
+    }
+    
+    public static void registerBlockBreakListeners() {
+        PlayerBlockBreakEvents.AFTER.register((world, playerEntity, blockPos, blockState, blockEntity) -> {
+            if (!world.isClient) {
+                Block block = blockState.getBlock();
+                if (block instanceof PlantBlock || block instanceof PumpkinBlock || block instanceof MelonBlock || block instanceof CocoaBlock) {
+                    if (block instanceof CropBlock) {
+                        if (((CropBlock)block).isMature(blockState)) {
+                            RPGStats.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)playerEntity, 1);
+                        }
+                    } else {
+                        RPGStats.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)playerEntity, 1);
+                    }
+                }
+        
+                Random random = new Random();
+                if ((block == Blocks.ANCIENT_DEBRIS || block instanceof OreBlock) && random.nextBoolean()) {
+                    int amount;
+                    if (
+                        block == Blocks.COAL_ORE ||
+                            block == Blocks.NETHER_GOLD_ORE
+                    ) {
+                        amount = 1;
+                    } else if (
+                        block == Blocks.IRON_ORE ||
+                            block == Blocks.NETHER_QUARTZ_ORE
+                    ) {
+                        amount = 2;
+                    } else if (
+                        block == Blocks.GOLD_ORE ||
+                            block == Blocks.LAPIS_ORE ||
+                            block == Blocks.REDSTONE_ORE
+                    ) {
+                        amount = 3;
+                    } else if (block == Blocks.EMERALD_ORE) {
+                        amount = 4;
+                    } else if (
+                        block == Blocks.DIAMOND_ORE ||
+                            block == Blocks.ANCIENT_DEBRIS
+                    ) {
+                        amount = 5;
+                    } else {
+                        amount = 2;
+                    }
+                    RPGStats.addXpAndLevelUp(CustomComponents.MINING, (ServerPlayerEntity)playerEntity, amount);
                 }
             }
         });

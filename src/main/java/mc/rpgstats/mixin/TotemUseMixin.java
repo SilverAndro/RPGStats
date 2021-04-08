@@ -24,6 +24,6 @@ public class TotemUseMixin {
         locals = LocalCapture.CAPTURE_FAILHARD
     )
     public void onUseTotem(DamageSource source, CallbackInfoReturnable<Boolean> cir, ItemStack itemStack, ServerPlayerEntity serverPlayerEntity) {
-        RPGStats.addXpAndLevelUp(CustomComponents.DEFENSE_COMPONENT.getId(), serverPlayerEntity, 130);
+        RPGStats.addXpAndLevelUp(CustomComponents.DEFENSE, serverPlayerEntity, 130);
     }
 }

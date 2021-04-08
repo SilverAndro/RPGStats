@@ -18,7 +18,7 @@ public class UnbreakingEnchantmentMixin {
     private static void bonusUnbreaking(ItemStack item, int level, Random random, CallbackInfoReturnable<Boolean> cir) {
         if (item.getHolder() != null && item.getHolder() instanceof ServerPlayerEntity) {
             if (
-                RPGStats.getComponentLevel(CustomComponents.MINING_COMPONENT.getId(), (ServerPlayerEntity)item.getHolder()) >= 25
+                RPGStats.getComponentLevel(CustomComponents.MINING, (ServerPlayerEntity)item.getHolder()) >= 25
                 && RPGStats.getConfig().toggles.mining.enableLv25Buff
             ) {
                 if (!cir.getReturnValue() && random.nextFloat() <= 0.05f) {

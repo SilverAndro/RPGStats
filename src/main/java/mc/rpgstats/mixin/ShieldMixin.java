@@ -15,7 +15,7 @@ public class ShieldMixin {
     private void onShieldUse(float amount, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Object)this instanceof ServerPlayerEntity) {
-            RPGStats.addXpAndLevelUp(CustomComponents.DEFENSE_COMPONENT.getId(), (ServerPlayerEntity)(Object)this, Math.max(1, (int)Math.floor(amount / 2)));
+            RPGStats.addXpAndLevelUp(CustomComponents.DEFENSE, (ServerPlayerEntity)(Object)this, Math.max(1, (int)Math.floor(amount / 2)));
         }
     }
 }

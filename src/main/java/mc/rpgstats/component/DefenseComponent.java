@@ -66,7 +66,7 @@ public class DefenseComponent implements IStatComponent {
     
     @Override
     public void onLevelUp(boolean beQuiet) {
-        Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) + 0.01);
+        /*Objects.requireNonNull(player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) + 0.01);
         if (!beQuiet)
             player.sendMessage(new LiteralText("§a+0.01§r Knockback resistance"), false);
         if (getLevel() % 2 == 0 && getLevel() > 10) {
@@ -82,5 +82,6 @@ public class DefenseComponent implements IStatComponent {
                 player.sendMessage(new LiteralText("§aNimble II§r - 10% chance to avoid damage"), false);
             }
         }
+         */
     }
 }

@@ -27,7 +27,7 @@ public class ImpalingMixin {
         if (EnchantmentHelper.get(stack).containsKey(Enchantments.IMPALING) && !(group == EntityGroup.AQUATIC)) {
             if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
                 if (
-                    RPGStats.getComponentLevel(CustomComponents.RANGED_COMPONENT.getId(), (ServerPlayerEntity)stack.getHolder()) >= 25
+                    RPGStats.getComponentLevel(CustomComponents.RANGED, (ServerPlayerEntity)stack.getHolder()) >= 25
                     && RPGStats.getConfig().toggles.ranged.enableLv25Buff
                 ) {
                     int level = EnchantmentHelper.get(stack).get(Enchantments.IMPALING);

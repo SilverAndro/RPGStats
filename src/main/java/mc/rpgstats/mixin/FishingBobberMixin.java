@@ -24,9 +24,9 @@ public class FishingBobberMixin {
     public void onCatchItem(ItemStack usedItem, CallbackInfoReturnable<Integer> cir, PlayerEntity playerEntity, int i, LootContext.Builder builder, LootTable lootTable, List list, Iterator var7, ItemStack itemStack) {
         if (!playerEntity.world.isClient) {
             if (itemStack.getItem().isIn(ItemTags.FISHES)) {
-                RPGStats.addXpAndLevelUp(CustomComponents.FISHING_COMPONENT.getId(), (ServerPlayerEntity)playerEntity, 3);
+                RPGStats.addXpAndLevelUp(CustomComponents.FISHING, (ServerPlayerEntity)playerEntity, 3);
             } else  {
-                RPGStats.addXpAndLevelUp(CustomComponents.FISHING_COMPONENT.getId(), (ServerPlayerEntity)playerEntity, 1);
+                RPGStats.addXpAndLevelUp(CustomComponents.FISHING, (ServerPlayerEntity)playerEntity, 1);
             }
         }
     }

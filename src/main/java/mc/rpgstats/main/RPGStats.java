@@ -6,6 +6,7 @@ import mc.rpgstats.advancemnents.LevelUpCriterion;
 import mc.rpgstats.command.CheatCommand;
 import mc.rpgstats.command.StatsCommand;
 import mc.rpgstats.component.IStatComponent;
+import mc.rpgstats.component.LevelUps;
 import mc.rpgstats.component.internal.PlayerPreferencesComponent;
 import mc.rpgstats.event.LevelUpCallback;
 import mc.rpgstats.mixin.accessor.CriteriaAccessor;
@@ -256,13 +257,13 @@ public class RPGStats implements ModInitializer {
                         
                         // Fix stats for respawning players
                         if (needsStatFix.contains(player) && player.isAlive()) {
-                            softLevelUp(CustomComponents.DEFENSE_COMPONENT.getId(), player);
-                            softLevelUp(CustomComponents.FARMING_COMPONENT.getId(), player);
-                            softLevelUp(CustomComponents.MAGIC_COMPONENT.getId(), player);
-                            softLevelUp(CustomComponents.MELEE_COMPONENT.getId(), player);
-                            softLevelUp(CustomComponents.MINING_COMPONENT.getId(), player);
-                            softLevelUp(CustomComponents.RANGED_COMPONENT.getId(), player);
-                            softLevelUp(CustomComponents.FISHING_COMPONENT.getId(), player);
+                            softLevelUp(CustomComponents.DEFENSE, player);
+                            softLevelUp(CustomComponents.FARMING, player);
+                            softLevelUp(CustomComponents.MAGIC, player);
+                            softLevelUp(CustomComponents.MELEE, player);
+                            softLevelUp(CustomComponents.MINING, player);
+                            softLevelUp(CustomComponents.RANGED, player);
+                            softLevelUp(CustomComponents.FISHING, player);
                             needsStatFix.remove(player);
                         }
                         
@@ -307,7 +308,7 @@ public class RPGStats implements ModInitializer {
                         // Mining lv 50 effect
                         if (
                             player.getBlockPos().getY() <= getConfig().toggles.mining.effectLevelTrigger
-                                && getComponentLevel(CustomComponents.MINING_COMPONENT.getId(), player) >= 50
+                                && getComponentLevel(CustomComponents.MINING, player) >= 50
                                 && getConfig().toggles.mining.enableLv50Buff
                         ) {
                             player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 13 * 20));
@@ -318,6 +319,8 @@ public class RPGStats implements ModInitializer {
                 tickCount = 0;
             }
         });
+    
+        LevelUps.registerLevelUpEvents();
         
         System.out.println("RPGStats is done loading");
     }

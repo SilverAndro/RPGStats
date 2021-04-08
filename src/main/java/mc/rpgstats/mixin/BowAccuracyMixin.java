@@ -43,7 +43,7 @@ class BowAccuracyMixin {
             PersistentProjectileEntity persistentProjectileEntity
     ) {
         if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
-            float newDistort = 1.0f - RPGStats.getComponentLevel(CustomComponents.RANGED_COMPONENT.getId(), (ServerPlayerEntity)playerEntity) / 50f;
+            float newDistort = 1.0f - RPGStats.getComponentLevel(CustomComponents.RANGED, (ServerPlayerEntity)playerEntity) / 50f;
             persistentProjectileEntity.setProperties(playerEntity, playerEntity.pitch, playerEntity.yaw, 0.0F, f * 3.0F, newDistort);
         }
     }

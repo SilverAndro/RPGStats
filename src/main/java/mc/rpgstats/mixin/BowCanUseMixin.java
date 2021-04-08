@@ -17,7 +17,7 @@ public class BowCanUseMixin {
     public void modifyGetArrow(ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
         //noinspection ConstantConditions
         if ((Object)this instanceof ServerPlayerEntity) {
-            if (RPGStats.getComponentLevel(CustomComponents.RANGED_COMPONENT.getId(), (ServerPlayerEntity)(Object)this) >= 50) {
+            if (RPGStats.getComponentLevel(CustomComponents.RANGED, (ServerPlayerEntity)(Object)this) >= 50) {
                 cir.setReturnValue(new ItemStack(Items.ARROW));
             }
         }

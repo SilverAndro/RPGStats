@@ -114,7 +114,7 @@ public class CheatCommand {
                 RPGStats.addXpAndLevelUp(statFromID, target, amount);
             }
             if (type == CommandType.LEVELS) {
-                RPGStats.setComponentLevel(statFromID, target, RPGStats.getComponentXP(statFromID, target) + amount);
+                RPGStats.setComponentLevel(id, target, RPGStats.getComponentXP(statFromID, target) + amount);
             }
         }
         source.sendFeedback(new LiteralText(amount + " XP added to stat " + id + " for " + targets.size() + " targets."), true);
@@ -123,13 +123,12 @@ public class CheatCommand {
     
     private static int executeSet(ServerCommandSource source, Identifier id, Collection<ServerPlayerEntity> targets, CommandType type, int amount) {
         for (ServerPlayerEntity target : targets) {
-            ComponentKey<? extends IStatComponent> statFromID = RPGStats.statFromID(id);
             if (type == CommandType.XP) {
-                RPGStats.setComponentXP(statFromID, target, amount);
+                RPGStats.setComponentXP(id, target, amount);
             }
             if (type == CommandType.LEVELS) {
-                RPGStats.setComponentLevel(statFromID, target, amount);
-                LevelUpCallback.EVENT.invoker().onLevelUp(target, statFromID, amount);
+                RPGStats.setComponentLevel(id, target, amount);
+                LevelUpCallback.EVENT.invoker().onLevelUp(target, id, amount, true);
             }
         }
         source.sendFeedback(new LiteralText("XP set for stat " + id + " to " + amount + " for " + targets.size() + " targets."), true);

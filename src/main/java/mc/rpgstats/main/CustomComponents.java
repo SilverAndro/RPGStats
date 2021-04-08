@@ -12,10 +12,9 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class CustomComponents implements EntityComponentInitializer {
-    public static HashSet<Identifier> customComponents = new HashSet<>();
+    public static HashMap<Identifier, String> customComponents = new HashMap<>();
     
     public static ArrayList<ComponentKey<? extends IStatComponent>> oldComponentStatList = new ArrayList<>();
     public static HashMap<Identifier, Integer> oldComponentIdToComponentIndexMap = new HashMap<>();

@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture;
 public class SkillSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
     @Override
     public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
-        for (Identifier skillID : CustomComponents.customComponents.keySet()) {
+        for (Identifier skillID : CustomComponents.components.keySet()) {
             builder.suggest(skillID.toString());
         }
         return builder.buildFuture();

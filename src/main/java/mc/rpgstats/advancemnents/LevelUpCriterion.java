@@ -1,9 +1,6 @@
 package mc.rpgstats.advancemnents;
 
 import com.google.gson.JsonObject;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import mc.rpgstats.component.IStatComponent;
-import mc.rpgstats.component.StatsComponent;
 import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.advancement.criterion.AbstractCriterion;

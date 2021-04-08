@@ -5,7 +5,6 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WListPanel;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
-import mc.rpgstats.component.IStatComponent;
 import mc.rpgstats.main.RPGStats;
 import mc.rpgstats.main.RPGStatsClient;
 import net.minecraft.text.LiteralText;

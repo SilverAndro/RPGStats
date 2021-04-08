@@ -100,7 +100,11 @@ public class Events {
                 possible = Identifier.tryParse(id.substring(1));
             }
             if (possible != null) {
-                CustomComponents.components.put(possible, name);
+                if (id.startsWith("-")) {
+                    CustomComponents.components.remove(possible);
+                } else {
+                    CustomComponents.components.put(possible, name);
+                }
             } else {
                 throw new RuntimeException(line);
             }

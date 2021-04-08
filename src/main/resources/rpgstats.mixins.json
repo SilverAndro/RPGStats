@@ -9,7 +9,6 @@
   "plugin": "mc.rpgstats.mixin.compat.Plugin",
   "mixins": [
     "ApplyDamageMixin",
-    "BlockBreakMixin",
     "BonemealGrowMixin",
     "BonemealMixin",
     "BowAccuracyMixin",

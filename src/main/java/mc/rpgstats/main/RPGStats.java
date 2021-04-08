@@ -188,6 +188,7 @@ public class RPGStats implements ModInitializer {
         Events.registerResourceReloadListeners();
         Events.registerServerTickEvents();
         Events.registerLevelUpEvents();
+        Events.registerBlockBreakListeners();
         
         System.out.println("RPGStats is done loading");
     }

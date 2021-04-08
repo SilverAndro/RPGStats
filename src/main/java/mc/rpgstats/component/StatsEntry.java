@@ -1,10 +1,8 @@
 package mc.rpgstats.component;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.IntArrayTag;
 import net.minecraft.util.Identifier;
 
-import java.util.List;
 import java.util.Objects;
 
 public class StatsEntry {
@@ -19,13 +17,10 @@ public class StatsEntry {
     }
     
     public void toCompound(CompoundTag compoundTag) {
-        List<Integer> array = new java.util.ArrayList<>(level);
-        array.add(xp);
-        
-        IntArrayTag data = new IntArrayTag(array);
-        
-        compoundTag.put(id.toString(), data);
-        
+        CompoundTag tag = new CompoundTag();
+        tag.putInt("level", level);
+        tag.putInt("xp", xp);
+        compoundTag.put(id.toString(), tag);
     }
     
     @Override

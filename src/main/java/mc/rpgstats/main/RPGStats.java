@@ -57,13 +57,13 @@ public class RPGStats implements ModInitializer {
     // Helper methods for components
     public static void setComponentXP(Identifier id, ServerPlayerEntity player, int newValue) {
         if (CustomComponents.customComponents.containsKey(id)) {
-            CustomComponents.STATS.get(player).getOrSetFromID(id).xp = newValue;
+            CustomComponents.STATS.get(player).getOrCreateID(id).xp = newValue;
         }
     }
     
     public static int getComponentXP(Identifier id, ServerPlayerEntity player) {
         if (CustomComponents.customComponents.containsKey(id)) {
-            return CustomComponents.STATS.get(player).getOrSetFromID(id).xp;
+            return CustomComponents.STATS.get(player).getOrCreateID(id).xp;
         } else {
             return -1;
         }
@@ -71,13 +71,13 @@ public class RPGStats implements ModInitializer {
     
     public static void setComponentLevel(Identifier id, ServerPlayerEntity player, int newValue) {
         if (CustomComponents.customComponents.containsKey(id)) {
-            CustomComponents.STATS.get(player).getOrSetFromID(id).level = newValue;
+            CustomComponents.STATS.get(player).getOrCreateID(id).level = newValue;
         }
     }
     
     public static int getComponentLevel(Identifier id, ServerPlayerEntity player) {
         if (CustomComponents.customComponents.containsKey(id)) {
-            return CustomComponents.STATS.get(player).getOrSetFromID(id).level;
+            return CustomComponents.STATS.get(player).getOrCreateID(id).level;
         } else {
             return -1;
         }
@@ -109,7 +109,11 @@ public class RPGStats implements ModInitializer {
                     currentLevel += 1;
             
                     setComponentLevel(id, player, currentLevel);
-                    player.sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + player.getName() + "§r level! You are now level §6" + getComponentLevel(id, player)), false);
+                    player.sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" +
+                        CustomComponents.customComponents.get(id) +
+                        "§r level! You are now level §6" +
+                        getComponentLevel(id, player)
+                    ), false);
             
                     LevelUpCallback.EVENT.invoker().onLevelUp(player, id, currentLevel, true);
             

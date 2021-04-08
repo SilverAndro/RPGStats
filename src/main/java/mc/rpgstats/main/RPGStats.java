@@ -97,24 +97,26 @@ public class RPGStats implements ModInitializer {
     }
     
     public static void addXpAndLevelUp(Identifier id, ServerPlayerEntity player, int addedXP) {
-        int nextXP = getComponentXP(id, player) + addedXP;
-        int currentLevel = getComponentLevel(id, player);
-        
-        if (currentLevel < 50) {
-            // Enough to level up
-            int nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
-            while (nextXP >= nextXPForLevelUp && currentLevel < 50) {
-                nextXP -= nextXPForLevelUp;
-                currentLevel += 1;
-                
-                setComponentLevel(id, player, currentLevel);
-                player.sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + player.getName() + "§r level! You are now level §6" + getComponentLevel(id, player)), false);
-                
-                LevelUpCallback.EVENT.invoker().onLevelUp(player, id, currentLevel, true);
-                
-                nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
+        if (CustomComponents.customComponents.containsKey(id)) {
+            int nextXP = getComponentXP(id, player) + addedXP;
+            int currentLevel = getComponentLevel(id, player);
+    
+            if (currentLevel < 50) {
+                // Enough to level up
+                int nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
+                while (nextXP >= nextXPForLevelUp && currentLevel < 50) {
+                    nextXP -= nextXPForLevelUp;
+                    currentLevel += 1;
+            
+                    setComponentLevel(id, player, currentLevel);
+                    player.sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + player.getName() + "§r level! You are now level §6" + getComponentLevel(id, player)), false);
+            
+                    LevelUpCallback.EVENT.invoker().onLevelUp(player, id, currentLevel, true);
+            
+                    nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
+                }
+                setComponentXP(id, player, nextXP);
             }
-            setComponentXP(id, player, nextXP);
         }
     }
     

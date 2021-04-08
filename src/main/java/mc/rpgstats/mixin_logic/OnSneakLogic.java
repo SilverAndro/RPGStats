@@ -18,7 +18,7 @@ public class OnSneakLogic {
     
         // Check if all conditions met
         if (isSneaking && playerEntity.getMainHandStack().getItem() instanceof HoeItem && new Random().nextBoolean()) {
-            int level = RPGStats.getComponentLevel(CustomComponents.FARMING_COMPONENT, playerEntity);
+            int level = RPGStats.getComponentLevel(CustomComponents.FARMING_COMPONENT.getId(), playerEntity);
             World world = playerEntity.world;
             int amount = 0;
             

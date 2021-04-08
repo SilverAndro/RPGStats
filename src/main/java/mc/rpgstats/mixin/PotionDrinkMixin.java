@@ -26,7 +26,7 @@ public class PotionDrinkMixin {
         if (livingEntity instanceof ServerPlayerEntity) {
             return livingEntity.addStatusEffect(new StatusEffectInstance(
                 effect.getEffectType(),
-                effect.getDuration() + (RPGStats.getComponentLevel(CustomComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity) * 2),
+                effect.getDuration() + (RPGStats.getComponentLevel(CustomComponents.MAGIC_COMPONENT.getId(), (ServerPlayerEntity)livingEntity) * 2),
                 effect.getAmplifier(),
                 effect.isAmbient(),
                 effect.shouldShowParticles(),
@@ -41,7 +41,7 @@ public class PotionDrinkMixin {
     private void getUseTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
             ServerPlayerEntity holder = (ServerPlayerEntity)stack.getHolder();
-            cir.setReturnValue((int)(32 - Math.floor(RPGStats.getComponentLevel(CustomComponents.MAGIC_COMPONENT, holder) / 3.0f)));
+            cir.setReturnValue((int)(32 - Math.floor(RPGStats.getComponentLevel(CustomComponents.MAGIC_COMPONENT.getId(), holder) / 3.0f)));
         }
     }
 }

@@ -3,8 +3,6 @@ package mc.rpgstats.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import mc.rpgstats.component.IStatComponent;
 import mc.rpgstats.event.LevelUpCallback;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -109,12 +107,11 @@ public class CheatCommand {
     
     private static int executeAdd(ServerCommandSource source, Identifier id, Collection<ServerPlayerEntity> targets, CommandType type, int amount) {
         for (ServerPlayerEntity target : targets) {
-            ComponentKey<? extends IStatComponent> statFromID = RPGStats.statFromID(id);
             if (type == CommandType.XP) {
-                RPGStats.addXpAndLevelUp(statFromID, target, amount);
+                RPGStats.addXpAndLevelUp(id, target, amount);
             }
             if (type == CommandType.LEVELS) {
-                RPGStats.setComponentLevel(id, target, RPGStats.getComponentXP(statFromID, target) + amount);
+                RPGStats.setComponentLevel(id, target, RPGStats.getComponentXP(id, target) + amount);
             }
         }
         source.sendFeedback(new LiteralText(amount + " XP added to stat " + id + " for " + targets.size() + " targets."), true);

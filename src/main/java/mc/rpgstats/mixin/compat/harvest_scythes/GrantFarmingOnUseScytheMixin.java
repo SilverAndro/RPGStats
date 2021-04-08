@@ -48,7 +48,7 @@ public class GrantFarmingOnUseScytheMixin {
         int damageTool
     ) {
         if (user instanceof ServerPlayerEntity) {
-            RPGStats.addXpAndLevelUp(CustomComponents.FARMING_COMPONENT, (ServerPlayerEntity)user, damageTool);
+            RPGStats.addXpAndLevelUp(CustomComponents.FARMING_COMPONENT.getId(), (ServerPlayerEntity)user, damageTool);
         }
     }
 }

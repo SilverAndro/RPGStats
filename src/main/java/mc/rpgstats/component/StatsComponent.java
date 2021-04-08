@@ -5,14 +5,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
-import java.util.Optional;
 
 public class StatsComponent implements Component {
     private PlayerEntity playerEntity;
     
-    public ArrayList<StatsEntry> entries = new ArrayList<>();
+    public HashMap<Identifier, StatsEntry> entries = new HashMap<>();
     
     public StatsComponent(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
@@ -24,14 +23,9 @@ public class StatsComponent implements Component {
         compoundTag.getKeys().forEach(s -> {
             Identifier identifier = Identifier.tryParse(s);
             if (identifier != null) {
-                int[] tagEntry = compoundTag.getIntArray(s);
-                if (tagEntry.length == 2) {
-                    entries.add(new StatsEntry(Identifier.tryParse(s), tagEntry[0], tagEntry[1]));
-                } else if (tagEntry.length == 1) {
-                    entries.add(new StatsEntry(Identifier.tryParse(s), tagEntry[0], 0));
-                } else if(tagEntry.length == 0) {
-                    entries.add(new StatsEntry(Identifier.tryParse(s), 0, 0));
-                }
+                CompoundTag data = compoundTag.getCompound(identifier.toString());
+                assert data != null;
+                entries.put(identifier, new StatsEntry(identifier, data.getInt("level"), data.getInt("xp")));
             } else {
                 System.err.println("Failed to parse stat identifier: " + s);
             }
@@ -40,7 +34,7 @@ public class StatsComponent implements Component {
     
     @Override
     public void writeToNbt(CompoundTag compoundTag) {
-        for (StatsEntry entry : entries) {
+        for (StatsEntry entry : entries.values()) {
             entry.toCompound(compoundTag);
         }
     }
@@ -58,14 +52,7 @@ public class StatsComponent implements Component {
         return Objects.hash(playerEntity, entries);
     }
     
-    public StatsEntry getOrSetFromID(Identifier id) {
-        Optional<StatsEntry> possible = entries.stream().filter(statsEntry -> statsEntry.id == id).findFirst();
-        if (possible.isPresent()) {
-            return possible.get();
-        } else {
-            StatsEntry entry = new StatsEntry(id, 0, 0);
-            entries.add(entry);
-            return entry;
-        }
+    public StatsEntry getOrCreateID(Identifier id) {
+        return entries.computeIfAbsent(id, identifier -> new StatsEntry(id, 0, 0));
     }
 }

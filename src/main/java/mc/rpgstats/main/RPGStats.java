@@ -22,7 +22,6 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
@@ -56,20 +55,32 @@ public class RPGStats implements ModInitializer {
     private int tickCount = 0;
     
     // Helper methods for components
-    public static void setComponentXP(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player, int newValue) {
-        type.get(player).setXP(newValue);
+    public static void setComponentXP(Identifier id, ServerPlayerEntity player, int newValue) {
+        if (CustomComponents.customComponents.containsKey(id)) {
+            CustomComponents.STATS.get(player).getOrSetFromID(id).xp = newValue;
+        }
     }
     
-    public static int getComponentXP(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player) {
-        return type.get(player).getXP();
+    public static int getComponentXP(Identifier id, ServerPlayerEntity player) {
+        if (CustomComponents.customComponents.containsKey(id)) {
+            return CustomComponents.STATS.get(player).getOrSetFromID(id).xp;
+        } else {
+            return -1;
+        }
     }
     
-    public static void setComponentLevel(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player, int newValue) {
-        type.get(player).setLevel(newValue);
+    public static void setComponentLevel(Identifier id, ServerPlayerEntity player, int newValue) {
+        if (CustomComponents.customComponents.containsKey(id)) {
+            CustomComponents.STATS.get(player).getOrSetFromID(id).level = newValue;
+        }
     }
     
-    public static int getComponentLevel(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player) {
-        return type.get(player).getLevel();
+    public static int getComponentLevel(Identifier id, ServerPlayerEntity player) {
+        if (CustomComponents.customComponents.containsKey(id)) {
+            return CustomComponents.STATS.get(player).getOrSetFromID(id).level;
+        } else {
+            return -1;
+        }
     }
     
     public static int calculateXpNeededToReachLevel(int level) {
@@ -85,9 +96,9 @@ public class RPGStats implements ModInitializer {
         }
     }
     
-    public static void addXpAndLevelUp(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player, int addedXP) {
-        int nextXP = getComponentXP(type, player) + addedXP;
-        int currentLevel = getComponentLevel(type, player);
+    public static void addXpAndLevelUp(Identifier id, ServerPlayerEntity player, int addedXP) {
+        int nextXP = getComponentXP(id, player) + addedXP;
+        int currentLevel = getComponentLevel(id, player);
         
         if (currentLevel < 50) {
             // Enough to level up
@@ -96,43 +107,48 @@ public class RPGStats implements ModInitializer {
                 nextXP -= nextXPForLevelUp;
                 currentLevel += 1;
                 
-                setComponentLevel(type, player, currentLevel);
-                ((PlayerEntity)type.get(player).getEntity()).sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + type.get(player).getName() + "§r level! You are now level §6" + type.get(player).getLevel()), false);
-                type.get(player).onLevelUp(false);
+                setComponentLevel(id, player, currentLevel);
+                player.sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" + player.getName() + "§r level! You are now level §6" + getComponentLevel(id, player)), false);
                 
-                LevelUpCallback.EVENT.invoker().onLevelUp(player, type, currentLevel);
+                LevelUpCallback.EVENT.invoker().onLevelUp(player, id, currentLevel, true);
                 
                 nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
             }
-            setComponentXP(type, player, nextXP);
+            setComponentXP(id, player, nextXP);
         }
     }
     
-    public static String getFormattedLevelData(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player) {
-        int currentLevel = getComponentLevel(type, player);
-        int xp = getComponentXP(type, player);
+    public static String getFormattedLevelData(Identifier id, ServerPlayerEntity player) {
+        int currentLevel = getComponentLevel(id, player);
+        int xp = getComponentXP(id, player);
+    
+        String name = CustomComponents.customComponents.get(id);
+        String capped = name.substring(0, 1).toUpperCase() + name.substring(1);
         if (currentLevel < 50) {
             int nextXP = calculateXpNeededToReachLevel(currentLevel + 1);
-            return "§6" + type.get(player).getCapName() + "§r - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
+            return "§6" + capped + "§r - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
         } else {
-            return "§6" + type.get(player).getCapName() + "§r - Level: " + currentLevel;
+            return "§6" + capped + "§r - Level: " + currentLevel;
         }
     }
     
-    public static String getNotFormattedLevelData(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player) {
-        int currentLevel = getComponentLevel(type, player);
-        int xp = getComponentXP(type, player);
+    public static String getNotFormattedLevelData(Identifier id, ServerPlayerEntity player) {
+        int currentLevel = getComponentLevel(id, player);
+        int xp = getComponentXP(id, player);
+        
+        String name = CustomComponents.customComponents.get(id);
+        String capped = name.substring(0, 1).toUpperCase() + name.substring(1);
         if (currentLevel < 50) {
             int nextXP = calculateXpNeededToReachLevel(currentLevel + 1);
-            return type.get(player).getCapName() + " - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
+            return capped + " - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
         } else {
-            return "" + type.get(player).getCapName() + " - Level: " + currentLevel;
+            return capped + " - Level: " + currentLevel;
         }
     }
     
     public static ArrayList<Integer> getStatLevelsForPlayer(ServerPlayerEntity player) {
         ArrayList<Integer> result = new ArrayList<>();
-        for (ComponentKey<? extends IStatComponent> stat : CustomComponents.oldComponentStatList) {
+        for (Identifier stat : CustomComponents.customComponents.keySet()) {
             result.add(getComponentLevel(stat, player));
         }
         return result;
@@ -146,16 +162,16 @@ public class RPGStats implements ModInitializer {
         return Collections.min(getStatLevelsForPlayer(player));
     }
     
-    public static void softLevelUp(ComponentKey<? extends IStatComponent> type, ServerPlayerEntity player) {
-        int savedLevel = getComponentLevel(type, player);
+    public static void softLevelUp(Identifier id, ServerPlayerEntity player) {
+        int savedLevel = getComponentLevel(id, player);
         if (savedLevel > 50) {
-            setComponentLevel(type, player, 50);
-            setComponentXP(type, player, 0);
+            setComponentLevel(id, player, 50);
+            setComponentXP(id, player, 0);
             savedLevel = 50;
         }
         for (int i = 1; i <= savedLevel; i++) {
-            setComponentLevel(type, player, i);
-            type.get(player).onLevelUp(true);
+            setComponentLevel(id, player, i);
+            LevelUpCallback.EVENT.invoker().onLevelUp(player, id, i, true);
         }
     }
     
@@ -237,13 +253,13 @@ public class RPGStats implements ModInitializer {
                         
                         // Fix stats for respawning players
                         if (needsStatFix.contains(player) && player.isAlive()) {
-                            softLevelUp(CustomComponents.DEFENSE_COMPONENT, player);
-                            softLevelUp(CustomComponents.FARMING_COMPONENT, player);
-                            softLevelUp(CustomComponents.MAGIC_COMPONENT, player);
-                            softLevelUp(CustomComponents.MELEE_COMPONENT, player);
-                            softLevelUp(CustomComponents.MINING_COMPONENT, player);
-                            softLevelUp(CustomComponents.RANGED_COMPONENT, player);
-                            softLevelUp(CustomComponents.FISHING_COMPONENT, player);
+                            softLevelUp(CustomComponents.DEFENSE_COMPONENT.getId(), player);
+                            softLevelUp(CustomComponents.FARMING_COMPONENT.getId(), player);
+                            softLevelUp(CustomComponents.MAGIC_COMPONENT.getId(), player);
+                            softLevelUp(CustomComponents.MELEE_COMPONENT.getId(), player);
+                            softLevelUp(CustomComponents.MINING_COMPONENT.getId(), player);
+                            softLevelUp(CustomComponents.RANGED_COMPONENT.getId(), player);
+                            softLevelUp(CustomComponents.FISHING_COMPONENT.getId(), player);
                             needsStatFix.remove(player);
                         }
                         
@@ -269,14 +285,12 @@ public class RPGStats implements ModInitializer {
                             // How many stats in packet
                             passedData.writeInt(count);
                             // For each stat
-                            for (Identifier statIdent : CustomComponents.oldComponentIdToComponentIndexMap.keySet()) {
+                            for (Identifier statId : CustomComponents.oldComponentIdToComponentIndexMap.keySet()) {
                                 // Write the stat identifier
-                                passedData.writeIdentifier(statIdent);
-                                // Get the actual key
-                                ComponentKey<? extends IStatComponent> stat = statFromID(statIdent);
+                                passedData.writeIdentifier(statId);
                                 // Write the level and XP
-                                passedData.writeInt(getComponentLevel(stat, player));
-                                passedData.writeInt(getComponentXP(stat, player));
+                                passedData.writeInt(getComponentLevel(statId, player));
+                                passedData.writeInt(getComponentXP(statId, player));
                             }
                             
                             ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, passedData);
@@ -285,7 +299,7 @@ public class RPGStats implements ModInitializer {
                         // Mining lv 50 effect
                         if (
                             player.getBlockPos().getY() <= getConfig().toggles.mining.effectLevelTrigger
-                                && getComponentLevel(CustomComponents.MINING_COMPONENT, player) >= 50
+                                && getComponentLevel(CustomComponents.MINING_COMPONENT.getId(), player) >= 50
                                 && getConfig().toggles.mining.enableLv50Buff
                         ) {
                             player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 13 * 20));
@@ -303,14 +317,19 @@ public class RPGStats implements ModInitializer {
     private void handleLines(String[] text) {
         for (String line : text) {
             line = line.replace("\r", "");
+    
+            String[] split = line.split(">");
+            String id = split[0];
+            String name = split[1];
+            
             Identifier possible;
-            if (!line.startsWith("-")) {
-                possible = Identifier.tryParse(line);
+            if (!id.startsWith("-")) {
+                possible = Identifier.tryParse(id);
             } else {
-                possible = Identifier.tryParse(line.substring(1));
+                possible = Identifier.tryParse(id.substring(1));
             }
             if (possible != null) {
-                CustomComponents.customComponents.add(possible);
+                CustomComponents.customComponents.put(possible, name);
             } else {
                 throw new RuntimeException(line);
             }

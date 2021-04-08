@@ -7,6 +7,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.Optional;
 
 public class StatsComponent implements Component {
     private PlayerEntity playerEntity;
@@ -49,5 +50,16 @@ public class StatsComponent implements Component {
     @Override
     public int hashCode() {
         return Objects.hash(playerEntity, entries);
+    }
+    
+    public StatsEntry getOrSetFromID(Identifier id) {
+        Optional<StatsEntry> possible = entries.stream().filter(statsEntry -> statsEntry.id == id).findFirst();
+        if (possible.isPresent()) {
+            return possible.get();
+        } else {
+            StatsEntry entry = new StatsEntry(id, 0, 0);
+            entries.add(entry);
+            return entry;
+        }
     }
 }

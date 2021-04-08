@@ -117,7 +117,7 @@ public class RPGStats implements ModInitializer {
                         getComponentLevel(id, player)
                     ), false);
             
-                    LevelUpCallback.EVENT.invoker().onLevelUp(player, id, currentLevel, true);
+                    LevelUpCallback.EVENT.invoker().onLevelUp(player, id, currentLevel, false);
             
                     nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
                 }

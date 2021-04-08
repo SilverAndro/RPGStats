@@ -17,7 +17,7 @@ public interface LevelUpCallback {
         (listeners) -> (player, id, newLevel, hideMessages) -> {
             RPGStats.levelUpCriterion.trigger((ServerPlayerEntity)player);
             for (LevelUpCallback listener : listeners) {
-                listener.onLevelUp(player, id, newLevel, true);
+                listener.onLevelUp(player, id, newLevel, hideMessages);
             }
         });
     

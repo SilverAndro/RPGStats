@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CustomComponents implements EntityComponentInitializer {
-    public static HashMap<Identifier, String> customComponents = new HashMap<>();
+    public static HashMap<Identifier, String> components = new HashMap<>();
     
     public static Identifier MELEE = new Identifier("rpgstats:melee");
     public static Identifier RANGED = new Identifier("rpgstats:ranged");

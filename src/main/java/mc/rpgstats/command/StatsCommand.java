@@ -65,14 +65,14 @@ public class StatsCommand {
             
             spe.sendMessage(new LiteralText("§aRPGStats >§r Stats for " + target.getEntityName()), false);
             
-            CustomComponents.customComponents.keySet().forEach(identifier -> {
+            CustomComponents.components.keySet().forEach(identifier -> {
                 spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(identifier, target)), false);
             });
         } else if (target != null) {
             if (source.getEntity() == null) {
                 source.sendFeedback(new LiteralText("Stats for " + target.getEntityName()), false);
     
-                CustomComponents.customComponents.keySet().forEach(identifier -> {
+                CustomComponents.components.keySet().forEach(identifier -> {
                     source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(identifier, target)), false);
                 });
             } else {
@@ -81,7 +81,7 @@ public class StatsCommand {
                 
                 spe.sendMessage(new LiteralText("§aRPGStats >§r Stats for " + targeted.getEntityName()), false);
     
-                CustomComponents.customComponents.keySet().forEach(identifier -> {
+                CustomComponents.components.keySet().forEach(identifier -> {
                     spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(identifier, targeted)), false);
                 });
             }

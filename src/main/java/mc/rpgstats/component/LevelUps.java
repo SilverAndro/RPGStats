@@ -10,7 +10,7 @@ import java.util.Objects;
 public class LevelUps {
     public static void registerLevelUpEvents() {
         LevelUpCallback.EVENT.register((player, id, newLevel, hideMessages) -> {
-            if (id == CustomComponents.DEFENSE) {
+            if (id.equals(CustomComponents.DEFENSE)) {
                 player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) + 0.01);
                 if (!hideMessages)
                     player.sendMessage(new LiteralText("§a+0.01§r Knockback resistance"), false);

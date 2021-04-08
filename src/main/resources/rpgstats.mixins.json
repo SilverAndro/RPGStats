@@ -15,6 +15,7 @@
     "BowAccuracyMixin",
     "BowArrowMixin",
     "BowCanUseMixin",
+    "DataFixerMixin",
     "FishingBobberMixin",
     "ImpalingMixin",
     "ItemEatMixin",

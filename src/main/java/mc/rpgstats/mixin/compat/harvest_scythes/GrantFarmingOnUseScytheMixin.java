@@ -11,7 +11,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -25,9 +24,10 @@ public class GrantFarmingOnUseScytheMixin {
     @Inject(method = "harvest",
         at = @At(value = "INVOKE",
             target = "Lnet/minecraft/entity/player/PlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;",
-            ordinal = 1
+            ordinal = 5
         ),
-        locals = LocalCapture.CAPTURE_FAILHARD)
+        locals = LocalCapture.CAPTURE_FAILHARD
+    )
     private static void scytheCompatFarmingXP(
         int harvestRadius,
         boolean circleHarvest,
@@ -35,9 +35,10 @@ public class GrantFarmingOnUseScytheMixin {
         PlayerEntity user,
         Hand hand,
         CallbackInfoReturnable<TypedActionResult<ItemStack>> cir,
-        Vec3d pos,
         BlockPos blockPos,
         Item item,
+        int lvl,
+        int radius,
         int x,
         int y,
         int z,

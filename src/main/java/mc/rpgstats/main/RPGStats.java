@@ -17,16 +17,24 @@ import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -180,6 +188,35 @@ public class RPGStats implements ModInitializer {
                 CheatCommand.register(dispatcher);
             }
         );
+        
+        // Data driven stuff
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+            @Override
+            public Identifier getFabricId() {
+                return new Identifier("rpgstats:stats");
+            }
+    
+            @Override
+            public void apply(ResourceManager manager) {
+                for(Identifier id : manager.findResources("rpgstats", path -> path.endsWith(".stat"))) {
+                    try (InputStream stream = manager.getResource(id).getInputStream()) {
+                        final char[] buffer = new char[8192];
+                        final StringBuilder result = new StringBuilder();
+                        try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
+                            int charsRead;
+                            while ((charsRead = reader.read(buffer, 0, buffer.length)) > 0) {
+                                result.append(buffer, 0, charsRead);
+                            }
+                            System.out.println(result);
+                        }
+                    } catch(Throwable e) {
+                        RuntimeException clean = new RuntimeException("Failed to read " + id);
+                        clean.addSuppressed(e);
+                        throw clean;
+                    }
+                }
+            }
+        });
         
         // Syncing and advancements
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {

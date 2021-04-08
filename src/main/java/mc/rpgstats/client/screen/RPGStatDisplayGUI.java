@@ -10,12 +10,13 @@ import mc.rpgstats.main.RPGStats;
 import mc.rpgstats.main.RPGStatsClient;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
 public class RPGStatDisplayGUI extends LightweightGuiDescription {
-    ArrayList<IStatComponent> data = new ArrayList<>();
+    ArrayList<Identifier> data = new ArrayList<>();
     
     public RPGStatDisplayGUI() {
         data.addAll(RPGStatsClient.currentStats.keySet());
@@ -27,16 +28,20 @@ public class RPGStatDisplayGUI extends LightweightGuiDescription {
         WLabel guiTitle = new WLabel("  RPGStats");
         root.add(guiTitle, 5, 0);
     
-        BiConsumer<IStatComponent, StatEntry> configurator = (IStatComponent component, StatEntry entry) -> {
-            int level = RPGStatsClient.currentStats.get(component).getLeft();
-            int xp = RPGStatsClient.currentStats.get(component).getRight();
+        BiConsumer<Identifier, StatEntry> configurator = (Identifier identifier, StatEntry entry) -> {
+            int level = RPGStatsClient.currentStats.get(identifier).getLeft();
+            int xp = RPGStatsClient.currentStats.get(identifier).getRight();
             
-            entry.name.setText(new LiteralText(component.getCapName()).formatted(Formatting.DARK_AQUA).formatted(Formatting.BOLD));
+            String name = RPGStatsClient.nameMap.get(identifier);
+            name = name.substring(0, 1).toUpperCase() + name.substring(1);
+            entry.name.setText(new LiteralText(
+                name
+            ).formatted(Formatting.DARK_AQUA).formatted(Formatting.BOLD));
             entry.level.setText(new LiteralText("Level: ").formatted(Formatting.DARK_GREEN).append(String.valueOf(level)));
             entry.xp.setText(new LiteralText("XP: ").formatted(Formatting.DARK_GREEN).append(xp + "/" + RPGStats.calculateXpNeededToReachLevel(level + 1)));
         };
     
-        WListPanel<IStatComponent, StatEntry> list = new WListPanel<>(data, StatEntry::new, configurator);
+        WListPanel<Identifier, StatEntry> list = new WListPanel<>(data, StatEntry::new, configurator);
         list.setListItemHeight(18);
         root.add(list, 1, 1, 11, 8);
         

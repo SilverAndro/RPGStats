@@ -8,25 +8,26 @@ import net.minecraft.nbt.CompoundTag;
 public class PlayerHealthAttachComponent implements Component {
     public PlayerEntity playerEntity;
     
+    public double amount = 0.0;
+    
     public PlayerHealthAttachComponent(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
     }
     
     @Override
     public void readFromNbt(CompoundTag compoundTag) {
+        amount = compoundTag.getDouble("max-health-mod");
         playerEntity
             .getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)
             .setBaseValue(
-                compoundTag.getDouble("max-health-saver")
+                playerEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).getValue() + amount
             );
     }
     
     @Override
     public void writeToNbt(CompoundTag compoundTag) {
-        compoundTag.putDouble("max-health-saver",
-            playerEntity
-                .getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)
-                .getValue()
+        compoundTag.putDouble("max-health-mod",
+            amount
         );
     }
 }

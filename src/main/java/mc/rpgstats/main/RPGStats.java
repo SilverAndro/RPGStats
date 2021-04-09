@@ -174,8 +174,6 @@ public class RPGStats implements ModInitializer {
     
     @Override
     public void onInitialize() {
-        System.out.println("RPGStats is starting...");
-        
         // Criterion
         assert CriteriaAccessor.getValues() != null;
         CriteriaAccessor.getValues().put(LevelUpCriterion.ID, levelUpCriterion);
@@ -190,6 +188,6 @@ public class RPGStats implements ModInitializer {
         Events.registerLevelUpEvents();
         Events.registerBlockBreakListeners();
         
-        System.out.println("RPGStats is done loading");
+        System.out.println("RPGStats loaded!");
     }
 }

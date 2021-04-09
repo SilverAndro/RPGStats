@@ -1,8 +1,10 @@
 package mc.rpgstats.mixin;
 
+import mc.rpgstats.component.StatsEntry;
 import mc.rpgstats.main.CustomComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,6 +28,12 @@ public class DataFixerMixin {
                     newTag.put(key, components.getCompound(key));
                 }
             }
+        }
+        
+        for (String key : newTag.getKeys()) {
+            StatsEntry entry = CustomComponents.STATS.get(this).getOrCreateID(Identifier.tryParse(key));
+            entry.level = newTag.getCompound(key).getInt("level");
+            entry.xp = newTag.getCompound(key).getInt("xp");
         }
     }
 }

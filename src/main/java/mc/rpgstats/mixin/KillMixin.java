@@ -28,17 +28,17 @@ public abstract class KillMixin {
 				ServerPlayerEntity serverPlayer = (ServerPlayerEntity)entity;
 				if (source.isProjectile()) {
 					if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-						RPGStats.addXpAndLevelUp(CustomComponents.RANGED_COMPONENT, serverPlayer, 130);
+						RPGStats.addXpAndLevelUp(CustomComponents.RANGED, serverPlayer, 130);
 					} else {
-						RPGStats.addXpAndLevelUp(CustomComponents.RANGED_COMPONENT, serverPlayer, 1);
+						RPGStats.addXpAndLevelUp(CustomComponents.RANGED, serverPlayer, 1);
 					}
 				} else if (source.getMagic()) {
-					RPGStats.addXpAndLevelUp(CustomComponents.MAGIC_COMPONENT, serverPlayer, 1);
+					RPGStats.addXpAndLevelUp(CustomComponents.MAGIC, serverPlayer, 1);
 				} else if (!source.isExplosive() && !source.isFire()) {
 					if (le instanceof PassiveEntity) {
-						RPGStats.addXpAndLevelUp(CustomComponents.FARMING_COMPONENT, serverPlayer, 1);
+						RPGStats.addXpAndLevelUp(CustomComponents.FARMING, serverPlayer, 1);
 					} else {
-						int level = RPGStats.getComponentLevel(CustomComponents.MELEE_COMPONENT, serverPlayer);
+						int level = RPGStats.getComponentLevel(CustomComponents.MELEE, serverPlayer);
 						
 						int duration = 0;
 						if (level >= 25 && RPGStats.getConfig().toggles.melee.enableLv25Buff) {
@@ -53,9 +53,9 @@ public abstract class KillMixin {
 						}
 						
 						if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-							RPGStats.addXpAndLevelUp(CustomComponents.MELEE_COMPONENT, serverPlayer, 130);
+							RPGStats.addXpAndLevelUp(CustomComponents.MELEE, serverPlayer, 130);
 						} else {
-							RPGStats.addXpAndLevelUp(CustomComponents.MELEE_COMPONENT, serverPlayer, 1);
+							RPGStats.addXpAndLevelUp(CustomComponents.MELEE, serverPlayer, 1);
 						}
 					}
 				}

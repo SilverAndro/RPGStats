@@ -1,8 +1,7 @@
 package mc.rpgstats.advancemnents;
 
 import com.google.gson.JsonObject;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
-import mc.rpgstats.component.IStatComponent;
+import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.advancement.criterion.AbstractCriterion;
 import net.minecraft.advancement.criterion.AbstractCriterionConditions;
@@ -44,8 +43,7 @@ public class LevelUpCriterion extends AbstractCriterion<LevelUpCriterion.LevelCr
             if (id.equals(ANY_ID)) {
                 return RPGStats.getHighestLevel(player) >= level;
             } else {
-                ComponentKey<? extends IStatComponent> componentKey = RPGStats.statFromID(id);
-                return componentKey.get(player).getLevel() >= level;
+                return CustomComponents.STATS.get(player).getOrCreateID(id).level >= level;
             }
         }
         

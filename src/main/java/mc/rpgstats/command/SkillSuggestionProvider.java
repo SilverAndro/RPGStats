@@ -1,7 +1,6 @@
 package mc.rpgstats.command;
 
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
@@ -13,9 +12,9 @@ import java.util.concurrent.CompletableFuture;
 
 public class SkillSuggestionProvider implements SuggestionProvider<ServerCommandSource> {
     @Override
-    public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) throws CommandSyntaxException {
-        for (Identifier skillID : CustomComponents.idToComponentIndexMap.keySet()) {
-            builder.suggest('"' + skillID.toString() + '"');
+    public CompletableFuture<Suggestions> getSuggestions(CommandContext<ServerCommandSource> context, SuggestionsBuilder builder) {
+        for (Identifier skillID : CustomComponents.components.keySet()) {
+            builder.suggest(skillID.toString());
         }
         return builder.buildFuture();
     }

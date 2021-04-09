@@ -16,7 +16,7 @@ public class StatusEffectsImmuneMixin {
     public boolean negatePoison(LivingEntity livingEntity, DamageSource source, float amount) {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
-                int level = RPGStats.getComponentLevel(CustomComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
+                int level = RPGStats.getComponentLevel(CustomComponents.MAGIC, (ServerPlayerEntity)livingEntity);
                 if (level < 25 || !RPGStats.getConfig().toggles.magic.enableLv25Buff) {
                     return livingEntity.damage(source, amount);
                 }
@@ -31,7 +31,7 @@ public class StatusEffectsImmuneMixin {
     public boolean negateWither(LivingEntity livingEntity, DamageSource source, float amount) {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
-                int level = RPGStats.getComponentLevel(CustomComponents.MAGIC_COMPONENT, (ServerPlayerEntity)livingEntity);
+                int level = RPGStats.getComponentLevel(CustomComponents.MAGIC, (ServerPlayerEntity)livingEntity);
                 if (level < 50 || !RPGStats.getConfig().toggles.magic.enableLv50Buff) {
                     return livingEntity.damage(source, amount);
                 }

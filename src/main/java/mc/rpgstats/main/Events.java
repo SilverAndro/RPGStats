@@ -195,7 +195,6 @@ public class Events {
                     player.sendMessage(new LiteralText("§a+0.01§r Knockback resistance"), false);
                 if (newLevel % 2 == 0 && newLevel > 10) {
                     player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) + 1);
-                    CustomComponents.MAX_HEALTH.get(player).amount += 1.0;
                     if (!hideMessages)
                         player.sendMessage(new LiteralText("§a+1§r Health"), false);
                 }

@@ -1,14 +1,14 @@
 package mc.rpgstats.component.internal;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
+import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.network.ServerPlayerEntity;
 
 public class PlayerHealthAttachComponent implements Component {
     public PlayerEntity playerEntity;
-    
-    public double amount = 0.0;
     
     public PlayerHealthAttachComponent(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
@@ -16,18 +16,11 @@ public class PlayerHealthAttachComponent implements Component {
     
     @Override
     public void readFromNbt(CompoundTag compoundTag) {
-        amount = compoundTag.getDouble("max-health-mod");
-        playerEntity
-            .getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)
-            .setBaseValue(
-                playerEntity.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).getValue() + amount
-            );
+        if (playerEntity instanceof ServerPlayerEntity) {
+            RPGStats.needsStatFix.add((ServerPlayerEntity)playerEntity);
+        }
     }
     
     @Override
-    public void writeToNbt(CompoundTag compoundTag) {
-        compoundTag.putDouble("max-health-mod",
-            amount
-        );
-    }
+    public void writeToNbt(CompoundTag compoundTag) {}
 }

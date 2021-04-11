@@ -45,13 +45,6 @@
       "projectID": 389800
     },
     "cardinal-components": [
-      "rpgstats:melee",
-      "rpgstats:ranged",
-      "rpgstats:defence",
-      "rpgstats:farming",
-      "rpgstats:magic",
-      "rpgstats:mining",
-      "rpgstats:fishing",
       "rpgstats:internal",
       "rpgstats:max_health",
       "rpgstats:stats"

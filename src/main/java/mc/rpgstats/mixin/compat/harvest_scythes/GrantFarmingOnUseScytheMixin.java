@@ -30,7 +30,6 @@ public class GrantFarmingOnUseScytheMixin {
     )
     private static void scytheCompatFarmingXP(
         int harvestRadius,
-        boolean circleHarvest,
         World world,
         PlayerEntity user,
         Hand hand,
@@ -39,10 +38,11 @@ public class GrantFarmingOnUseScytheMixin {
         Item item,
         int lvl,
         int radius,
+        boolean circleHarvest,
         int x,
         int y,
         int z,
-        BlockPos newBlockPos,
+        BlockPos cropPos,
         BlockState blockState,
         Block block,
         int damageTool

@@ -1,26 +1,15 @@
 package mc.rpgstats.main;
 
 import mc.rpgstats.advancemnents.LevelUpCriterion;
-import mc.rpgstats.command.CheatCommand;
-import mc.rpgstats.command.StatsCommand;
 import mc.rpgstats.event.LevelUpCallback;
 import mc.rpgstats.mixin.accessor.CriteriaAccessor;
-import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
-import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -85,10 +74,10 @@ public class RPGStats implements ModInitializer {
             int nextXP = getComponentXP(id, player) + addedXP;
             int currentLevel = getComponentLevel(id, player);
     
-            if (currentLevel < 50) {
+            if (currentLevel < getConfig().scaling.maxLevel) {
                 // Enough to level up
                 int nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
-                while (nextXP >= nextXPForLevelUp && currentLevel < 50) {
+                while (nextXP >= nextXPForLevelUp && currentLevel < getConfig().scaling.maxLevel) {
                     nextXP -= nextXPForLevelUp;
                     currentLevel += 1;
             
@@ -114,7 +103,7 @@ public class RPGStats implements ModInitializer {
     
         String name = CustomComponents.components.get(id);
         String capped = name.substring(0, 1).toUpperCase() + name.substring(1);
-        if (currentLevel < 50) {
+        if (currentLevel < getConfig().scaling.maxLevel) {
             int nextXP = calculateXpNeededToReachLevel(currentLevel + 1);
             return "§6" + capped + "§r - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
         } else {

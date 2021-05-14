@@ -1,8 +1,8 @@
 package mc.rpgstats.main;
 
-import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
-import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
-import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Comment;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = "rpgstats")
 public class RPGStatsConfig implements ConfigData {
@@ -24,6 +24,7 @@ public class RPGStatsConfig implements ConfigData {
         public int base = 80;
         @Comment("If the required amount should be the requirements from previous levels combined + new one instead of just solving once")
         public boolean isCumulative = false;
+        public int maxLevel = 50;
     }
     
     public static class LevelBuffToggles {

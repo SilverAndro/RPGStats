@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.4-SNAPSHOT'
+	id 'fabric-loom' version '0.6-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -19,6 +19,7 @@ repositories {
 		name = "CottonMC"
 		url = "https://server.bbkr.space/artifactory/libs-release"
 	}
+	maven { url "https://maven.shedaniel.me/" }
 	maven {
 		url 'https://jitpack.io'
 	}
@@ -45,10 +46,10 @@ dependencies {
 	include "io.github.onyxstudios.Cardinal-Components-API:cardinal-components-entity:${project.cca_version}"
 
 	// Auto config
-	modApi("me.sargunvohra.mcmods:autoconfig1u:3.3.1") {
+	modApi("me.shedaniel.cloth:cloth-config-fabric:4.11.24") {
 		exclude(group: "net.fabricmc.fabric-api")
 	}
-	include "me.sargunvohra.mcmods:autoconfig1u:3.3.1"
+	include "me.shedaniel.cloth:cloth-config-fabric:4.11.24"
 
 	// Harvest scythes
 	modImplementation 'com.github.LordDeatHunter:HarvestScythes:-SNAPSHOT'

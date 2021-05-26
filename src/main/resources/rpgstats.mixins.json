@@ -6,7 +6,6 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "plugin": "mc.rpgstats.mixin.compat.Plugin",
   "mixins": [
     "ApplyDamageMixin",
     "BonemealGrowMixin",

@@ -3,7 +3,7 @@
   "id": "rpgstats",
   "version": "${version}",
   "name": "RPGStats",
-  "description": "RPGStats, Made for 1.16 Modfest",
+  "description": "RPGStats, Made for 1.16 Modfest originally",
   "authors": [
     "TheoreticallyUseful"
   ],
@@ -29,15 +29,9 @@
     "rpgstats.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.7.4",
+    "fabricloader": "*",
     "fabric": "*",
     "minecraft": ">1.16-"
-  },
-  "conflicts": {
-    "moenchantments": "*"
-  },
-  "suggests": {
-    "flamingo": "*"
   },
   "custom": {
     "modupdater": {

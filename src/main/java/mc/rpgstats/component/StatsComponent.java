@@ -2,14 +2,14 @@ package mc.rpgstats.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 public class StatsComponent implements Component {
-    private PlayerEntity playerEntity;
+    private final PlayerEntity playerEntity;
     
     public HashMap<Identifier, StatsEntry> entries = new HashMap<>();
     
@@ -18,12 +18,12 @@ public class StatsComponent implements Component {
     }
     
     @Override
-    public void readFromNbt(CompoundTag compoundTag) {
+    public void readFromNbt(NbtCompound compoundTag) {
         entries.clear();
         compoundTag.getKeys().forEach(s -> {
             Identifier identifier = Identifier.tryParse(s);
             if (identifier != null) {
-                CompoundTag data = compoundTag.getCompound(identifier.toString());
+                NbtCompound data = compoundTag.getCompound(identifier.toString());
                 assert data != null;
                 entries.put(identifier, new StatsEntry(identifier, data.getInt("level"), data.getInt("xp")));
             } else {
@@ -33,7 +33,7 @@ public class StatsComponent implements Component {
     }
     
     @Override
-    public void writeToNbt(CompoundTag compoundTag) {
+    public void writeToNbt(NbtCompound compoundTag) {
         for (StatsEntry entry : entries.values()) {
             entry.toCompound(compoundTag);
         }

@@ -22,7 +22,7 @@ public abstract class KillMixin {
 	@Inject(at = @At("HEAD"), method = "onDeath")
 	private void onKilledXPTracker(DamageSource source, CallbackInfo info) {
 		LivingEntity le = (LivingEntity)(Object)this;
-		if (!le.world.isClient && !le.removed) {
+		if (!le.world.isClient && !le.isRemoved()) {
 			Entity entity = source.getAttacker();
 			if (entity instanceof ServerPlayerEntity) {
 				ServerPlayerEntity serverPlayer = (ServerPlayerEntity)entity;
@@ -32,7 +32,7 @@ public abstract class KillMixin {
 					} else {
 						RPGStats.addXpAndLevelUp(CustomComponents.RANGED, serverPlayer, 1);
 					}
-				} else if (source.getMagic()) {
+				} else if (source.isMagic()) {
 					RPGStats.addXpAndLevelUp(CustomComponents.MAGIC, serverPlayer, 1);
 				} else if (!source.isExplosive() && !source.isFire()) {
 					if (le instanceof PassiveEntity) {

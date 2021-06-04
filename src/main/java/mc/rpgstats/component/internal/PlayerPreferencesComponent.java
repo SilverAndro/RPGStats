@@ -3,7 +3,7 @@ package mc.rpgstats.component.internal;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.entity.PlayerComponent;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 
 public class PlayerPreferencesComponent implements PlayerComponent<Component> {
     public PlayerEntity playerEntity;
@@ -15,17 +15,12 @@ public class PlayerPreferencesComponent implements PlayerComponent<Component> {
     }
     
     @Override
-    public void readFromNbt(CompoundTag compoundTag) {
+    public void readFromNbt(NbtCompound compoundTag) {
         isOptedOutOfButtonSpam = compoundTag.getBoolean("optedOutSpam");
     }
     
     @Override
-    public void writeToNbt(CompoundTag compoundTag) {
+    public void writeToNbt(NbtCompound compoundTag) {
         compoundTag.putBoolean("optedOutSpam", isOptedOutOfButtonSpam);
-    }
-    
-    @Override
-    public boolean shouldCopyForRespawn(boolean lossless, boolean keepInventory) {
-        return true;
     }
 }

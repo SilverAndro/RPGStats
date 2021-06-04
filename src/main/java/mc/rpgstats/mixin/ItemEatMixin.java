@@ -27,7 +27,7 @@ public class ItemEatMixin {
         LivingEntity le = (LivingEntity)(Object)this;
         if (le instanceof ServerPlayerEntity) {
             int level = RPGStats.getComponentLevel(CustomComponents.FISHING, (ServerPlayerEntity)le);
-            if (level >= 25 && stack.getItem().isIn(ItemTags.FISHES) && RPGStats.getConfig().toggles.fishing.enableLv25Buff) {
+            if (level >= 25 && ItemTags.FISHES.contains(stack.getItem()) && RPGStats.getConfig().toggles.fishing.enableLv25Buff) {
                 List<StatusEffect> goodEffects = Arrays.asList(
                     StatusEffects.ABSORPTION,
                     StatusEffects.CONDUIT_POWER,

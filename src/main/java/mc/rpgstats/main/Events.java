@@ -59,7 +59,7 @@ public class Events {
             }
         
             @Override
-            public void apply(ResourceManager manager) {
+            public void reload(ResourceManager manager) {
                 CustomComponents.components.clear();
             
                 for(Identifier id : manager.findResources("rpgstats", path -> path.endsWith(".stat"))) {

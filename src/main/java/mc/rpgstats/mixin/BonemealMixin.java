@@ -57,7 +57,7 @@ public class BonemealMixin {
                         }
                     }
 
-                    if (blockState.getBlock().isIn(BlockTags.WALL_CORALS)) {
+                    if (BlockTags.WALL_CORALS.contains(blockState.getBlock())) {
                         for (k = 0; !blockState.canPlaceAt(world, blockPos2) && k < 4; ++k) {
                             blockState = blockState.with(DeadCoralWallFanBlock.FACING, Direction.Type.HORIZONTAL.random(RANDOM));
                         }

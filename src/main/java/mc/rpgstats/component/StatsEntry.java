@@ -1,6 +1,6 @@
 package mc.rpgstats.component;
 
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 
 import java.util.Objects;
@@ -16,8 +16,8 @@ public class StatsEntry {
         this.xp = xp;
     }
     
-    public void toCompound(CompoundTag compoundTag) {
-        CompoundTag tag = new CompoundTag();
+    public void toCompound(NbtCompound compoundTag) {
+        NbtCompound tag = new NbtCompound();
         tag.putInt("level", level);
         tag.putInt("xp", xp);
         compoundTag.put(id.toString(), tag);

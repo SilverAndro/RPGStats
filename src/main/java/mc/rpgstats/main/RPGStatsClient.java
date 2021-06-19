@@ -61,7 +61,7 @@ public class RPGStatsClient implements ClientModInitializer {
         });
     
         ClientPlayNetworking.registerGlobalReceiver(RPGStats.OPEN_GUI, (client, handler, byteBuf, packetSender) -> {
-            client.openScreen(new RPGStatDisplayScreen(new RPGStatDisplayGUI()));
+            client.send(() -> client.openScreen(new RPGStatDisplayScreen(new RPGStatDisplayGUI())));
         });
         
         openGUIKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(

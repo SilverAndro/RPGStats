@@ -30,7 +30,6 @@ public class RPGStatDisplayGUI extends LightweightGuiDescription {
     
         BiConsumer<Identifier, StatEntry> configurator = (Identifier identifier, StatEntry entry) -> {
             int level = RPGStatsClient.currentStats.get(identifier).getLeft();
-            System.out.println(identifier);
             int xp = RPGStatsClient.currentStats.get(identifier).getRight();
             
             String name = RPGStatsClient.nameMap.get(identifier);

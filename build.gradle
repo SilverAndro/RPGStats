@@ -23,7 +23,10 @@ repositories {
 		url "https://maven.shedaniel.me/"
 	}
 	maven {
-		url 'https://jitpack.io'
+		url "https://www.cursemaven.com"
+		content {
+			includeGroup "curse.maven"
+		}
 	}
 }
 
@@ -54,12 +57,10 @@ dependencies {
 	include "me.shedaniel.cloth:cloth-config-fabric:4.11.24"
 
 	// Harvest scythes
-	// Pain, get it from curseforge or whatever
-	modImplementation files("libs/wraith-harvestscythes-2.0.5.jar")
-	implementation files("libs/wraith-harvestscythes-2.0.5.jar")
+	modImplementation "curse.maven:harvestscythes-412225:3350526"
 
 	// Harvest
-	modImplementation 'com.github.TehNut:Harvest:1.16_fabric-SNAPSHOT'
+	modImplementation 'curse.maven:simpleharvest-240783:2989916'
 }
 
 processResources {

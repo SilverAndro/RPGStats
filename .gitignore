@@ -28,6 +28,3 @@ bin/
 
 run/
 logs/
-
-# custom
-libs/*.jar

@@ -23,10 +23,11 @@ public class PotionDrinkMixin {
         )
     )
     private boolean onFinishedUsing(LivingEntity livingEntity, StatusEffectInstance effect) {
-        if (livingEntity instanceof ServerPlayerEntity) {
-            return livingEntity.addStatusEffect(new StatusEffectInstance(
+        if (livingEntity instanceof ServerPlayerEntity playerEntity) {
+            RPGStats.addXpAndLevelUp(CustomComponents.MAGIC, playerEntity, 10);
+            return playerEntity.addStatusEffect(new StatusEffectInstance(
                 effect.getEffectType(),
-                effect.getDuration() + (RPGStats.getComponentLevel(CustomComponents.MAGIC, (ServerPlayerEntity)livingEntity) * 2),
+                effect.getDuration() + (RPGStats.getComponentLevel(CustomComponents.MAGIC, playerEntity) * 2),
                 effect.getAmplifier(),
                 effect.isAmbient(),
                 effect.shouldShowParticles(),
@@ -39,8 +40,7 @@ public class PotionDrinkMixin {
     
     @Inject(at = @At("HEAD"), method = "getMaxUseTime", cancellable = true)
     private void getUseTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
-        if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
-            ServerPlayerEntity holder = (ServerPlayerEntity)stack.getHolder();
+        if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity holder) {
             cir.setReturnValue((int)(32 - Math.floor(RPGStats.getComponentLevel(CustomComponents.MAGIC, holder) / 3.0f)));
         }
     }

@@ -177,8 +177,8 @@ public class Events {
                                 && RPGStats.getComponentLevel(CustomComponents.MINING, player) >= 50
                                 && RPGStats.getConfig().toggles.mining.enableLv50Buff
                         ) {
-                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 13 * 20));
-                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 2 * 20, 1));
+                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 13 * 20, 0, true, false, true));
+                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 2 * 20, 1, true, false, true));
                         }
                     }
                 );

@@ -9,6 +9,8 @@ import net.fabricmc.api.ModInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +20,8 @@ public class RPGStats implements ModInitializer {
     public static final Identifier SYNC_STATS_PACKET_ID = new Identifier(MOD_ID, "sync_stats");
     public static final Identifier SYNC_NAMES_PACKET_ID = new Identifier(MOD_ID, "sync_names");
     public static final Identifier OPEN_GUI = new Identifier(MOD_ID, "open_gui");
+    
+    final public static Logger debugLogger = LogManager.getLogger("RPGStats Debug");
     
     final static Identifier LEVELS_MAX = new Identifier(RPGStats.MOD_ID, "levels_max");
     
@@ -70,6 +74,10 @@ public class RPGStats implements ModInitializer {
     }
     
     public static void addXpAndLevelUp(Identifier id, ServerPlayerEntity player, int addedXP) {
+        if (getConfig().debug.logXpGain) {
+            debugLogger.info(player.getEntityName() + " gained " + addedXP + " xp in stat " + id.toString());
+        }
+        
         if (CustomComponents.components.containsKey(id)) {
             int nextXP = getComponentXP(id, player) + addedXP;
             int currentLevel = getComponentLevel(id, player);

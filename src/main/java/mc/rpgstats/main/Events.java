@@ -306,6 +306,9 @@ public class Events {
         PlayerBlockBreakEvents.AFTER.register((world, playerEntity, blockPos, blockState, blockEntity) -> {
             if (!world.isClient) {
                 Block block = blockState.getBlock();
+                if (RPGStats.getConfig().debug.logBrokenBlocks) {
+                    RPGStats.debugLogger.info(playerEntity.getEntityName() + " broke " + block.getTranslationKey());
+                }
                 if (block instanceof PlantBlock || block instanceof PumpkinBlock || block instanceof MelonBlock || block instanceof CocoaBlock) {
                     if (block instanceof CropBlock) {
                         if (((CropBlock)block).isMature(blockState)) {
@@ -321,25 +324,33 @@ public class Events {
                     int amount;
                     if (
                         block == Blocks.COAL_ORE ||
-                            block == Blocks.NETHER_GOLD_ORE
+                            block == Blocks.NETHER_GOLD_ORE ||
+                            block == Blocks.DEEPSLATE_COAL_ORE
                     ) {
                         amount = 1;
                     } else if (
                         block == Blocks.IRON_ORE ||
-                            block == Blocks.NETHER_QUARTZ_ORE
+                            block == Blocks.NETHER_QUARTZ_ORE ||
+                            block == Blocks.DEEPSLATE_IRON_ORE ||
+                            block == Blocks.COPPER_ORE ||
+                            block == Blocks.DEEPSLATE_COPPER_ORE
                     ) {
                         amount = 2;
                     } else if (
                         block == Blocks.GOLD_ORE ||
                             block == Blocks.LAPIS_ORE ||
-                            block == Blocks.REDSTONE_ORE
+                            block == Blocks.REDSTONE_ORE ||
+                            block == Blocks.DEEPSLATE_GOLD_ORE ||
+                            block == Blocks.DEEPSLATE_LAPIS_ORE ||
+                            block == Blocks.DEEPSLATE_REDSTONE_ORE
                     ) {
                         amount = 3;
-                    } else if (block == Blocks.EMERALD_ORE) {
+                    } else if (block == Blocks.EMERALD_ORE || block == Blocks.DEEPSLATE_EMERALD_ORE) {
                         amount = 4;
                     } else if (
                         block == Blocks.DIAMOND_ORE ||
-                            block == Blocks.ANCIENT_DEBRIS
+                            block == Blocks.ANCIENT_DEBRIS ||
+                            block == Blocks.DEEPSLATE_DIAMOND_ORE
                     ) {
                         amount = 5;
                     } else {

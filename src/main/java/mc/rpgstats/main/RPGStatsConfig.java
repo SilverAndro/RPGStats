@@ -15,6 +15,9 @@ public class RPGStatsConfig implements ConfigData {
     @Comment("Toggles for level effects")
     public DefaultLevelToggles toggles = new DefaultLevelToggles();
     
+    @Comment("Debug options")
+    public Debug debug = new Debug();
+    
     public static class LevelScaling {
         @Comment("Default 2.05")
         public double power = 2.05;
@@ -44,5 +47,10 @@ public class RPGStatsConfig implements ConfigData {
         public LevelBuffToggles defense = new LevelBuffToggles();
         public MiningBuffToggles mining = new MiningBuffToggles();
         public LevelBuffToggles farming = new LevelBuffToggles();
+    }
+    
+    public static class Debug {
+        public boolean logXpGain = false;
+        public boolean logBrokenBlocks = false;
     }
 }

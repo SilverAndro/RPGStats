@@ -23,5 +23,11 @@ A clear and concise description of what you expected to happen.
 **Screenshots and Logs**
 If applicable, add screenshots and logs to help explain your problem.
 
+**Environment**
+- [ ] Server
+- [ ] Client
+- [ ] Singleplayer
+- [ ] Lan Server
+
 **Mod list**
 Provide your mod lit here if possible.

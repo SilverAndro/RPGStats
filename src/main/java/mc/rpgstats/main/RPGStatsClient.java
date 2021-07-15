@@ -26,10 +26,10 @@ public class RPGStatsClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(RPGStats.SYNC_NAMES_PACKET_ID, (client, handler, byteBuf, packetSender) -> {
             // Clear data
             nameMap.clear();
-        
+            
             // Get the amount of stats to read
             int count = byteBuf.readInt();
-        
+            
             // Read each stat in turn
             for (int i = 0; i < count; i++) {
                 // Read the identifier
@@ -47,7 +47,7 @@ public class RPGStatsClient implements ClientModInitializer {
             
             // Get the amount of stats to read
             int count = byteBuf.readInt();
-    
+            
             // Read each stat in turn
             for (int i = 0; i < count; i++) {
                 // Read the identifier
@@ -56,13 +56,11 @@ public class RPGStatsClient implements ClientModInitializer {
                 int level = byteBuf.readInt();
                 int xp = byteBuf.readInt();
                 
-               currentStats.put(statId, new Pair<>(level, xp));
+                currentStats.put(statId, new Pair<>(level, xp));
             }
         });
-    
-        ClientPlayNetworking.registerGlobalReceiver(RPGStats.OPEN_GUI, (client, handler, byteBuf, packetSender) -> {
-            client.send(() -> client.openScreen(new RPGStatDisplayScreen(new RPGStatDisplayGUI())));
-        });
+        
+        ClientPlayNetworking.registerGlobalReceiver(RPGStats.OPEN_GUI, (client, handler, byteBuf, packetSender) -> client.send(() -> client.setScreen(new RPGStatDisplayScreen(new RPGStatDisplayGUI()))));
         
         openGUIKeybind = KeyBindingHelper.registerKeyBinding(new KeyBinding(
             "key.rpgstats.open_gui",
@@ -70,11 +68,11 @@ public class RPGStatsClient implements ClientModInitializer {
             GLFW.GLFW_KEY_UNKNOWN,
             "category.rpgstats.keybinds"
         ));
-    
+        
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (openGUIKeybind.wasPressed()) {
                 if (client.currentScreen == null) {
-                    client.openScreen(new RPGStatDisplayScreen(new RPGStatDisplayGUI()));
+                    client.setScreen(new RPGStatDisplayScreen(new RPGStatDisplayGUI()));
                 }
             }
         });

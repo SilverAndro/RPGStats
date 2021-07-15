@@ -25,9 +25,17 @@ public class PotionDrinkMixin {
     private boolean onFinishedUsing(LivingEntity livingEntity, StatusEffectInstance effect) {
         if (livingEntity instanceof ServerPlayerEntity playerEntity) {
             RPGStats.addXpAndLevelUp(CustomComponents.MAGIC, playerEntity, 10);
+            
+            int newDuration;
+            if (RPGStats.getComponentLevel(CustomComponents.MAGIC, playerEntity) > 0) {
+                newDuration = effect.getDuration() + (effect.getDuration() / ((RPGStats.getConfig().scaling.maxLevel * 5) / RPGStats.getComponentLevel(CustomComponents.MAGIC, playerEntity)));
+            } else {
+                newDuration = effect.getDuration();
+            }
+    
             return playerEntity.addStatusEffect(new StatusEffectInstance(
                 effect.getEffectType(),
-                effect.getDuration() + (RPGStats.getComponentLevel(CustomComponents.MAGIC, playerEntity) * 2),
+                newDuration,
                 effect.getAmplifier(),
                 effect.isAmbient(),
                 effect.shouldShowParticles(),

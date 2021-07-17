@@ -52,5 +52,7 @@ public class RPGStatsConfig implements ConfigData {
     public static class Debug {
         public boolean logXpGain = false;
         public boolean logBrokenBlocks = false;
+        public boolean logRawOps = false;
+        public boolean logRawWrite = false;
     }
 }

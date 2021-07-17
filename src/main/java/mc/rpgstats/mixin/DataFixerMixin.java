@@ -32,8 +32,8 @@ public class DataFixerMixin {
         
         for (String key : newTag.getKeys()) {
             StatsEntry entry = CustomComponents.STATS.get(this).getOrCreateID(Identifier.tryParse(key));
-            entry.level = newTag.getCompound(key).getInt("level");
-            entry.xp = newTag.getCompound(key).getInt("xp");
+            entry.setLevel(newTag.getCompound(key).getInt("level"));
+            entry.setXp(newTag.getCompound(key).getInt("xp"));
         }
     }
 }

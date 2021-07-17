@@ -43,7 +43,7 @@ public class LevelUpCriterion extends AbstractCriterion<LevelUpCriterion.LevelCr
             if (id.equals(ANY_ID)) {
                 return RPGStats.getHighestLevel(player) >= level;
             } else {
-                return CustomComponents.STATS.get(player).getOrCreateID(id).level >= level;
+                return CustomComponents.STATS.get(player).getOrCreateID(id).getLevel() >= level;
             }
         }
         

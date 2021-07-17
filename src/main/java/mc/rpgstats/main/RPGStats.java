@@ -33,28 +33,36 @@ public class RPGStats implements ModInitializer {
     
     // Helper methods for components
     public static void setComponentXP(Identifier id, ServerPlayerEntity player, int newValue) {
+        if (getConfig().debug.logRawOps) {
+            debugLogger.info(player.getEntityName() + " xp was set to " + newValue + " in stat " + id.toString());
+            debugLogger.info("Stat is loaded: " + CustomComponents.components.containsKey(id));
+        }
         if (CustomComponents.components.containsKey(id)) {
-            CustomComponents.STATS.get(player).getOrCreateID(id).xp = newValue;
+            CustomComponents.STATS.get(player).getOrCreateID(id).setXp(newValue);
         }
     }
     
     public static int getComponentXP(Identifier id, ServerPlayerEntity player) {
         if (CustomComponents.components.containsKey(id)) {
-            return CustomComponents.STATS.get(player).getOrCreateID(id).xp;
+            return CustomComponents.STATS.get(player).getOrCreateID(id).getXp();
         } else {
             return -1;
         }
     }
     
     public static void setComponentLevel(Identifier id, ServerPlayerEntity player, int newValue) {
+        if (getConfig().debug.logRawOps) {
+            debugLogger.info(player.getEntityName() + " level was set to " + newValue + " in stat " + id.toString());
+            debugLogger.info("Stat is loaded: " + CustomComponents.components.containsKey(id));
+        }
         if (CustomComponents.components.containsKey(id)) {
-            CustomComponents.STATS.get(player).getOrCreateID(id).level = newValue;
+            CustomComponents.STATS.get(player).getOrCreateID(id).setLevel(newValue);
         }
     }
     
     public static int getComponentLevel(Identifier id, ServerPlayerEntity player) {
         if (CustomComponents.components.containsKey(id)) {
-            return CustomComponents.STATS.get(player).getOrCreateID(id).level;
+            return CustomComponents.STATS.get(player).getOrCreateID(id).getLevel();
         } else {
             return -1;
         }
@@ -76,6 +84,7 @@ public class RPGStats implements ModInitializer {
     public static void addXpAndLevelUp(Identifier id, ServerPlayerEntity player, int addedXP) {
         if (getConfig().debug.logXpGain) {
             debugLogger.info(player.getEntityName() + " gained " + addedXP + " xp in stat " + id.toString());
+            debugLogger.info("Stat is loaded: " + CustomComponents.components.containsKey(id));
         }
         
         if (CustomComponents.components.containsKey(id)) {

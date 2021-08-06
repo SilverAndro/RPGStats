@@ -109,12 +109,13 @@ public class CheatCommand {
         for (ServerPlayerEntity target : targets) {
             if (type == CommandType.XP) {
                 RPGStats.addXpAndLevelUp(id, target, amount);
+                source.sendFeedback(new LiteralText(amount + " XP added to stat " + id + " for " + targets.size() + " targets."), true);
             }
             if (type == CommandType.LEVELS) {
-                RPGStats.setComponentLevel(id, target, RPGStats.getComponentXP(id, target) + amount);
+                int needed = RPGStats.calculateXpNeededToReachLevel(RPGStats.getComponentLevel(id, target) + amount);
+                RPGStats.addXpAndLevelUp(id, target, needed);
             }
         }
-        source.sendFeedback(new LiteralText(amount + " XP added to stat " + id + " for " + targets.size() + " targets."), true);
         return 1;
     }
     

@@ -193,8 +193,8 @@ public class Events {
                 player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) + 0.01);
                 if (!hideMessages)
                     player.sendMessage(new LiteralText("§a+0.01§r Knockback resistance"), false);
-                if (newLevel % 2 == 0 && newLevel > 10) {
-                    player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) + 1);
+                if (newLevel % RPGStats.getConfig().defenseHP.everyXLevels == 0 && newLevel > RPGStats.getConfig().defenseHP.afterLevel) {
+                    player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) + RPGStats.getConfig().defenseHP.addAmount);
                     if (!hideMessages)
                         player.sendMessage(new LiteralText("§a+1§r Health"), false);
                 }

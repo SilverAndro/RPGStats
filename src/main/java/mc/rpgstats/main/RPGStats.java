@@ -102,10 +102,16 @@ public class RPGStats implements ModInitializer {
                     currentLevel += 1;
             
                     setComponentLevel(id, player, currentLevel);
-                    player.sendMessage(new LiteralText("§aRPGStats >§r You gained a §6" +
-                        CustomComponents.components.get(id) +
-                        "§r level! You are now level §6" +
-                        getComponentLevel(id, player)
+                    player.sendMessage(new LiteralText("§aRPGStats >§r ")
+                            .formatted(Formatting.GREEN)
+                            .append(new TranslatableText("rpgstats.levelup_1")
+                                .formatted(Formatting.WHITE)
+                                .append(new LiteralText(CustomComponents.components.get(id))
+                                    .formatted(Formatting.GOLD)
+                                    .append(new TranslatableText("rpgstats.levelup_2")
+                                        .formatted(Formatting.WHITE)
+                                        .append(new LiteralText(String.valueOf(getComponentLevel(id, player)))
+                                            .formatted(Formatting.GOLD))))
                     ), false);
             
                     LevelUpCallback.EVENT.invoker().onLevelUp(player, id, currentLevel, false);

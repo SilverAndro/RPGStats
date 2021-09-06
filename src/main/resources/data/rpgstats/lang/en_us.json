@@ -5,6 +5,9 @@
   "rpgstats.maxlevel_trunc": " - Level: %d",
   "rpgstats.notmaxlevel_trunc": " - Level: %d XP: %d/%d",
 
+  "rpgstats.levelup_1": "You gained a ",
+  "rpgstats.levelup_2": " level! you are now level ",
+
   "rpgstats.feedback.toggle_sneak": "Hold sneak instead of spamming: %s",
 
   "rpgstats.error.console_player_required": "A player must be passed when executing that command from the console",

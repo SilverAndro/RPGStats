@@ -11,6 +11,7 @@ import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 
 public class StatsCommand {
@@ -60,33 +61,36 @@ public class StatsCommand {
     }
     
     private static int execute(ServerCommandSource source, ServerPlayerEntity target) {
-        if (source.getEntity() instanceof ServerPlayerEntity && target != null) {
-            ServerPlayerEntity spe = (ServerPlayerEntity)source.getEntity();
+        if (source.getEntity() instanceof ServerPlayerEntity spe && target != null) {
+    
+            spe.sendMessage(new LiteralText("RPGStats > ")
+                .formatted(Formatting.GREEN)
+                .append(new TranslatableText("rpgstats.stats_for", target.getEntityName()).formatted(Formatting.WHITE)), false);
             
-            spe.sendMessage(new LiteralText("§aRPGStats >§r Stats for " + target.getEntityName()), false);
-            
-            CustomComponents.components.keySet().forEach(identifier -> {
-                spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(identifier, target)), false);
-            });
+            CustomComponents.components.keySet().forEach(identifier ->
+                spe.sendMessage(RPGStats.getFormattedLevelData(identifier, target), false)
+            );
         } else if (target != null) {
             if (source.getEntity() == null) {
-                source.sendFeedback(new LiteralText("Stats for " + target.getEntityName()), false);
+                source.sendFeedback(new TranslatableText("rpgstats.stats_for", target.getEntityName()), false);
     
-                CustomComponents.components.keySet().forEach(identifier -> {
-                    source.sendFeedback(new LiteralText(RPGStats.getNotFormattedLevelData(identifier, target)), false);
-                });
+                CustomComponents.components.keySet().forEach(identifier ->
+                    source.sendFeedback(RPGStats.getNotFormattedLevelData(identifier, target), false)
+                );
             } else {
                 ServerPlayerEntity spe = (ServerPlayerEntity)source.getEntity();
                 ServerPlayerEntity targeted = (ServerPlayerEntity)source.getEntity();
                 
-                spe.sendMessage(new LiteralText("§aRPGStats >§r Stats for " + targeted.getEntityName()), false);
+                spe.sendMessage(new LiteralText("RPGStats > ")
+                    .formatted(Formatting.GREEN)
+                    .append(new TranslatableText("rpgstats.stats_for", target.getEntityName()).formatted(Formatting.WHITE)), false);
     
-                CustomComponents.components.keySet().forEach(identifier -> {
-                    spe.sendMessage(new LiteralText(RPGStats.getFormattedLevelData(identifier, targeted)), false);
-                });
+                CustomComponents.components.keySet().forEach(identifier ->
+                    spe.sendMessage(RPGStats.getFormattedLevelData(identifier, targeted), false)
+                );
             }
         } else {
-            source.sendError(new LiteralText("A player must be passed when execute from the console"));
+            source.sendError(new TranslatableText("rpgstats.error.console_player_required"));
         }
         return 1;
     }

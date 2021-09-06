@@ -8,6 +8,9 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -114,7 +117,7 @@ public class RPGStats implements ModInitializer {
         }
     }
     
-    public static String getFormattedLevelData(Identifier id, ServerPlayerEntity player) {
+    public static MutableText getFormattedLevelData(Identifier id, ServerPlayerEntity player) {
         int currentLevel = getComponentLevel(id, player);
         int xp = getComponentXP(id, player);
     
@@ -122,23 +125,27 @@ public class RPGStats implements ModInitializer {
         String capped = name.substring(0, 1).toUpperCase() + name.substring(1);
         if (currentLevel < getConfig().scaling.maxLevel) {
             int nextXP = calculateXpNeededToReachLevel(currentLevel + 1);
-            return "§6" + capped + "§r - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
+            return new LiteralText(capped)
+                .formatted(Formatting.GOLD)
+                .append(new TranslatableText("rpgstats.notmaxlevel_trunc", currentLevel, xp, nextXP).formatted(Formatting.WHITE));
         } else {
-            return "§6" + capped + "§r - Level: " + currentLevel;
+            return new LiteralText(capped)
+                .formatted(Formatting.GOLD)
+                .append(new TranslatableText("rpgstats.maxlevel_trunc", currentLevel).formatted(Formatting.WHITE));
         }
     }
     
-    public static String getNotFormattedLevelData(Identifier id, ServerPlayerEntity player) {
+    public static TranslatableText getNotFormattedLevelData(Identifier id, ServerPlayerEntity player) {
         int currentLevel = getComponentLevel(id, player);
         int xp = getComponentXP(id, player);
         
         String name = CustomComponents.components.get(id);
         String capped = name.substring(0, 1).toUpperCase() + name.substring(1);
-        if (currentLevel < 50) {
+        if (currentLevel < getConfig().scaling.maxLevel) {
             int nextXP = calculateXpNeededToReachLevel(currentLevel + 1);
-            return capped + " - Level: " + currentLevel + " XP: " + xp + "/" + nextXP;
+            return new TranslatableText("rpgstats.notmaxlevel", capped, currentLevel, xp, nextXP);
         } else {
-            return capped + " - Level: " + currentLevel;
+            return new TranslatableText("rpgstats.maxlevel", capped, currentLevel);
         }
     }
     

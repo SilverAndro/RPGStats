@@ -15,6 +15,9 @@ public class RPGStatsConfig implements ConfigData {
     @Comment("Toggles for level effects")
     public DefaultLevelToggles toggles = new DefaultLevelToggles();
     
+    @Comment("Config for how HP scaling works with defense")
+    public DefenseHPConfig defenseHP = new DefenseHPConfig();
+    
     @Comment("Debug options")
     public Debug debug = new Debug();
     
@@ -33,6 +36,15 @@ public class RPGStatsConfig implements ConfigData {
     public static class LevelBuffToggles {
         public boolean enableLv50Buff = true;
         public boolean enableLv25Buff = true;
+    }
+    
+    public static class DefenseHPConfig {
+        @Comment("Will only grant HP every X levels")
+        public int everyXLevels = 2;
+        @Comment("How much HP to grant on trigger")
+        public int addAmount = 1;
+        @Comment("Minimum level before you start getting HP (Exclusive)")
+        public int afterLevel = 10;
     }
     
     public static class MiningBuffToggles extends LevelBuffToggles {

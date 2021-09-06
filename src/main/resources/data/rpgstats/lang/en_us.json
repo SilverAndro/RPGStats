@@ -1,0 +1,9 @@
+{
+  "rpgstats.stats_for": "Stats for %s",
+  "rpgstats.maxlevel": "%s - Level: %d",
+  "rpgstats.notmaxlevel": "%s - Level: %d XP: %d/%d",
+  "rpgstats.maxlevel_trunc": " - Level: %d",
+  "rpgstats.notmaxlevel_trunc": " - Level: %d XP: %d/%d",
+
+  "rpgstats.error.console_player_required": "A player must be passed when executing that command from the console"
+}

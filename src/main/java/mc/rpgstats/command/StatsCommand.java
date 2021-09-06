@@ -31,7 +31,7 @@ public class StatsCommand {
                             ServerPlayNetworking.send(player, RPGStats.OPEN_GUI, PacketByteBufs.empty());
                             return 1;
                         } else {
-                            player.sendMessage(new LiteralText("You don't have RPGStats installed on your client, cant open GUI").formatted(Formatting.RED), false);
+                            source.sendError(new TranslatableText("rpgstats.error.not_on_client"));
                             return 0;
                         }
                     }
@@ -51,7 +51,7 @@ public class StatsCommand {
                         context -> {
                             PlayerPreferencesComponent component = CustomComponents.PREFERENCES.get(context.getSource().getPlayer());
                             component.isOptedOutOfButtonSpam = !component.isOptedOutOfButtonSpam;
-                            context.getSource().sendFeedback(new LiteralText("Hold sneak instead of spam: " + component.isOptedOutOfButtonSpam), false);
+                            context.getSource().sendFeedback(new TranslatableText("rpgstats.feedback.toggle_sneak", component.isOptedOutOfButtonSpam), false);
                             return 1;
                         }
                     )

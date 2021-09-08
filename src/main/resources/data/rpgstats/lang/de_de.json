@@ -1,0 +1,15 @@
+{
+  "rpgstats.stats_for": "Stats for %s",
+  "rpgstats.maxlevel": "%s - Level: %d",
+  "rpgstats.notmaxlevel": "%s - Level: %d XP: %d/%d",
+  "rpgstats.maxlevel_trunc": " - Level: %d",
+  "rpgstats.notmaxlevel_trunc": " - Level: %d XP: %d/%d",
+
+  "rpgstats.levelup_1": "Du hast ein ",
+  "rpgstats.levelup_2": " Level erhalten! Du bist nun auf Level ",
+
+  "rpgstats.feedback.toggle_sneak": "Schleichen halten statt wiederholt drücken: %s",
+
+  "rpgstats.error.console_player_required": "Ein Spieler muss bei diesem Befehl auf der Konsole angegeben werden",
+  "rpgstats.error.not_on_client": "Du hast RPGStats in deinem Client nicht installiert, GUI kann nicht geöffnet werden"
+}

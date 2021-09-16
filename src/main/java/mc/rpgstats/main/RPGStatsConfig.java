@@ -18,8 +18,8 @@ public class RPGStatsConfig implements ConfigData {
     @Comment("Config for how HP scaling works with defense")
     public DefenseHPConfig defenseHP = new DefenseHPConfig();
     
-    @Comment("Debug options")
-    public Debug debug = new Debug();
+    @Comment("If these damage types should grant defense XP when blocked")
+    public DamageSourceBlacklist damageBlacklist = new DamageSourceBlacklist();
     
     public static class LevelScaling {
         @Comment("Default 2.05")
@@ -33,9 +33,24 @@ public class RPGStatsConfig implements ConfigData {
         public int maxLevel = 50;
     }
     
+    @Comment("Debug options")
+    public Debug debug = new Debug();
+    
     public static class LevelBuffToggles {
         public boolean enableLv50Buff = true;
         public boolean enableLv25Buff = true;
+    }
+    
+    public static class DamageSourceBlacklist {
+        public boolean lightning = true;
+        public boolean lava = true;
+        public boolean hotFloor = true;
+        public boolean cactus = true;
+        public boolean anvil = true;
+        public boolean fallingBlock = true;
+        public boolean dryOut = true;
+        public boolean berryBush = true;
+        public boolean stalactite = true;
     }
     
     public static class DefenseHPConfig {

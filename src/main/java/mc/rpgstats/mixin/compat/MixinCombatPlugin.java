@@ -29,8 +29,10 @@ public class MixinCombatPlugin implements IMixinConfigPlugin {
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.startsWith("mc.rpgstats.mixin.compat.")) {
-            return isClassLoaded(targetClassName);
-            //return FabricLauncherBase.getLauncher().isClassLoaded(targetClassName);
+            int startModID = mixinClassName.indexOf(".compat.") + ".compat.".length();
+            int endModID  = mixinClassName.indexOf('.', startModID);
+            String modID = mixinClassName.substring(startModID, endModID);
+            return FabricLoader.getInstance().isModLoaded(modID);
         }
         return true;
     }

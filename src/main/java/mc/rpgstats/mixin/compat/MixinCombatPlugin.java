@@ -1,8 +1,6 @@
 package mc.rpgstats.mixin.compat;
 
-import mc.rpgstats.main.RPGStats;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.impl.launch.FabricLauncher;
 import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;

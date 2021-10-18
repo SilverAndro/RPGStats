@@ -2,6 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "mc.rpgstats.mixin",
+  "plugin": "mc.rpgstats.mixin.compat.MixinCompatPlugin",
   "compatibilityLevel": "JAVA_16",
   "injectors": {
     "defaultRequire": 1

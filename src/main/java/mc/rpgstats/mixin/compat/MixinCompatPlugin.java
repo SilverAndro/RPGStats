@@ -1,7 +1,6 @@
 package mc.rpgstats.mixin.compat;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.impl.launch.FabricLauncherBase;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -10,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-public class MixinCombatPlugin implements IMixinConfigPlugin {
+public class MixinCompatPlugin implements IMixinConfigPlugin {
 
 
     @Override
@@ -44,15 +43,6 @@ public class MixinCombatPlugin implements IMixinConfigPlugin {
     public List<String> getMixins() {
 
         return null;
-    }
-
-
-    boolean isClassLoaded(String name) {
-        try {
-            return FabricLauncherBase.getLauncher().getClassByteArray(name, true) != null;
-        } catch (IOException ex) {
-            return false;
-        }
     }
 
     @Override

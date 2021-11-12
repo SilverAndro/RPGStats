@@ -12,6 +12,10 @@ group = project.maven_group
 
 repositories {
 	maven {
+		name = "Jitpack"
+		url = "https://jitpack.io"
+	}
+	maven {
 		name = 'Ladysnake Mods'
 		url = 'https://ladysnake.jfrog.io/artifactory/mods'
 	}
@@ -64,7 +68,11 @@ dependencies {
 	include "fr.catcore:server-translations-api:1.4.5+1.17"
 
 	// Harvest scythes
-	modImplementation "curse.maven:harvestscythes-412225:3350526"
+	modImplementation "curse.maven:harvestscythes-412225:3522392"
+	// Dependency for Harvest Scythes
+	modImplementation("com.github.Chocohead:Fabric-ASM:v2.3") {
+		exclude (group: "net.fabricmc.fabric-api")
+	}
 
 	// Harvest
 	modImplementation 'curse.maven:simplerharvest-481720:3307870'

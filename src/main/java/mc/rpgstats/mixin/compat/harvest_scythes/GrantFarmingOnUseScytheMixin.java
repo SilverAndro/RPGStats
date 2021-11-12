@@ -24,9 +24,8 @@ import wraith.harvest_scythes.ScytheTool;
 @Mixin(ScytheTool.class)
 public class GrantFarmingOnUseScytheMixin {
     @Inject(method = "harvest",
-        at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;getStackInHand(Lnet/minecraft/util/Hand;)Lnet/minecraft/item/ItemStack;",
-            ordinal = 5
+        at = @At(value = "RETURN",
+            ordinal = 0
         ),
         locals = LocalCapture.CAPTURE_FAILHARD
     )
@@ -37,6 +36,7 @@ public class GrantFarmingOnUseScytheMixin {
         Hand hand,
         CallbackInfoReturnable<TypedActionResult<ItemStack>> cir,
         BlockPos blockPos,
+        ItemStack stack,
         Item item,
         int lvl,
         int radius,

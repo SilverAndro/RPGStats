@@ -6,6 +6,9 @@ import mc.rpgstats.mixin.accessor.CriteriaAccessor;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.Version;
+import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
@@ -15,7 +18,13 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class RPGStats implements ModInitializer {
@@ -33,6 +42,40 @@ public class RPGStats implements ModInitializer {
     public static LevelUpCriterion levelUpCriterion = new LevelUpCriterion();
     
     private static RPGStatsConfig configUnsafe;
+    
+    static void verifyOptionalDeps() throws IOException {
+        try (InputStream stream = RPGStats.class.getResource("/opt_deps_req.txt").openStream()) {
+            final char[] buffer = new char[8192];
+            final StringBuilder result = new StringBuilder();
+            Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
+            int charsRead;
+            while ((charsRead = reader.read(buffer, 0, buffer.length)) > 0) {
+                result.append(buffer, 0, charsRead);
+            }
+            
+            String[] text = result.toString().split("\n");
+            Arrays.stream(text).iterator().forEachRemaining(s -> {
+                String[] line = s.split(" ");
+                String modID = line[0].trim();
+                String version = line[1].trim();
+                
+                FabricLoader.getInstance().getModContainer(modID).ifPresent(modContainer -> {
+                    Version testVersion = null;
+                    try {
+                        testVersion = Version.parse(version);
+                    } catch (VersionParsingException e) {
+                        e.printStackTrace();
+                        System.exit(-1);
+                    }
+    
+                    if (modContainer.getMetadata().getVersion().compareTo(testVersion) <= -1) {
+                        System.err.println("RPGStats requires " + modID + " to be at least version " + testVersion.getFriendlyString() + " but got " + modContainer.getMetadata().getVersion().getFriendlyString() + "!");
+                        System.exit(-1);
+                    }
+                });
+            });
+        }
+    }
     
     // Helper methods for components
     public static void setComponentXP(Identifier id, ServerPlayerEntity player, int newValue) {
@@ -93,29 +136,29 @@ public class RPGStats implements ModInitializer {
         if (CustomComponents.components.containsKey(id)) {
             int nextXP = getComponentXP(id, player) + addedXP;
             int currentLevel = getComponentLevel(id, player);
-    
+            
             if (currentLevel < getConfig().scaling.maxLevel) {
                 // Enough to level up
                 int nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
                 while (nextXP >= nextXPForLevelUp && currentLevel < getConfig().scaling.maxLevel) {
                     nextXP -= nextXPForLevelUp;
                     currentLevel += 1;
-            
+                    
                     setComponentLevel(id, player, currentLevel);
                     player.sendMessage(new LiteralText("§aRPGStats >§r ")
-                            .formatted(Formatting.GREEN)
-                            .append(new TranslatableText("rpgstats.levelup_1")
-                                .formatted(Formatting.WHITE)
-                                .append(new LiteralText(CustomComponents.components.get(id))
-                                    .formatted(Formatting.GOLD)
-                                    .append(new TranslatableText("rpgstats.levelup_2")
-                                        .formatted(Formatting.WHITE)
-                                        .append(new LiteralText(String.valueOf(getComponentLevel(id, player)))
-                                            .formatted(Formatting.GOLD))))
-                    ), false);
-            
+                        .formatted(Formatting.GREEN)
+                        .append(new TranslatableText("rpgstats.levelup_1")
+                            .formatted(Formatting.WHITE)
+                            .append(new LiteralText(CustomComponents.components.get(id))
+                                .formatted(Formatting.GOLD)
+                                .append(new TranslatableText("rpgstats.levelup_2")
+                                    .formatted(Formatting.WHITE)
+                                    .append(new LiteralText(String.valueOf(getComponentLevel(id, player)))
+                                        .formatted(Formatting.GOLD))))
+                        ), false);
+                    
                     LevelUpCallback.EVENT.invoker().onLevelUp(player, id, currentLevel, false);
-            
+                    
                     nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
                 }
                 setComponentXP(id, player, nextXP);
@@ -126,7 +169,7 @@ public class RPGStats implements ModInitializer {
     public static MutableText getFormattedLevelData(Identifier id, ServerPlayerEntity player) {
         int currentLevel = getComponentLevel(id, player);
         int xp = getComponentXP(id, player);
-    
+        
         String name = CustomComponents.components.get(id);
         String capped = name.substring(0, 1).toUpperCase() + name.substring(1);
         if (currentLevel < getConfig().scaling.maxLevel) {
@@ -193,6 +236,13 @@ public class RPGStats implements ModInitializer {
     
     @Override
     public void onInitialize() {
+        try {
+            verifyOptionalDeps();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.exit(-1);
+        }
+    
         // Criterion
         assert CriteriaAccessor.getValues() != null;
         CriteriaAccessor.getValues().put(LevelUpCriterion.ID, levelUpCriterion);

@@ -26,7 +26,7 @@ public class LevelUpCriterion extends AbstractCriterion<LevelUpCriterion.LevelCr
     }
     
     public void trigger(ServerPlayerEntity player) {
-        this.test(player, (levelCriteria) -> levelCriteria.matches(player));
+        this.trigger(player, (levelCriteria) -> levelCriteria.matches(player));
     }
     
     public static class LevelCriteria extends AbstractCriterionConditions {

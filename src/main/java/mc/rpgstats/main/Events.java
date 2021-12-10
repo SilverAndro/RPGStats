@@ -25,13 +25,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+import wraith.harvest_scythes.api.scythe.HSScythesEvents;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Collection;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
 
@@ -50,7 +51,17 @@ public class Events {
         );
     }
     
+    public static void registerHSCompat() {
+        HSScythesEvents.addHarvestListener(harvestEvent -> {
+            System.out.println(harvestEvent);
+            if (harvestEvent.user() instanceof ServerPlayerEntity) {
+                RPGStats.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)harvestEvent.user(), harvestEvent.totalBlocksHarvested());
+            }
+        });
+    }
+    
     public static void registerResourceReloadListeners() {
+        
         // Data driven stuff
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override

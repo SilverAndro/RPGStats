@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.8-SNAPSHOT'
+	id 'fabric-loom' version '0.10-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -64,11 +64,11 @@ dependencies {
 	include "me.shedaniel.cloth:cloth-config-fabric:4.11.24"
 
 	// Translations
-	modImplementation "fr.catcore:server-translations-api:1.4.5+1.17"
-	include "fr.catcore:server-translations-api:1.4.5+1.17"
+	modImplementation "fr.catcore:server-translations-api:1.4.8+1.18-pre1"
+	include "fr.catcore:server-translations-api:1.4.8+1.18-pre1"
 
 	// Harvest scythes
-	modImplementation "curse.maven:harvestscythes-412225:3522392"
+	modImplementation "curse.maven:harvestscythes-412225:3544761"
 	// Dependency for Harvest Scythes
 	modImplementation("com.github.Chocohead:Fabric-ASM:v2.3") {
 		exclude (group: "net.fabricmc.fabric-api")

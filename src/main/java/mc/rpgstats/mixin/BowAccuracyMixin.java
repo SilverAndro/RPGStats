@@ -22,7 +22,7 @@ class BowAccuracyMixin {
             method = "onStoppedUsing(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;I)V",
             at = @At(
                 value = "INVOKE",
-                target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;setProperties(Lnet/minecraft/entity/Entity;FFFFF)V",
+                target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;setVelocity(Lnet/minecraft/entity/Entity;FFFFF)V",
                 shift = At.Shift.AFTER
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
@@ -44,7 +44,7 @@ class BowAccuracyMixin {
     ) {
         if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
             float newDistort = 1.0f - RPGStats.getComponentLevel(CustomComponents.RANGED, (ServerPlayerEntity)playerEntity) / 50f;
-            persistentProjectileEntity.setProperties(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, f * 3.0F, newDistort);
+            persistentProjectileEntity.setVelocity(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, f * 3.0F, newDistort);
         }
     }
 }

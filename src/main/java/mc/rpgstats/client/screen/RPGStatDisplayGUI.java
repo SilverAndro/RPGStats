@@ -55,11 +55,11 @@ public class RPGStatDisplayGUI extends LightweightGuiDescription {
         
         public StatEntry() {
             name = new WLabel("Foo");
-            this.add(name, 0, 18, 5*18, 18);
+            this.add(name, 0, 0, 5*18, 18);
             level = new WLabel("0");
-            this.add(level, 60, 18, 6*18, 18);
+            this.add(level, 60, 0, 6*18, 18);
             xp = new WLabel("0/0");
-            this.add(xp, 120, 18, 6*18, 18);
+            this.add(xp, 120, 0, 6*18, 18);
             
             this.setSize(7*18, 2*18);
         }

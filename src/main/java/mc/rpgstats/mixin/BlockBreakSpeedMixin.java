@@ -14,7 +14,6 @@ public class BlockBreakSpeedMixin {
     
         if (CustomComponents.components.containsKey(CustomComponents.MINING)) {
             int level = CustomComponents.STATS.get(player).getOrCreateID(CustomComponents.MINING).getLevel();
-            System.out.println("Was " + f + " is now " + (f + (level * 0.1f)));
             return (f + (level * 0.1f));
         }
         return f;

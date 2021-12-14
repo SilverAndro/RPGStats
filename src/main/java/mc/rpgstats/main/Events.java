@@ -189,8 +189,8 @@ public class Events {
                                 && RPGStats.getConfig().toggles.mining.enableLv50Buff
                         ) {
                             player.addStatusEffect(new StatusEffectInstance(StatusEffects.NIGHT_VISION, 13 * 20, 0, true, false, true));
-                            player.addStatusEffect(new StatusEffectInstance(StatusEffects.HASTE, 2 * 20, 1, true, false, true));
                         }
+                        CustomComponents.STATS.sync(player);
                     }
                 );
                 tickCount = 0;
@@ -284,15 +284,13 @@ public class Events {
     
         LevelUpCallback.EVENT.register((player, id, newLevel, hideMessages) -> {
             if (id.equals(CustomComponents.MINING)) {
-                player.getAttributeInstance(EntityAttributes.GENERIC_LUCK).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_LUCK) + 0.05);
-    
                 if (!hideMessages) {
-                    player.sendMessage(new LiteralText("§a+0.05§r Luck"), false);
+                    player.sendMessage(new LiteralText("§a+0.1§r Additional Mining Speed"), false);
         
                     if (newLevel == 25) {
                         player.sendMessage(new LiteralText("§aMagically infused§r - Extra 5% chance to not consume durability with unbreaking."), false);
                     } else if (newLevel == 50) {
-                        player.sendMessage(new LiteralText("§aMiners sight§r - Night vision and haste below y40"), false);
+                        player.sendMessage(new LiteralText("§aMiners sight§r - Night vision below y" + RPGStats.getConfig().toggles.mining.effectLevelTrigger), false);
                     }
                 }
             }

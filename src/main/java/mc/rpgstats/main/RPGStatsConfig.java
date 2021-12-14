@@ -63,7 +63,8 @@ public class RPGStatsConfig implements ConfigData {
     }
     
     public static class MiningBuffToggles extends LevelBuffToggles {
-        public int effectLevelTrigger = 40;
+        @Comment("At what Y level does the lv50 effect trigger?")
+        public int effectLevelTrigger = 20;
     }
     
     public static class DefaultLevelToggles {

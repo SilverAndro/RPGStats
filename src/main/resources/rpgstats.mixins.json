@@ -9,6 +9,7 @@
   },
   "mixins": [
     "ApplyDamageMixin",
+    "BlockBreakSpeedMixin",
     "BonemealGrowMixin",
     "BonemealMixin",
     "BowAccuracyMixin",

@@ -44,6 +44,7 @@ public class RPGStats implements ModInitializer {
     private static RPGStatsConfig configUnsafe;
     
     static void verifyOptionalDeps() throws IOException {
+        //noinspection ConstantConditions
         try (InputStream stream = RPGStats.class.getResource("/opt_deps_req.txt").openStream()) {
             final char[] buffer = new char[8192];
             final StringBuilder result = new StringBuilder();
@@ -85,6 +86,7 @@ public class RPGStats implements ModInitializer {
         }
         if (CustomComponents.components.containsKey(id)) {
             CustomComponents.STATS.get(player).getOrCreateID(id).setXp(newValue);
+            CustomComponents.STATS.sync(player);
         }
     }
     
@@ -103,6 +105,7 @@ public class RPGStats implements ModInitializer {
         }
         if (CustomComponents.components.containsKey(id)) {
             CustomComponents.STATS.get(player).getOrCreateID(id).setLevel(newValue);
+            CustomComponents.STATS.sync(player);
         }
     }
     
@@ -145,6 +148,7 @@ public class RPGStats implements ModInitializer {
                     currentLevel += 1;
                     
                     setComponentLevel(id, player, currentLevel);
+                    CustomComponents.STATS.sync(player);
                     player.sendMessage(new LiteralText("§aRPGStats >§r ")
                         .formatted(Formatting.GREEN)
                         .append(new TranslatableText("rpgstats.levelup_1")
@@ -162,6 +166,7 @@ public class RPGStats implements ModInitializer {
                     nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1);
                 }
                 setComponentXP(id, player, nextXP);
+                CustomComponents.STATS.sync(player);
             }
         }
     }
@@ -225,6 +230,7 @@ public class RPGStats implements ModInitializer {
             setComponentLevel(id, player, i);
             LevelUpCallback.EVENT.invoker().onLevelUp(player, id, i, true);
         }
+        CustomComponents.STATS.sync(player);
     }
     
     public static RPGStatsConfig getConfig() {

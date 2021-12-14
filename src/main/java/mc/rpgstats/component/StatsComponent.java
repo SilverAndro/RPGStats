@@ -1,20 +1,29 @@
 package mc.rpgstats.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
+import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
+import mc.rpgstats.main.RPGStats;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.HashMap;
 import java.util.Objects;
 
-public class StatsComponent implements Component {
+public class StatsComponent implements Component, AutoSyncedComponent {
     private final PlayerEntity playerEntity;
     
     public HashMap<Identifier, StatsEntry> entries = new HashMap<>();
     
     public StatsComponent(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
+    }
+    
+    @Override
+    public boolean shouldSyncWith(ServerPlayerEntity player) {
+        return ServerPlayNetworking.canSend(player, RPGStats.SYNC_STATS_PACKET_ID);
     }
     
     @Override

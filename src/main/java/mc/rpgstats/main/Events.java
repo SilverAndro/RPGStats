@@ -53,7 +53,6 @@ public class Events {
     
     public static void registerHSCompat() {
         HSScythesEvents.addHarvestListener(harvestEvent -> {
-            System.out.println(harvestEvent);
             if (harvestEvent.user() instanceof ServerPlayerEntity) {
                 RPGStats.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)harvestEvent.user(), harvestEvent.totalBlocksHarvested());
             }

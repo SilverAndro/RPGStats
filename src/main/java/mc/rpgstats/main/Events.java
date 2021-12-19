@@ -317,7 +317,7 @@ public class Events {
                 if (RPGStats.getConfig().debug.logBrokenBlocks) {
                     RPGStats.debugLogger.info(playerEntity.getEntityName() + " broke " + block.getTranslationKey());
                 }
-                if (block instanceof PlantBlock || block instanceof PumpkinBlock || block instanceof MelonBlock || block instanceof CocoaBlock) {
+                if (block instanceof CropBlock || block instanceof PumpkinBlock || block instanceof MelonBlock || block instanceof CocoaBlock) {
                     if (block instanceof CropBlock) {
                         if (((CropBlock)block).isMature(blockState)) {
                             RPGStats.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)playerEntity, 1);

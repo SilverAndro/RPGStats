@@ -7,23 +7,30 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.PotionItem;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(PotionItem.class)
 public class PotionDrinkMixin {
-    @Redirect(
+    // What the actual hell is this??????? None of the capturing is documented, and it's a core feature of the annotation
+    // Also it literally says Redirect is better :rolling_eyes:
+    @ModifyArgs(
         method = "finishUsing",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/entity/LivingEntity;addStatusEffect(Lnet/minecraft/entity/effect/StatusEffectInstance;)Z"
         )
     )
-    private boolean onFinishedUsing(LivingEntity livingEntity, StatusEffectInstance effect) {
-        if (livingEntity instanceof ServerPlayerEntity playerEntity) {
+    private void onFinishedUsing(Args args, ItemStack stack, World world, LivingEntity entity) {
+        // Yay! no type safety
+        StatusEffectInstance effect = args.get(0);
+        
+        if (entity instanceof ServerPlayerEntity playerEntity) {
             RPGStats.addXpAndLevelUp(CustomComponents.MAGIC, playerEntity, 10);
             
             int newDuration;
@@ -32,17 +39,18 @@ public class PotionDrinkMixin {
             } else {
                 newDuration = effect.getDuration();
             }
-    
-            return playerEntity.addStatusEffect(new StatusEffectInstance(
+            
+            // Why is `permanent` mutable but not anything else
+            StatusEffectInstance newInstance = new StatusEffectInstance(
                 effect.getEffectType(),
                 newDuration,
                 effect.getAmplifier(),
                 effect.isAmbient(),
                 effect.shouldShowParticles(),
                 effect.shouldShowIcon()
-            ));
-        } else {
-            return livingEntity.addStatusEffect(effect);
+            );
+    
+            args.set(0, newInstance);
         }
     }
     

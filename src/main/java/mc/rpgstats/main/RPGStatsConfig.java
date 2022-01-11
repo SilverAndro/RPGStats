@@ -42,15 +42,29 @@ public class RPGStatsConfig implements ConfigData {
     }
     
     public static class DamageSourceBlacklist {
+        public boolean inFire = true;
         public boolean lightning = true;
+        public boolean onFire = true;
         public boolean lava = true;
         public boolean hotFloor = true;
+        public boolean inWall = true;
+        public boolean cramming = true;
+        public boolean drown = true;
+        public boolean starve = true;
         public boolean cactus = true;
+        public boolean fall = true;
+        public boolean flyIntoWall = true;
+        public boolean outOfWorld = true;
+        public boolean magic = true;
+        public boolean generic = true;
+        public boolean wither = true;
         public boolean anvil = true;
         public boolean fallingBlock = true;
         public boolean dryOut = true;
         public boolean berryBush = true;
+        public boolean freeze = true;
         public boolean stalactite = true;
+        public boolean fallingStalactite = true;
     }
     
     public static class DefenseHPConfig {

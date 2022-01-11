@@ -15,9 +15,10 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-@Mixin(PotionItem.class)
+// Have to lower priority due to mixin bug with mixin conflict handling
+@Mixin(value = PotionItem.class, priority = 900)
 public class PotionDrinkMixin {
-    // What the actual hell is this??????? None of the capturing is documented, and it's a core feature of the annotation
+    // What is this bruh. None of the capturing is documented, and it's a core feature of the annotation
     // Also it literally says Redirect is better :rolling_eyes:
     @ModifyArgs(
         method = "finishUsing",

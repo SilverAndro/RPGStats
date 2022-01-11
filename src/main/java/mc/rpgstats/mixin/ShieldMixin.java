@@ -14,7 +14,7 @@ import java.util.Random;
 @Mixin(PlayerEntity.class)
 public class ShieldMixin {
     @Inject(at = @At("HEAD"), method = "damageShield")
-    private void onShieldUse(float amount, CallbackInfo ci) {
+    private void rpgstats$onShieldUse(float amount, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Object)this instanceof ServerPlayerEntity && new Random().nextBoolean()) {
             RPGStats.addXpAndLevelUp(CustomComponents.DEFENSE, (ServerPlayerEntity)(Object)this, (int)Math.floor(amount / 2.2));

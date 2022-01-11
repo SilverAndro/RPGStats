@@ -15,7 +15,7 @@ import java.util.Random;
 @Mixin(UnbreakingEnchantment.class)
 public class UnbreakingEnchantmentMixin {
     @Inject(method = "shouldPreventDamage", at = @At("RETURN"), cancellable = true)
-    private static void bonusUnbreaking(ItemStack item, int level, Random random, CallbackInfoReturnable<Boolean> cir) {
+    private static void rpgstats$bonusUnbreaking(ItemStack item, int level, Random random, CallbackInfoReturnable<Boolean> cir) {
         if (item.getHolder() != null && item.getHolder() instanceof ServerPlayerEntity) {
             if (
                 RPGStats.getComponentLevel(CustomComponents.MINING, (ServerPlayerEntity)item.getHolder()) >= 25

@@ -26,7 +26,7 @@ public class SweetBerryHarvestMixin {
             shift = At.Shift.AFTER
         )
     )
-    public void grantXpOnHarvestBerry(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
+    public void rpgstats$grantXpOnHarvestBerry(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
         if (!world.isClient) {
             RPGStats.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)player, 1);
         }

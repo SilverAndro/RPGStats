@@ -20,12 +20,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntity.class)
 public abstract class KillMixin {
 	@Inject(at = @At("HEAD"), method = "onDeath")
-	private void onKilledXPTracker(DamageSource source, CallbackInfo info) {
+	private void rpgstats$onKilledXPTracker(DamageSource source, CallbackInfo info) {
 		LivingEntity le = (LivingEntity)(Object)this;
 		if (!le.world.isClient && !le.isRemoved()) {
 			Entity entity = source.getAttacker();
-			if (entity instanceof ServerPlayerEntity) {
-				ServerPlayerEntity serverPlayer = (ServerPlayerEntity)entity;
+			if (entity instanceof ServerPlayerEntity serverPlayer) {
 				if (source.isProjectile()) {
 					if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
 						RPGStats.addXpAndLevelUp(CustomComponents.RANGED, serverPlayer, 130);

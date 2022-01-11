@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerPlayerEntity.class)
 public class DataFixerMixin {
     @Inject(method = "readCustomDataFromNbt", at = @At("TAIL"))
-    public void upgradeStatDataTov2(NbtCompound tag, CallbackInfo ci) {
+    public void rpgstats$upgradeStatDataTov2(NbtCompound tag, CallbackInfo ci) {
         NbtCompound components = tag.getCompound("cardinal_components");
         
         NbtCompound newTag = components.getCompound("rpgstats:stats");

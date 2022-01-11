@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PlayerEntity.class)
 public class BowCanUseMixin {
     @Inject(method = "getArrowType", at = @At("HEAD"), cancellable = true)
-    public void modifyGetArrow(ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
+    public void rpgstats$modifyGetArrow(ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
         //noinspection ConstantConditions
         if ((Object)this instanceof ServerPlayerEntity) {
             if (RPGStats.getComponentLevel(CustomComponents.RANGED, (ServerPlayerEntity)(Object)this) >= 50) {

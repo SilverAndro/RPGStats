@@ -20,7 +20,7 @@ public class BonemealGrowMixin {
     protected Random random;
 
     @Inject(method = "setSneaking", at = @At("TAIL"))
-    public void onShift(boolean sneaking, CallbackInfo ci) {
+    public void rpgstats$onShift(boolean sneaking, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Entity) (Object) this instanceof ServerPlayerEntity) {
             if (!CustomComponents.PREFERENCES.get(this).isOptedOutOfButtonSpam) {

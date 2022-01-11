@@ -21,7 +21,7 @@ import java.util.List;
 @Mixin(FishingBobberEntity.class)
 public class FishingBobberMixin {
     @Inject(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/ItemEntity;<init>(Lnet/minecraft/world/World;DDDLnet/minecraft/item/ItemStack;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void onCatchItem(ItemStack usedItem, CallbackInfoReturnable<Integer> cir, PlayerEntity playerEntity, int i, LootContext.Builder builder, LootTable lootTable, List list, Iterator var7, ItemStack itemStack) {
+    public void rpgstats$onCatchItem(ItemStack usedItem, CallbackInfoReturnable<Integer> cir, PlayerEntity playerEntity, int i, LootContext.Builder builder, LootTable lootTable, List list, Iterator var7, ItemStack itemStack) {
         if (!playerEntity.world.isClient) {
             if (ItemTags.FISHES.contains(itemStack.getItem())) {
                 RPGStats.addXpAndLevelUp(CustomComponents.FISHING, (ServerPlayerEntity)playerEntity, 3);

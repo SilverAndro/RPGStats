@@ -20,14 +20,14 @@ public class BowArrowMixin {
     private ServerPlayerEntity itemUser = null;
     
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerAbilities;creativeMode:Z", ordinal = 0, shift = At.Shift.BY, by = -2), method = "onStoppedUsing")
-    public void capturePlayerUsingBow(ItemStack stack, World world, LivingEntity user, int remainingUseTicks, CallbackInfo ci) {
+    public void rpgstats$capturePlayerUsingBow(ItemStack stack, World world, LivingEntity user, int remainingUseTicks, CallbackInfo ci) {
         if (user instanceof ServerPlayerEntity) {
             itemUser = (ServerPlayerEntity)user;
         }
     }
     
     @ModifyVariable(method = "onStoppedUsing", at = @At(value = "INVOKE_ASSIGN", ordinal = 2, shift = At.Shift.AFTER), ordinal = 0)
-    public boolean forceCanShootArrow(boolean bl) {
+    public boolean rpgstats$forceCanShootArrow(boolean bl) {
         if (
             itemUser != null
             && RPGStats.getComponentLevel(CustomComponents.RANGED, itemUser) >= 50

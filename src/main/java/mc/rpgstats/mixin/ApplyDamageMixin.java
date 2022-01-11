@@ -16,12 +16,12 @@ public class ApplyDamageMixin {
     private static float originalDamage = 0f;
     
     @Inject(method = "applyDamage", at = @At("HEAD"))
-    public void captureOriginalDamageDealtForXpCalc(DamageSource source, float amount, CallbackInfo ci) {
+    public void rpgstats$captureOriginalDamageDealtForXpCalc(DamageSource source, float amount, CallbackInfo ci) {
         originalDamage = amount;
     }
     
     @Inject(method = "applyDamage", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/player/PlayerEntity;applyEnchantmentsToDamage(Lnet/minecraft/entity/damage/DamageSource;F)F", shift = At.Shift.AFTER))
-    public void grantXpFromDamageAbsorbedThroughArmorOrEnchants(DamageSource source, float amount, CallbackInfo ci) {
+    public void rpgstats$grantXpFromDamageAbsorbedThroughArmorOrEnchants(DamageSource source, float amount, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Object)this instanceof ServerPlayerEntity && sourceCanGrantXp(source)) {
             float blockedDamage = originalDamage - amount;

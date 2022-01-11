@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ServerPlayerEntity.class)
 public class TakeDamageMixin {
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
-    public void dodge(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+    public void rpgstats$dodge(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         ServerPlayerEntity spe = (ServerPlayerEntity)(Object)this;
         int level = RPGStats.getComponentLevel(CustomComponents.DEFENSE, spe);
         float chance = 0f;
@@ -28,7 +28,7 @@ public class TakeDamageMixin {
     }
     
     @Inject(method = "onDeath", at = @At("HEAD"))
-    public void onPlayerDeathRefreshStats(DamageSource source, CallbackInfo ci) {
+    public void rpgstats$onPlayerDeathRefreshStats(DamageSource source, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Object)this instanceof ServerPlayerEntity) {
             ServerPlayerEntity le = (ServerPlayerEntity)(Object)this;

@@ -28,7 +28,7 @@ public class BonemealMixin {
     private static final Random RANDOM = new Random();
     
     @Inject(at = @At("HEAD"), method = "useOnGround")
-    private static void groundEffectiveness(ItemStack stack, World world, BlockPos blockPos, Direction facing, CallbackInfoReturnable<Boolean> cir) {
+    private static void rpgstats$groundEffectiveness(ItemStack stack, World world, BlockPos blockPos, Direction facing, CallbackInfoReturnable<Boolean> cir) {
         if (world.getBlockState(blockPos).isOf(Blocks.WATER) && world.getFluidState(blockPos).getLevel() == 8) {
             if (world instanceof ServerWorld && stack.getHolder() != null) {
                 Random random = world.getRandom();
@@ -75,7 +75,7 @@ public class BonemealMixin {
     }
     
     @Inject(at = @At("HEAD"), method = "useOnFertilizable")
-    private static void onGrowable(ItemStack stack, World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
+    private static void rpgstats$onGrowable(ItemStack stack, World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (!world.isClient && stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
             int level = RPGStats.getComponentLevel(CustomComponents.FARMING, (ServerPlayerEntity)stack.getHolder());
             BlockState blockState = world.getBlockState(pos);

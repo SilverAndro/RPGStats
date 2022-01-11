@@ -27,7 +27,7 @@ class BowAccuracyMixin {
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
-    public void changeAccuracy(
+    public void rpgstats$changeAccuracy(
             ItemStack stack,
             World world,
             LivingEntity user,

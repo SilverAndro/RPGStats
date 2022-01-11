@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(StatusEffect.class)
 public class StatusEffectsImmuneMixin {
     @Redirect(method = "applyUpdateEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", ordinal = 0))
-    public boolean negatePoison(LivingEntity livingEntity, DamageSource source, float amount) {
+    public boolean rpgstats$negatePoison(LivingEntity livingEntity, DamageSource source, float amount) {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
                 int level = RPGStats.getComponentLevel(CustomComponents.MAGIC, (ServerPlayerEntity)livingEntity);
@@ -28,7 +28,7 @@ public class StatusEffectsImmuneMixin {
     }
 
     @Redirect(method = "applyUpdateEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", ordinal = 1))
-    public boolean negateWither(LivingEntity livingEntity, DamageSource source, float amount) {
+    public boolean rpgstats$negateWither(LivingEntity livingEntity, DamageSource source, float amount) {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
                 int level = RPGStats.getComponentLevel(CustomComponents.MAGIC, (ServerPlayerEntity)livingEntity);

@@ -26,7 +26,7 @@ public class PotionDrinkMixin {
             target = "Lnet/minecraft/entity/LivingEntity;addStatusEffect(Lnet/minecraft/entity/effect/StatusEffectInstance;)Z"
         )
     )
-    private void onFinishedUsing(Args args, ItemStack stack, World world, LivingEntity entity) {
+    private void rpgstats$OnFinishDrinkingPotion(Args args, ItemStack stack, World world, LivingEntity entity) {
         // Yay! no type safety
         StatusEffectInstance effect = args.get(0);
         
@@ -55,7 +55,7 @@ public class PotionDrinkMixin {
     }
     
     @Inject(at = @At("HEAD"), method = "getMaxUseTime", cancellable = true)
-    private void getUseTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
+    private void rpgstats$getPotionUseTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity holder) {
             cir.setReturnValue((int)(32 - Math.floor(RPGStats.getComponentLevel(CustomComponents.MAGIC, holder) / 3.0f)));
         }

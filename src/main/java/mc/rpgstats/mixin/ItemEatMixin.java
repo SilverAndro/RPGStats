@@ -23,7 +23,7 @@ import java.util.List;
 public class ItemEatMixin {
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "applyFoodEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item;isFood()Z"))
-    public void grantFishEffects(ItemStack stack, World world, LivingEntity targetEntity, CallbackInfo ci) {
+    public void rpgstats$grantFishEffects(ItemStack stack, World world, LivingEntity targetEntity, CallbackInfo ci) {
         LivingEntity le = (LivingEntity)(Object)this;
         if (le instanceof ServerPlayerEntity) {
             int level = RPGStats.getComponentLevel(CustomComponents.FISHING, (ServerPlayerEntity)le);

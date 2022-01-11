@@ -20,7 +20,7 @@ import java.util.List;
 @Mixin(PotionEntity.class)
 public class PotionSplashMixin {
     @Inject(at = @At("HEAD"), method = "applySplashPotion")
-    private void onSplash(List<StatusEffectInstance> statusEffects, Entity entity, CallbackInfo ci) {
+    private void rpgstats$onSplash(List<StatusEffectInstance> statusEffects, Entity entity, CallbackInfo ci) {
         PotionEntity pe = (PotionEntity)(Object)this;
         Box box = pe.getBoundingBox().expand(4.0D, 2.0D, 4.0D);
         List<LivingEntity> list = pe.world.getNonSpectatingEntities(LivingEntity.class, box);
@@ -34,7 +34,7 @@ public class PotionSplashMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "applyLingeringPotion")
-    private void onLingering(ItemStack stack, Potion potion, CallbackInfo ci) {
+    private void rpgstats$onLingering(ItemStack stack, Potion potion, CallbackInfo ci) {
         PotionEntity pe = (PotionEntity)(Object)this;
         Box box = pe.getBoundingBox().expand(4.0D, 2.0D, 4.0D);
         List<LivingEntity> list = pe.world.getNonSpectatingEntities(LivingEntity.class, box);

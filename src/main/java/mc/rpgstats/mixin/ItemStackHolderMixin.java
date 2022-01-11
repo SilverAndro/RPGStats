@@ -18,12 +18,12 @@ public abstract class ItemStackHolderMixin {
     @Shadow public abstract Entity getHolder();
 
     @Inject(at = @At("HEAD"), method = "inventoryTick")
-    private void onTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
+    private void rpgstats$onTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
         setHolder(entity);
     }
 
     @Inject(at = @At("TAIL"), method = "copy", locals = LocalCapture.CAPTURE_FAILHARD)
-    private void copyHolder(CallbackInfoReturnable<ItemStack> cir, ItemStack itemStack) {
+    private void rpgstats$copyHolder(CallbackInfoReturnable<ItemStack> cir, ItemStack itemStack) {
         itemStack.setHolder(this.getHolder());
     }
 }

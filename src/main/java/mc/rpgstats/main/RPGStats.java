@@ -262,6 +262,9 @@ public class RPGStats implements ModInitializer {
         Events.registerServerTickEvents();
         Events.registerLevelUpEvents();
         Events.registerBlockBreakListeners();
+        if (FabricLoader.getInstance().isModLoaded("harvest_scythes")) {
+            Events.registerHSCompat();
+        }
         
         System.out.println("RPGStats loaded!");
     }

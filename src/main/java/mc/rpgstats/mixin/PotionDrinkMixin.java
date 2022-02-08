@@ -54,6 +54,20 @@ public class PotionDrinkMixin {
             args.set(0, newInstance);
         }
     }
+
+    @Inject(
+            method = "finishUsing",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/effect/StatusEffect;applyInstantEffect(Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/LivingEntity;ID)V"
+            )
+    )
+    private void rpgstats$OnFinishDrinkingHealthPotion(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
+        if (user instanceof ServerPlayerEntity playerEntity) {
+            RPGStats.addXpAndLevelUp(CustomComponents.MAGIC, playerEntity, 10);
+
+        }
+    }
     
     @Inject(at = @At("HEAD"), method = "getMaxUseTime", cancellable = true)
     private void rpgstats$getPotionUseTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {

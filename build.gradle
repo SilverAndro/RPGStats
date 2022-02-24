@@ -36,6 +36,10 @@ repositories {
     maven {
         url "https://maven.nucleoid.xyz/"
     }
+	maven {
+		name = "TerraformersMC"
+		url = "https://maven.terraformersmc.com/"
+	}
 }
 
 dependencies {
@@ -77,6 +81,13 @@ dependencies {
 
 	// Harvest
 	modImplementation 'curse.maven:simplerharvest-481720:3307870'
+
+	// Artifality
+	modImplementation 'curse.maven:artifality-490812:3650925'
+	// Dependency for Artifality (Trinkets)
+	modImplementation ("dev.emi:trinkets:3.1.0") {
+		exclude (group: "net.fabricmc.fabric-api")
+	}
 }
 
 processResources {

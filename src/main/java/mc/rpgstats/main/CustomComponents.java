@@ -10,7 +10,6 @@ import mc.rpgstats.component.internal.PlayerHealthAttachComponent;
 import mc.rpgstats.component.internal.PlayerPreferencesComponent;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class CustomComponents implements EntityComponentInitializer {

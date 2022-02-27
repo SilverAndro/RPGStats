@@ -91,11 +91,9 @@ public class RPGStats implements ModInitializer {
     }
     
     public static int getComponentXP(Identifier id, ServerPlayerEntity player) {
-        if (CustomComponents.components.containsKey(id)) {
-            return CustomComponents.STATS.get(player).getOrCreateID(id).getXp();
-        } else {
-            return -1;
-        }
+        return CustomComponents.components.containsKey(id) ?
+                CustomComponents.STATS.get(player).getOrCreateID(id).getXp()
+                : -1;
     }
     
     public static void setComponentLevel(Identifier id, ServerPlayerEntity player, int newValue) {
@@ -110,11 +108,9 @@ public class RPGStats implements ModInitializer {
     }
     
     public static int getComponentLevel(Identifier id, ServerPlayerEntity player) {
-        if (CustomComponents.components.containsKey(id)) {
-            return CustomComponents.STATS.get(player).getOrCreateID(id).getLevel();
-        } else {
-            return -1;
-        }
+        return CustomComponents.components.containsKey(id) ?
+                CustomComponents.STATS.get(player).getOrCreateID(id).getLevel()
+                : -1;
     }
     
     public static int calculateXpNeededToReachLevel(int level) {

@@ -3,8 +3,6 @@ package mc.rpgstats.mixin.compat.artifality;
 import artifality.item.HarvestStaffItem;
 import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CropBlock;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;

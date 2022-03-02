@@ -40,11 +40,9 @@ public class LevelUpCriterion extends AbstractCriterion<LevelUpCriterion.LevelCr
         }
         
         public boolean matches(ServerPlayerEntity player) {
-            if (id.equals(ANY_ID)) {
-                return RPGStats.getHighestLevel(player) >= level;
-            } else {
-                return CustomComponents.STATS.get(player).getOrCreateID(id).getLevel() >= level;
-            }
+            return id.equals(ANY_ID) ?
+                    RPGStats.getHighestLevel(player) >= level
+                    : CustomComponents.STATS.get(player).getOrCreateID(id).getLevel() >= level;
         }
         
         @Override

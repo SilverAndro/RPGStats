@@ -29,9 +29,7 @@ public class TakeDamageMixin {
     
     @Inject(method = "onDeath", at = @At("HEAD"))
     public void rpgstats$onPlayerDeathRefreshStats(DamageSource source, CallbackInfo ci) {
-        //noinspection ConstantConditions
-        if ((Object)this instanceof ServerPlayerEntity) {
-            ServerPlayerEntity le = (ServerPlayerEntity)(Object)this;
+        if ((Object) this instanceof ServerPlayerEntity le) {
             if (!le.world.isClient) {
                 RPGStats.needsStatFix.add(le);
             }

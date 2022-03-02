@@ -4,11 +4,14 @@ import mc.rpgstats.main.RPGStats;
 import mc.rpgstats.main.CustomComponents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.entity.effect.StatusEffectCategory;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.tag.ItemTags;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,6 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 
 @Mixin(LivingEntity.class)
 public class ItemEatMixin {
@@ -49,7 +54,7 @@ public class ItemEatMixin {
     
                 // im lazy
                 Collections.shuffle(goodEffects);
-                
+
                 le.addStatusEffect(new StatusEffectInstance(goodEffects.get(0), 30 * 20, 0));
             }
     

@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(HarvestStaffItem.class)
 public class GrantFarmingOnStaffHarvest {
     @Inject(method = "useOnBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z"))
-    private void giveFarmingXpOnStaffHarvest(ItemUsageContext crop, CallbackInfoReturnable<ActionResult> cir){
+    private void rpgstats$giveFarmingXpOnStaffHarvest(ItemUsageContext crop, CallbackInfoReturnable<ActionResult> cir){
         if (crop.getPlayer() instanceof ServerPlayerEntity player) {
             RPGStats.addXpAndLevelUp(CustomComponents.FARMING, player, 1);
         }

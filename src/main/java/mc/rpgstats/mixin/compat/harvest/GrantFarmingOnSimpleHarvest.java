@@ -22,7 +22,7 @@ public class GrantFarmingOnSimpleHarvest {
         method = "lambda$onInitialize$3",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;addExhaustion(F)V")
     )
-    private static void giveFarmingXpOnSimpleHarvest(PlayerEntity player, World world, Hand hand, BlockHitResult blockHitResult, CallbackInfoReturnable<ActionResult> cir) {
+    private static void rpgstats$giveFarmingXpOnSimpleHarvest(PlayerEntity player, World world, Hand hand, BlockHitResult blockHitResult, CallbackInfoReturnable<ActionResult> cir) {
         if (player instanceof ServerPlayerEntity) {
             RPGStats.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)player, 1);
         }

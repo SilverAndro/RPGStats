@@ -10,6 +10,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -27,6 +29,7 @@ import java.util.Random;
 public class BonemealMixin {
     private static final Random RANDOM = new Random();
     
+    // TODO: Generalize this! Breaks often and not ideal
     @Inject(at = @At("HEAD"), method = "useOnGround")
     private static void rpgstats$groundEffectiveness(ItemStack stack, World world, BlockPos blockPos, Direction facing, CallbackInfoReturnable<Boolean> cir) {
         if (world.getBlockState(blockPos).isOf(Blocks.WATER) && world.getFluidState(blockPos).getLevel() == 8) {
@@ -45,28 +48,39 @@ public class BonemealMixin {
                             continue loop;
                         }
                     }
-                    
-                    Optional<RegistryKey<Biome>> optional = world.getBiomeKey(blockPos2);
-                    if (Objects.equals(optional, Optional.of(BiomeKeys.WARM_OCEAN))) {
+        
+                    RegistryEntry<Biome> j = world.getBiome(blockPos2);
+                    if (j.matchesKey(BiomeKeys.WARM_OCEAN)) {
                         if (i == 0 && facing != null && facing.getAxis().isHorizontal()) {
-                            blockState = BlockTags.WALL_CORALS.getRandom(world.random).getDefaultState().with(DeadCoralWallFanBlock.FACING, facing);
+                            blockState = Registry.BLOCK
+                                .getEntryList(BlockTags.WALL_CORALS)
+                                .flatMap(blocks -> blocks.getRandom(world.random))
+                                .map(blockEntry -> blockEntry.value().getDefaultState())
+                                .orElse(blockState);
+                            if (blockState.contains(DeadCoralWallFanBlock.FACING)) {
+                                blockState = blockState.with(DeadCoralWallFanBlock.FACING, facing);
+                            }
                         } else if (random.nextInt(4) == 0) {
-                            blockState = BlockTags.UNDERWATER_BONEMEALS.getRandom(random).getDefaultState();
+                            blockState = Registry.BLOCK
+                                .getEntryList(BlockTags.UNDERWATER_BONEMEALS)
+                                .flatMap(blocks -> blocks.getRandom(world.random))
+                                .map(blockEntry -> blockEntry.value().getDefaultState())
+                                .orElse(blockState);
                         }
                     }
-                    
-                    if (blockState.isIn(BlockTags.WALL_CORALS)) {
-                        for (int k = 0; !blockState.canPlaceAt(world, blockPos2) && k < 4; ++k) {
+        
+                    if (blockState.isIn(BlockTags.WALL_CORALS, state -> state.contains(DeadCoralWallFanBlock.FACING))) {
+                        for(int k = 0; !blockState.canPlaceAt(world, blockPos2) && k < 4; ++k) {
                             blockState = blockState.with(DeadCoralWallFanBlock.FACING, Direction.Type.HORIZONTAL.random(random));
                         }
                     }
-                    
+        
                     if (blockState.canPlaceAt(world, blockPos2)) {
-                        BlockState blockState2 = world.getBlockState(blockPos2);
-                        if (blockState2.isOf(Blocks.WATER) && world.getFluidState(blockPos2).getLevel() == 8) {
+                        BlockState k = world.getBlockState(blockPos2);
+                        if (k.isOf(Blocks.WATER) && world.getFluidState(blockPos2).getLevel() == 8) {
                             world.setBlockState(blockPos2, blockState, Block.NOTIFY_ALL);
-                        } else if (blockState2.isOf(Blocks.SEAGRASS) && random.nextInt(10) == 0) {
-                            ((Fertilizable)Blocks.SEAGRASS).grow((ServerWorld)world, random, blockPos2, blockState2);
+                        } else if (k.isOf(Blocks.SEAGRASS) && random.nextInt(10) == 0) {
+                            ((Fertilizable)Blocks.SEAGRASS).grow((ServerWorld)world, random, blockPos2, k);
                         }
                     }
                 }

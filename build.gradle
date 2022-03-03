@@ -59,10 +59,10 @@ dependencies {
 
 	// Cardinal components entity
 	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
-	include "dev.onyxstudios.cardinal-components-apiI:cardinal-components-entity:${project.cca_version}"
+	include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
 
 	// Auto config
-	implementation "com.github.p03w-rehost:AutoConfig:1.18-SNAPSHOT"
+	modImplementation "com.github.p03w-rehost:AutoConfig:1.18-SNAPSHOT"
 	include "com.github.p03w-rehost:AutoConfig:1.18-SNAPSHOT"
 
 	// Translations
@@ -79,12 +79,15 @@ dependencies {
 	// Harvest
 	modImplementation 'curse.maven:simplerharvest-481720:3307870'
 
+	/*
 	// Artifality
 	modImplementation 'curse.maven:artifality-490812:3650925'
 	// Dependency for Artifality (Trinkets)
-	modImplementation ("dev.emi:trinkets:3.1.0") {
+	modImplementation ("dev.emi:trinkets:3.3.0") {
 		exclude (group: "net.fabricmc.fabric-api")
+		exclude (group: "dev.onyxstudios.cardinal-components-api")
 	}
+	 */
 }
 
 processResources {

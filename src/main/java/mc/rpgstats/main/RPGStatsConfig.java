@@ -1,8 +1,8 @@
 package mc.rpgstats.main;
 
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
+import me.sargunvohra.mcmods.autoconfig1u.ConfigData;
+import me.sargunvohra.mcmods.autoconfig1u.annotation.Config;
+import me.sargunvohra.mcmods.autoconfig1u.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = "rpgstats")
 public class RPGStatsConfig implements ConfigData {

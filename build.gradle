@@ -13,10 +13,6 @@ group = project.maven_group
 
 repositories {
 	maven {
-		name = "Jitpack"
-		url = "https://jitpack.io"
-	}
-	maven {
 		name = 'Ladysnake Mods'
 		url = 'https://ladysnake.jfrog.io/artifactory/mods'
 	}
@@ -25,15 +21,22 @@ repositories {
 		url = "https://server.bbkr.space/artifactory/libs-release"
 	}
 	maven {
+		name = "Shedaniel"
 		url "https://maven.shedaniel.me/"
 	}
 	maven {
+		name = "Curseforge"
 		url "https://www.cursemaven.com"
 		content {
 			includeGroup "curse.maven"
 		}
 	}
+	maven {
+		name = "Jitpack"
+		url = "https://jitpack.io"
+	}
     maven {
+		name = "Nucleoid"
         url "https://maven.nucleoid.xyz/"
     }
 	maven {
@@ -47,7 +50,7 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
+	// Fabric API
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// LibGui

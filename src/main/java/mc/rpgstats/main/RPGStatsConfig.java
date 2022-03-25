@@ -33,8 +33,18 @@ public class RPGStatsConfig implements ConfigData {
         public int maxLevel = 50;
     }
     
+    @Comment("Options for attempting to prevent cheating")
+    public AntiCheat antiCheat = new AntiCheat();
+    
     @Comment("Debug options")
     public Debug debug = new Debug();
+    
+    public static class AntiCheat {
+        @Comment("Prevent duplicate XP from breaking blocks in the same location")
+        public boolean blockBreakPos = true;
+        @Comment("How many ticks before you gain XP from breaking a block from a location again")
+        public int blockBreakDelay = 5000;
+    }
     
     public static class LevelBuffToggles {
         public boolean enableLv50Buff = true;

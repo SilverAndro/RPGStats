@@ -25,20 +25,21 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import wraith.harvest_scythes.api.scythe.HSScythesEvents;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
+import static mc.rpgstats.main.RPGStats.getConfig;
 import static mc.rpgstats.main.RPGStats.softLevelUp;
 
 public class Events {
     private static int tickCount = 0;
+    private static final HashMap<BlockPos, Integer> blacklistedPos = new HashMap<>();
     
     public static void registerCommandRegisters() {
         // Commands
@@ -123,6 +124,16 @@ public class Events {
     public static void registerServerTickEvents() {
         // Syncing and advancements
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
+            ArrayList<BlockPos> toRemove = new ArrayList<>();
+            System.out.println(blacklistedPos);
+            blacklistedPos.forEach((blockPos, integer) -> {
+                blacklistedPos.put(blockPos, integer - 1);
+                if (integer <= 0) {
+                    toRemove.add(blockPos);
+                }
+            });
+            toRemove.forEach(blacklistedPos::remove);
+            
             tickCount++;
             if (tickCount >= 20) {
                 Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
@@ -312,9 +323,20 @@ public class Events {
     public static void registerBlockBreakListeners() {
         PlayerBlockBreakEvents.AFTER.register((world, playerEntity, blockPos, blockState, blockEntity) -> {
             if (!world.isClient) {
+                if (RPGStats.getConfig().antiCheat.blockBreakPos) {
+                    if (blacklistedPos.containsKey(blockPos)) {
+                        if (getConfig().debug.logBrokenBlocks) {
+                            RPGStats.debugLogger.info("Ignoring block break at " + blockPos + " because it was previously broken");
+                        }
+                        return;
+                    } else {
+                        blacklistedPos.put(blockPos, getConfig().antiCheat.blockBreakDelay);
+                    }
+                }
+                
                 Block block = blockState.getBlock();
                 if (RPGStats.getConfig().debug.logBrokenBlocks) {
-                    RPGStats.debugLogger.info(playerEntity.getEntityName() + " broke " + block.getTranslationKey());
+                    RPGStats.debugLogger.info(playerEntity.getEntityName() + " broke " + block.getTranslationKey() + " at " + blockPos);
                 }
                 if (block instanceof CropBlock || block instanceof PumpkinBlock || block instanceof MelonBlock || block instanceof CocoaBlock) {
                     if (block instanceof CropBlock) {

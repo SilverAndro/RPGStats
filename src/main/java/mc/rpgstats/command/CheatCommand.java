@@ -112,8 +112,10 @@ public class CheatCommand {
                 source.sendFeedback(new LiteralText(amount + " XP added to stat " + id + " for " + targets.size() + " targets."), true);
             }
             if (type == CommandType.LEVELS) {
-                int needed = RPGStats.calculateXpNeededToReachLevel(RPGStats.getComponentLevel(id, target) + amount);
-                RPGStats.addXpAndLevelUp(id, target, needed);
+                for (int x = 0; x < amount; x++) {
+                    int needed = RPGStats.calculateXpNeededToReachLevel(RPGStats.getComponentLevel(id, target) + amount);
+                    RPGStats.addXpAndLevelUp(id, target, needed);
+                }
             }
         }
         return 1;

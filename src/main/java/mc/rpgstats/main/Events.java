@@ -125,7 +125,6 @@ public class Events {
         // Syncing and advancements
         ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
             ArrayList<BlockPos> toRemove = new ArrayList<>();
-            System.out.println(blacklistedPos);
             blacklistedPos.forEach((blockPos, integer) -> {
                 blacklistedPos.put(blockPos, integer - 1);
                 if (integer <= 0) {

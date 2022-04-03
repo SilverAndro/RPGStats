@@ -30,4 +30,4 @@ If applicable, add screenshots and logs to help explain your problem.
 - [ ] Lan Server
 
 **Mod list**
-Provide your mod lit here if possible.
+Provide your mod list here if possible.

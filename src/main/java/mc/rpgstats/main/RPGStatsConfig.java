@@ -21,6 +21,12 @@ public class RPGStatsConfig implements ConfigData {
     @Comment("If these damage types should grant defense XP when blocked")
     public DamageSourceBlacklist damageBlacklist = new DamageSourceBlacklist();
     
+    @Comment("Options for attempting to prevent cheating")
+    public AntiCheat antiCheat = new AntiCheat();
+    
+    @Comment("Debug options")
+    public Debug debug = new Debug();
+    
     public static class LevelScaling {
         @Comment("Default 2.05")
         public double power = 2.05;
@@ -32,12 +38,6 @@ public class RPGStatsConfig implements ConfigData {
         public boolean isCumulative = false;
         public int maxLevel = 50;
     }
-    
-    @Comment("Options for attempting to prevent cheating")
-    public AntiCheat antiCheat = new AntiCheat();
-    
-    @Comment("Debug options")
-    public Debug debug = new Debug();
     
     public static class AntiCheat {
         @Comment("Prevent duplicate XP from breaking blocks in the same location")
@@ -106,5 +106,7 @@ public class RPGStatsConfig implements ConfigData {
         public boolean logBrokenBlocks = false;
         public boolean logRawOps = false;
         public boolean logRawWrite = false;
+        
+        public boolean logAntiCheatPrevention = false;
     }
 }

@@ -324,7 +324,7 @@ public class Events {
             if (!world.isClient) {
                 if (RPGStats.getConfig().antiCheat.blockBreakPos) {
                     if (blacklistedPos.containsKey(blockPos)) {
-                        if (getConfig().debug.logBrokenBlocks) {
+                        if (getConfig().debug.logAntiCheatPrevention) {
                             RPGStats.debugLogger.info("Ignoring block break at " + blockPos + " because it was previously broken");
                         }
                         return;

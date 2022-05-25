@@ -1,5 +1,5 @@
 plugins {
-	id 'io.github.p03w.machete' version '1.0.10'
+	id 'io.github.p03w.machete' version '1.0.11'
 	id 'fabric-loom' version '0.10-SNAPSHOT'
 	id 'io.github.juuxel.loom-quiltflower-mini' version '1.3.0'
 	id 'maven-publish'
@@ -67,8 +67,8 @@ dependencies {
 	include "com.github.p03w-rehost:AutoConfig:1.18-SNAPSHOT"
 
 	// Translations
-	modImplementation "fr.catcore:server-translations-api:1.4.10+1.18.2"
-	include "fr.catcore:server-translations-api:1.4.10+1.18.2"
+	modImplementation "fr.catcore:server-translations-api:1.4.12+1.18.2"
+	include "fr.catcore:server-translations-api:1.4.12+1.18.2"
 
 	// Harvest scythes
 	modImplementation "curse.maven:harvestscythes-412225:3544761"

@@ -25,7 +25,7 @@ public class RPGStatDisplayGUI extends LightweightGuiDescription {
         setRootPanel(root);
         root.setSize(240, 180);
         
-        WLabel guiTitle = new WLabel("  RPGStats");
+        WLabel guiTitle = new WLabel(new LiteralText("  RPGStats"));
         root.add(guiTitle, 5, 1);
     
         BiConsumer<Identifier, StatEntry> configurator = (Identifier identifier, StatEntry entry) -> {
@@ -54,11 +54,11 @@ public class RPGStatDisplayGUI extends LightweightGuiDescription {
         WLabel xp;
         
         public StatEntry() {
-            name = new WLabel("Foo");
+            name = new WLabel(new LiteralText("Foo"));
             this.add(name, 0, 0, 5*18, 18);
-            level = new WLabel("0");
+            level = new WLabel(new LiteralText("0"));
             this.add(level, 60, 0, 6*18, 18);
-            xp = new WLabel("0/0");
+            xp = new WLabel(new LiteralText("0/0"));
             this.add(xp, 120, 0, 6*18, 18);
             
             this.setSize(7*18, 2*18);

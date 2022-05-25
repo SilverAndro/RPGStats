@@ -33,13 +33,14 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static mc.rpgstats.main.RPGStats.getConfig;
 import static mc.rpgstats.main.RPGStats.softLevelUp;
 
 public class Events {
     private static int tickCount = 0;
-    private static final HashMap<BlockPos, Integer> blacklistedPos = new HashMap<>();
+    private static final ConcurrentHashMap<BlockPos, Integer> blacklistedPos = new ConcurrentHashMap<>();
     
     public static void registerCommandRegisters() {
         // Commands

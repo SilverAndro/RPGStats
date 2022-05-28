@@ -38,6 +38,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import static mc.rpgstats.main.RPGStats.getConfig;
 import static mc.rpgstats.main.RPGStats.softLevelUp;
 
+@SuppressWarnings("ConstantConditions")
 public class Events {
     private static int tickCount = 0;
     private static final ConcurrentHashMap<BlockPos, Integer> blacklistedPos = new ConcurrentHashMap<>();
@@ -278,7 +279,7 @@ public class Events {
     
         LevelUpCallback.EVENT.register((player, id, newLevel, hideMessages) -> {
             if (id.equals(CustomComponents.MELEE)) {
-                player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + 0.08);
+                player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + getConfig().melee.attackDamagePerLevel);
     
                 if (!hideMessages) {
                     player.sendMessage(new LiteralText("§a+0.08§r Melee damage"), false);

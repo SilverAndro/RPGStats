@@ -18,8 +18,11 @@ public class RPGStatsConfig implements ConfigData {
     @Comment("Config for how HP scaling works with defense")
     public DefenseHPConfig defenseHP = new DefenseHPConfig();
     
+    public MeleeAttackConfig melee = new MeleeAttackConfig();
+    
     @Comment("If these damage types should grant defense XP when blocked")
     public DamageSourceBlacklist damageBlacklist = new DamageSourceBlacklist();
+    
     
     @Comment("Options for attempting to prevent cheating")
     public AntiCheat antiCheat = new AntiCheat();
@@ -84,6 +87,10 @@ public class RPGStatsConfig implements ConfigData {
         public int addAmount = 1;
         @Comment("Minimum level before you start getting HP (Exclusive)")
         public int afterLevel = 10;
+    }
+    
+    public static class MeleeAttackConfig {
+        public double attackDamagePerLevel = 0.08;
     }
     
     public static class MiningBuffToggles extends LevelBuffToggles {

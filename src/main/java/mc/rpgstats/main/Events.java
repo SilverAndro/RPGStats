@@ -282,7 +282,7 @@ public class Events {
                 player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + getConfig().melee.attackDamagePerLevel);
     
                 if (!hideMessages) {
-                    player.sendMessage(new LiteralText("§a+0.08§r Melee damage"), false);
+                    player.sendMessage(new LiteralText("§a+" + getConfig().melee.attackDamagePerLevel + "§r Melee damage"), false);
                     if (newLevel == 25) {
                         player.sendMessage(new LiteralText("§aBloodthirst§r - Regain 1 heart after killing a monster"), false);
                     } else if (newLevel == 50) {

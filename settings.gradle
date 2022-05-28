@@ -9,6 +9,5 @@ pluginManagement {
             url = 'https://server.bbkr.space/artifactory/libs-release/'
         }
         gradlePluginPortal()
-        mavenLocal()
     }
 }

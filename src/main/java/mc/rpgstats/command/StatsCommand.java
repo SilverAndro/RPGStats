@@ -10,8 +10,7 @@ import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
 public class StatsCommand {
@@ -26,12 +25,12 @@ public class StatsCommand {
                 CommandManager.literal("GUI").executes(
                     (commandContext) -> {
                         ServerCommandSource source = commandContext.getSource();
-                        ServerPlayerEntity player = source.getPlayer();
+                        ServerPlayerEntity player = source.getPlayerOrThrow();
                         if (ServerPlayNetworking.canSend(player, RPGStats.OPEN_GUI)) {
                             ServerPlayNetworking.send(player, RPGStats.OPEN_GUI, PacketByteBufs.empty());
                             return 1;
                         } else {
-                            source.sendError(new TranslatableText("rpgstats.error.not_on_client"));
+                            source.sendError(Text.translatable("rpgstats.error.not_on_client"));
                             return 0;
                         }
                     }
@@ -49,9 +48,9 @@ public class StatsCommand {
                 .then(CommandManager.literal("spamSneak")
                     .executes(
                         context -> {
-                            PlayerPreferencesComponent component = CustomComponents.PREFERENCES.get(context.getSource().getPlayer());
+                            PlayerPreferencesComponent component = CustomComponents.PREFERENCES.get(context.getSource().getPlayerOrThrow());
                             component.isOptedOutOfButtonSpam = !component.isOptedOutOfButtonSpam;
-                            context.getSource().sendFeedback(new TranslatableText("rpgstats.feedback.toggle_sneak", component.isOptedOutOfButtonSpam), false);
+                            context.getSource().sendFeedback(Text.translatable("rpgstats.feedback.toggle_sneak", component.isOptedOutOfButtonSpam), false);
                             return 1;
                         }
                     )
@@ -63,16 +62,16 @@ public class StatsCommand {
     private static int execute(ServerCommandSource source, ServerPlayerEntity target) {
         if (source.getEntity() instanceof ServerPlayerEntity spe && target != null) {
     
-            spe.sendMessage(new LiteralText("RPGStats > ")
+            spe.sendMessage(Text.translatable("RPGStats > ")
                 .formatted(Formatting.GREEN)
-                .append(new TranslatableText("rpgstats.stats_for", target.getEntityName()).formatted(Formatting.WHITE)), false);
+                .append(Text.translatable("rpgstats.stats_for", target.getEntityName()).formatted(Formatting.WHITE)), false);
             
             CustomComponents.components.keySet().forEach(identifier ->
                 spe.sendMessage(RPGStats.getFormattedLevelData(identifier, target), false)
             );
         } else if (target != null) {
             if (source.getEntity() == null) {
-                source.sendFeedback(new TranslatableText("rpgstats.stats_for", target.getEntityName()), false);
+                source.sendFeedback(Text.translatable("rpgstats.stats_for", target.getEntityName()), false);
     
                 CustomComponents.components.keySet().forEach(identifier ->
                     source.sendFeedback(RPGStats.getNotFormattedLevelData(identifier, target), false)
@@ -81,16 +80,16 @@ public class StatsCommand {
                 ServerPlayerEntity spe = (ServerPlayerEntity)source.getEntity();
                 ServerPlayerEntity targeted = (ServerPlayerEntity)source.getEntity();
                 
-                spe.sendMessage(new LiteralText("RPGStats > ")
+                spe.sendMessage(Text.literal("RPGStats > ")
                     .formatted(Formatting.GREEN)
-                    .append(new TranslatableText("rpgstats.stats_for", target.getEntityName()).formatted(Formatting.WHITE)), false);
+                    .append(Text.translatable("rpgstats.stats_for", target.getEntityName()).formatted(Formatting.WHITE)), false);
     
                 CustomComponents.components.keySet().forEach(identifier ->
                     spe.sendMessage(RPGStats.getFormattedLevelData(identifier, targeted), false)
                 );
             }
         } else {
-            source.sendError(new TranslatableText("rpgstats.error.console_player_required"));
+            source.sendError(Text.translatable("rpgstats.error.console_player_required"));
         }
         return 1;
     }

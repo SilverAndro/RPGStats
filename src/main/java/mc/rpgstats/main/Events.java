@@ -6,7 +6,7 @@ import mc.rpgstats.command.StatsCommand;
 import mc.rpgstats.component.internal.PlayerPreferencesComponent;
 import mc.rpgstats.event.LevelUpCallback;
 import mc.rpgstats.mixin_logic.OnSneakLogic;
-import net.fabricmc.fabric.api.command.v1.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -19,20 +19,25 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import wraith.harvest_scythes.api.scythe.HSScythesEvents;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static mc.rpgstats.main.RPGStats.getConfig;
@@ -46,7 +51,7 @@ public class Events {
     public static void registerCommandRegisters() {
         // Commands
         CommandRegistrationCallback.EVENT.register(
-            (dispatcher, dedicated) -> {
+            (dispatcher, registryAccess, environment) -> {
                 StatsCommand.register(dispatcher);
                 CheatCommand.register(dispatcher);
             }
@@ -73,8 +78,19 @@ public class Events {
             @Override
             public void reload(ResourceManager manager) {
                 CustomComponents.components.clear();
-            
-                for(Identifier id : manager.findResources("rpgstats", path -> path.endsWith(".stat"))) {
+
+                for (Resource resource : manager.getAllResources(getFabricId())) {
+                    System.out.println(resource);
+                    try {
+                        System.out.println(resource.getMetadata());
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                    System.out.println(resource.getResourcePackName());
+                }
+
+                /*
+                for(Identifier id : manager.findResources("rpgstats", path -> System.out.println(path))) {
                     try (InputStream stream = manager.getResource(id).getInputStream()) {
                         final char[] buffer = new char[8192];
                         final StringBuilder result = new StringBuilder();
@@ -93,6 +109,7 @@ public class Events {
                         throw clean;
                     }
                 }
+                */
             }
         });
     }
@@ -213,18 +230,18 @@ public class Events {
             if (id.equals(CustomComponents.DEFENSE)) {
                 player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) + 0.01);
                 if (!hideMessages)
-                    player.sendMessage(new LiteralText("§a+0.01§r Knockback resistance"), false);
+                    player.sendMessage(Text.literal("§a+0.01§r Knockback resistance"), false);
                 if (newLevel % RPGStats.getConfig().defenseHP.everyXLevels == 0 && newLevel > RPGStats.getConfig().defenseHP.afterLevel) {
                     player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) + RPGStats.getConfig().defenseHP.addAmount);
                     if (!hideMessages)
-                        player.sendMessage(new LiteralText("§a+1§r Health"), false);
+                        player.sendMessage(Text.literal("§a+1§r Health"), false);
                 }
     
                 if (!hideMessages) {
                     if (newLevel == 25) {
-                        player.sendMessage(new LiteralText("§aNimble§r - 5% chance to avoid damage"), false);
+                        player.sendMessage(Text.literal("§aNimble§r - 5% chance to avoid damage"), false);
                     } else if (newLevel == 50) {
-                        player.sendMessage(new LiteralText("§aNimble II§r - 10% chance to avoid damage"), false);
+                        player.sendMessage(Text.literal("§aNimble II§r - 10% chance to avoid damage"), false);
                     }
                 }
             }
@@ -233,12 +250,12 @@ public class Events {
         LevelUpCallback.EVENT.register((player, id, newLevel, hideMessages) -> {
             if (id.equals(CustomComponents.FARMING)) {
                 if (!hideMessages) {
-                    player.sendMessage(new LiteralText("§a+1§r Bonemeal efficiency"), false);
+                    player.sendMessage(Text.literal("§a+1§r Bonemeal efficiency"), false);
         
                     if (newLevel == 25) {
-                        player.sendMessage(new LiteralText("§aNurturing§r - Shift rapidly to grow nearby crops (while holding hoe)"), false);
+                        player.sendMessage(Text.literal("§aNurturing§r - Shift rapidly to grow nearby crops (while holding hoe)"), false);
                     } else if (newLevel == 50) {
-                        player.sendMessage(new LiteralText("§aNurturing II§r - Nurturing has increased range"), false);
+                        player.sendMessage(Text.literal("§aNurturing II§r - Nurturing has increased range"), false);
                     }
                 }
             }
@@ -249,11 +266,11 @@ public class Events {
                 player.getAttributeInstance(EntityAttributes.GENERIC_LUCK).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_LUCK) + 0.05);
     
                 if (!hideMessages) {
-                    player.sendMessage(new LiteralText("§a+0.05§r Luck"), false);
+                    player.sendMessage(Text.literal("§a+0.05§r Luck"), false);
                     if (newLevel == 25) {
-                        player.sendMessage(new LiteralText("§aVitamin rich§r - Eating fish grants you a temporary positive effect"), false);
+                        player.sendMessage(Text.literal("§aVitamin rich§r - Eating fish grants you a temporary positive effect"), false);
                     } else if (newLevel == 50) {
-                        player.sendMessage(new LiteralText("§aTeach a man to fish§r - Extra saturation when eating"), false);
+                        player.sendMessage(Text.literal("§aTeach a man to fish§r - Extra saturation when eating"), false);
                     }
                 }
             }
@@ -262,16 +279,16 @@ public class Events {
         LevelUpCallback.EVENT.register((player, id, newLevel, hideMessages) -> {
             if (id.equals(CustomComponents.MAGIC)) {
                 if (!hideMessages) {
-                    player.sendMessage(new LiteralText("§a+1§r Drunk potion duration"), false);
+                    player.sendMessage(Text.literal("§a+1§r Drunk potion duration"), false);
         
                     if (newLevel % 3 == 0) {
-                        player.sendMessage(new LiteralText("§a+1§r Potion drink speed"), false);
+                        player.sendMessage(Text.literal("§a+1§r Potion drink speed"), false);
                     }
         
                     if (newLevel == 25) {
-                        player.sendMessage(new LiteralText("§aVax§r - Immune to poison"), false);
+                        player.sendMessage(Text.literal("§aVax§r - Immune to poison"), false);
                     } else if (newLevel == 50) {
-                        player.sendMessage(new LiteralText("§aDead inside§r - Immune to wither"), false);
+                        player.sendMessage(Text.literal("§aDead inside§r - Immune to wither"), false);
                     }
                 }
             }
@@ -282,11 +299,11 @@ public class Events {
                 player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE).setBaseValue(player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + getConfig().melee.attackDamagePerLevel);
     
                 if (!hideMessages) {
-                    player.sendMessage(new LiteralText("§a+" + getConfig().melee.attackDamagePerLevel + "§r Melee damage"), false);
+                    player.sendMessage(Text.literal("§a+" + getConfig().melee.attackDamagePerLevel + "§r Melee damage"), false);
                     if (newLevel == 25) {
-                        player.sendMessage(new LiteralText("§aBloodthirst§r - Regain 1 heart after killing a monster"), false);
+                        player.sendMessage(Text.literal("§aBloodthirst§r - Regain 1 heart after killing a monster"), false);
                     } else if (newLevel == 50) {
-                        player.sendMessage(new LiteralText("§aBloodthirst II§r - Regain 2 hearts after killing a monster"), false);
+                        player.sendMessage(Text.literal("§aBloodthirst II§r - Regain 2 hearts after killing a monster"), false);
                     }
                 }
             }
@@ -295,12 +312,12 @@ public class Events {
         LevelUpCallback.EVENT.register((player, id, newLevel, hideMessages) -> {
             if (id.equals(CustomComponents.MINING)) {
                 if (!hideMessages) {
-                    player.sendMessage(new LiteralText("§a+0.1§r Additional Mining Speed"), false);
+                    player.sendMessage(Text.literal("§a+0.1§r Additional Mining Speed"), false);
         
                     if (newLevel == 25) {
-                        player.sendMessage(new LiteralText("§aMagically infused§r - Extra 5% chance to not consume durability with unbreaking."), false);
+                        player.sendMessage(Text.literal("§aMagically infused§r - Extra 5% chance to not consume durability with unbreaking."), false);
                     } else if (newLevel == 50) {
-                        player.sendMessage(new LiteralText("§aMiners sight§r - Night vision below y" + RPGStats.getConfig().toggles.mining.effectLevelTrigger), false);
+                        player.sendMessage(Text.literal("§aMiners sight§r - Night vision below y" + RPGStats.getConfig().toggles.mining.effectLevelTrigger), false);
                     }
                 }
             }
@@ -309,12 +326,12 @@ public class Events {
         LevelUpCallback.EVENT.register((player, id, newLevel, hideMessages) -> {
             if (id.equals(CustomComponents.RANGED)) {
                 if (!hideMessages) {
-                    player.sendMessage(new LiteralText("§a+1§r Bow accuracy"), false);
+                    player.sendMessage(Text.literal("§a+1§r Bow accuracy"), false);
         
                     if (newLevel == 25) {
-                        player.sendMessage(new LiteralText("§aAqueus§r - Impaling applies to all mobs, not just water based ones"), false);
+                        player.sendMessage(Text.literal("§aAqueus§r - Impaling applies to all mobs, not just water based ones"), false);
                     } else if (newLevel == 50) {
-                        player.sendMessage(new LiteralText("§aNix§r - You no longer need arrows"), false);
+                        player.sendMessage(Text.literal("§aNix§r - You no longer need arrows"), false);
                     }
                 }
             }

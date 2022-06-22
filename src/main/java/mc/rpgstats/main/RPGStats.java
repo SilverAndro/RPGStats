@@ -10,9 +10,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.VersionParsingException;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.MutableText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -145,15 +144,15 @@ public class RPGStats implements ModInitializer {
                     
                     setComponentLevel(id, player, currentLevel);
                     CustomComponents.STATS.sync(player);
-                    player.sendMessage(new LiteralText("§aRPGStats >§r ")
+                    player.sendMessage(Text.literal("§aRPGStats >§r ")
                         .formatted(Formatting.GREEN)
-                        .append(new TranslatableText("rpgstats.levelup_1")
+                        .append(Text.translatable("rpgstats.levelup_1")
                             .formatted(Formatting.WHITE)
-                            .append(new LiteralText(CustomComponents.components.get(id))
+                            .append(Text.literal(CustomComponents.components.get(id))
                                 .formatted(Formatting.GOLD)
-                                .append(new TranslatableText("rpgstats.levelup_2")
+                                .append(Text.translatable("rpgstats.levelup_2")
                                     .formatted(Formatting.WHITE)
-                                    .append(new LiteralText(String.valueOf(getComponentLevel(id, player)))
+                                    .append(Text.literal(String.valueOf(getComponentLevel(id, player)))
                                         .formatted(Formatting.GOLD))))
                         ), false);
                     
@@ -175,17 +174,17 @@ public class RPGStats implements ModInitializer {
         String capped = name.substring(0, 1).toUpperCase() + name.substring(1);
         if (currentLevel < getConfig().scaling.maxLevel) {
             int nextXP = calculateXpNeededToReachLevel(currentLevel + 1);
-            return new LiteralText(capped)
+            return Text.literal(capped)
                 .formatted(Formatting.GOLD)
-                .append(new TranslatableText("rpgstats.notmaxlevel_trunc", currentLevel, xp, nextXP).formatted(Formatting.WHITE));
+                .append(Text.translatable("rpgstats.notmaxlevel_trunc", currentLevel, xp, nextXP).formatted(Formatting.WHITE));
         } else {
-            return new LiteralText(capped)
+            return Text.literal(capped)
                 .formatted(Formatting.GOLD)
-                .append(new TranslatableText("rpgstats.maxlevel_trunc", currentLevel).formatted(Formatting.WHITE));
+                .append(Text.translatable("rpgstats.maxlevel_trunc", currentLevel).formatted(Formatting.WHITE));
         }
     }
     
-    public static TranslatableText getNotFormattedLevelData(Identifier id, ServerPlayerEntity player) {
+    public static Text getNotFormattedLevelData(Identifier id, ServerPlayerEntity player) {
         int currentLevel = getComponentLevel(id, player);
         int xp = getComponentXP(id, player);
         
@@ -193,9 +192,9 @@ public class RPGStats implements ModInitializer {
         String capped = name.substring(0, 1).toUpperCase() + name.substring(1);
         if (currentLevel < getConfig().scaling.maxLevel) {
             int nextXP = calculateXpNeededToReachLevel(currentLevel + 1);
-            return new TranslatableText("rpgstats.notmaxlevel", capped, currentLevel, xp, nextXP);
+            return Text.translatable("rpgstats.notmaxlevel", capped, currentLevel, xp, nextXP);
         } else {
-            return new TranslatableText("rpgstats.maxlevel", capped, currentLevel);
+            return Text.translatable("rpgstats.maxlevel", capped, currentLevel);
         }
     }
     
@@ -208,10 +207,14 @@ public class RPGStats implements ModInitializer {
     }
     
     public static int getHighestLevel(ServerPlayerEntity player) {
+        ArrayList<Integer> stats = getStatLevelsForPlayer(player);
+        if (stats.isEmpty()) return 0;
         return Collections.max(getStatLevelsForPlayer(player));
     }
     
     public static int getLowestLevel(ServerPlayerEntity player) {
+        ArrayList<Integer> stats = getStatLevelsForPlayer(player);
+        if (stats.isEmpty()) return 0;
         return Collections.min(getStatLevelsForPlayer(player));
     }
     

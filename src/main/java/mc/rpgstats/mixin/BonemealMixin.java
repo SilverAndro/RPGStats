@@ -10,9 +10,9 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryEntry;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.BiomeKeys;
@@ -21,13 +21,9 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
-
 @Mixin(BoneMealItem.class)
 public class BonemealMixin {
-    private static final Random RANDOM = new Random();
+    private static final java.util.Random RANDOM = new java.util.Random();
     
     // TODO: Generalize this! Breaks often and not ideal
     @Inject(at = @At("HEAD"), method = "useOnGround")

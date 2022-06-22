@@ -9,7 +9,7 @@ import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.Collection;
@@ -109,7 +109,7 @@ public class CheatCommand {
         for (ServerPlayerEntity target : targets) {
             if (type == CommandType.XP) {
                 RPGStats.addXpAndLevelUp(id, target, amount);
-                source.sendFeedback(new LiteralText(amount + " XP added to stat " + id + " for " + targets.size() + " targets."), true);
+                source.sendFeedback(Text.literal(amount + " XP added to stat " + id + " for " + targets.size() + " targets."), true);
             }
             if (type == CommandType.LEVELS) {
                 for (int x = 0; x < amount; x++) {
@@ -131,7 +131,7 @@ public class CheatCommand {
                 LevelUpCallback.EVENT.invoker().onLevelUp(target, id, amount, true);
             }
         }
-        source.sendFeedback(new LiteralText("XP set for stat " + id + " to " + amount + " for " + targets.size() + " targets."), true);
+        source.sendFeedback(Text.literal("XP set for stat " + id + " to " + amount + " for " + targets.size() + " targets."), true);
         return 1;
     }
     

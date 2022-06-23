@@ -19,6 +19,7 @@ public abstract class GrantFarmingOnStaffHarvest extends Item {
         super(settings);
     }
     
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "useOnBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/World;setBlockState(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/block/BlockState;)Z"))
     private void rpgstats$giveFarmingXpOnStaffHarvest(ItemUsageContext crop, CallbackInfoReturnable<ActionResult> cir){
         if (crop.getPlayer() instanceof ServerPlayerEntity player) {

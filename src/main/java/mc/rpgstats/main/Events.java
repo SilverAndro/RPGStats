@@ -6,11 +6,7 @@ import mc.rpgstats.command.StatsCommand;
 import mc.rpgstats.component.internal.PlayerPreferencesComponent;
 import mc.rpgstats.event.LevelUpCallback;
 import mc.rpgstats.mixin_logic.OnSneakLogic;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.advancement.Advancement;
@@ -27,8 +23,14 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
+import org.quiltmc.qsl.command.api.CommandRegistrationCallback;
+import org.quiltmc.qsl.lifecycle.api.event.ServerTickEvents;
+import org.quiltmc.qsl.networking.api.PlayerLookup;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 import wraith.harvest_scythes.api.scythe.HSScythesEvents;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -60,7 +62,6 @@ public class Events {
     }
     
     public static void registerResourceReloadListeners() {
-        
         // Data driven stuff
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
@@ -77,7 +78,9 @@ public class Events {
                     for (Map.Entry<Identifier, List<Resource>> entry : manager.findAllResources("rpgstats", identifier -> true).entrySet()) {
                         System.out.println(entry.getKey());
                         for (Resource resource : entry.getValue()) {
-                            handleLines(resource.getReader().lines().toArray(String[]::new));
+                            try (BufferedReader reader = resource.openBufferedReader()) {
+                                handleLines(reader.lines().toArray(String[]::new));
+                            }
                         }
                     }
                 } catch (IOException err) {
@@ -117,7 +120,7 @@ public class Events {
     
     public static void registerServerTickEvents() {
         // Syncing and advancements
-        ServerTickEvents.END_SERVER_TICK.register((MinecraftServer server) -> {
+        ServerTickEvents.END.register((MinecraftServer server) -> {
             ArrayList<BlockPos> toRemove = new ArrayList<>();
             blacklistedPos.forEach((blockPos, integer) -> {
                 blacklistedPos.put(blockPos, integer - 1);
@@ -342,7 +345,7 @@ public class Events {
                 }
         
                 Random random = new Random();
-                if ((block == Blocks.ANCIENT_DEBRIS || block instanceof OreBlock) && random.nextBoolean()) {
+                if ((block == Blocks.ANCIENT_DEBRIS || Registry.BLOCK.getId(block).getPath().contains("ore")) && random.nextBoolean()) {
                     int amount;
                     if (
                         block == Blocks.COAL_ORE ||

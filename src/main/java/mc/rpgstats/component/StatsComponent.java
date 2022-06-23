@@ -3,11 +3,12 @@ package mc.rpgstats.component;
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
 import mc.rpgstats.main.RPGStats;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -42,7 +43,7 @@ public class StatsComponent implements Component, AutoSyncedComponent {
     }
     
     @Override
-    public void writeToNbt(NbtCompound compoundTag) {
+    public void writeToNbt(@NotNull NbtCompound compoundTag) {
         for (StatsEntry entry : entries.values()) {
             entry.toCompound(compoundTag);
         }
@@ -51,7 +52,7 @@ public class StatsComponent implements Component, AutoSyncedComponent {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (getClass() != o.getClass()) return false;
         StatsComponent that = (StatsComponent)o;
         return playerEntity.equals(that.playerEntity) && entries.equals(that.entries);
     }

@@ -23,7 +23,10 @@ public class TotemUseMixin {
         ),
         locals = LocalCapture.CAPTURE_FAILHARD
     )
-    public void rpgstats$onUseTotem(DamageSource source, CallbackInfoReturnable<Boolean> cir, ItemStack itemStack, ServerPlayerEntity serverPlayerEntity) {
-        RPGStats.addXpAndLevelUp(CustomComponents.DEFENSE, serverPlayerEntity, 100);
+    public void rpgstats$onUseTotem(DamageSource source, CallbackInfoReturnable<Boolean> cir) {
+        //noinspection ConstantConditions
+        if ((Object)this instanceof ServerPlayerEntity serverPlayerEntity) {
+            RPGStats.addXpAndLevelUp(CustomComponents.DEFENSE, serverPlayerEntity, 100);
+        }
     }
 }

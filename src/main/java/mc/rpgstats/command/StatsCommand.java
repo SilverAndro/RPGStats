@@ -4,14 +4,14 @@ import com.mojang.brigadier.CommandDispatcher;
 import mc.rpgstats.component.internal.PlayerPreferencesComponent;
 import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
+import org.quiltmc.qsl.networking.api.PacketByteBufs;
+import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
 public class StatsCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
@@ -25,7 +25,7 @@ public class StatsCommand {
                 CommandManager.literal("GUI").executes(
                     (commandContext) -> {
                         ServerCommandSource source = commandContext.getSource();
-                        ServerPlayerEntity player = source.getPlayerOrThrow();
+                        ServerPlayerEntity player = source.getPlayer();
                         if (ServerPlayNetworking.canSend(player, RPGStats.OPEN_GUI)) {
                             ServerPlayNetworking.send(player, RPGStats.OPEN_GUI, PacketByteBufs.empty());
                             return 1;
@@ -48,7 +48,7 @@ public class StatsCommand {
                 .then(CommandManager.literal("spamSneak")
                     .executes(
                         context -> {
-                            PlayerPreferencesComponent component = CustomComponents.PREFERENCES.get(context.getSource().getPlayerOrThrow());
+                            PlayerPreferencesComponent component = CustomComponents.PREFERENCES.get(context.getSource().getPlayer());
                             component.isOptedOutOfButtonSpam = !component.isOptedOutOfButtonSpam;
                             context.getSource().sendFeedback(Text.translatable("rpgstats.feedback.toggle_sneak", component.isOptedOutOfButtonSpam), false);
                             return 1;

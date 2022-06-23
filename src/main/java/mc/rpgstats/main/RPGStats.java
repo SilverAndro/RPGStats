@@ -42,41 +42,6 @@ public class RPGStats implements ModInitializer {
     
     private static RPGStatsConfig configUnsafe;
     
-    static void verifyOptionalDeps() throws IOException {
-        //noinspection ConstantConditions
-        try (InputStream stream = RPGStats.class.getResource("/opt_deps_req.txt").openStream()) {
-            final char[] buffer = new char[8192];
-            final StringBuilder result = new StringBuilder();
-            Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
-            int charsRead;
-            while ((charsRead = reader.read(buffer, 0, buffer.length)) > 0) {
-                result.append(buffer, 0, charsRead);
-            }
-            
-            String[] text = result.toString().split("\n");
-            Arrays.stream(text).iterator().forEachRemaining(s -> {
-                String[] line = s.split(" ");
-                String modID = line[0].trim();
-                String version = line[1].trim();
-                
-                FabricLoader.getInstance().getModContainer(modID).ifPresent(modContainer -> {
-                    Version testVersion = null;
-                    try {
-                        testVersion = Version.parse(version);
-                    } catch (VersionParsingException e) {
-                        e.printStackTrace();
-                        System.exit(-1);
-                    }
-    
-                    if (modContainer.getMetadata().getVersion().compareTo(testVersion) <= -1) {
-                        System.err.println("RPGStats requires " + modID + " to be at least version " + testVersion.getFriendlyString() + " but got " + modContainer.getMetadata().getVersion().getFriendlyString() + "!");
-                        System.exit(-1);
-                    }
-                });
-            });
-        }
-    }
-    
     // Helper methods for components
     public static void setComponentXP(Identifier id, ServerPlayerEntity player, int newValue) {
         if (getConfig().debug.logRawOps) {
@@ -241,13 +206,6 @@ public class RPGStats implements ModInitializer {
     
     @Override
     public void onInitialize() {
-        try {
-            verifyOptionalDeps();
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.exit(-1);
-        }
-    
         // Criterion
         assert CriteriaAccessor.getValues() != null;
         CriteriaAccessor.getValues().put(LevelUpCriterion.ID, levelUpCriterion);

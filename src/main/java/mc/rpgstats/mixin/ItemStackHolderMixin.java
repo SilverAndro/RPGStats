@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public abstract class ItemStackHolderMixin {
     @Shadow public abstract void setHolder(Entity holder);
 
-    @Shadow public abstract Entity getHolder();
+    @Shadow public abstract Entity getEntityHolder();
 
     @Inject(at = @At("HEAD"), method = "inventoryTick")
     private void rpgstats$onTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {
@@ -24,6 +24,6 @@ public abstract class ItemStackHolderMixin {
 
     @Inject(at = @At("TAIL"), method = "copy", locals = LocalCapture.CAPTURE_FAILHARD)
     private void rpgstats$copyHolder(CallbackInfoReturnable<ItemStack> cir, ItemStack itemStack) {
-        itemStack.setHolder(this.getHolder());
+        itemStack.setHolder(this.getEntityHolder());
     }
 }

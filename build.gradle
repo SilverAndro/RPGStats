@@ -1,8 +1,7 @@
 plugins {
 	id 'io.github.p03w.machete' version '1.1.3'
-	id 'fabric-loom' version '0.12-SNAPSHOT'
-	id 'io.github.juuxel.loom-quiltflower' version '1.7.1'
-	id 'maven-publish'
+	id 'org.quiltmc.loom' version '0.12+'
+	id 'org.jetbrains.kotlin.jvm' version '1.7.0'
 }
 
 sourceCompatibility = JavaVersion.VERSION_16
@@ -44,11 +43,17 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	mappings loom.layered {
+		addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${quilt_mappings}:v2"))
+	}
+	modImplementation "org.quiltmc:quilt-loader:${project.loader_version}"
 
-	// Fabric API
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+	// QSL
+	modImplementation "org.quiltmc:qsl:${qsl_version}+${minecraft_version}"
+	modImplementation "org.quiltmc.quilted-fabric-api:quilted-fabric-api:2.0.0-alpha.4+0.56.1-${minecraft_version}"
+
+	// QKL
+	modImplementation "org.quiltmc.quilt-kotlin-libraries:quilt-kotlin-libraries:0.1.0+"
 
 	// LibGui
 	modImplementation "io.github.cottonmc:LibGui:${project.libgui_version}"
@@ -118,25 +123,4 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 jar {
 	from "LICENSE"
-}
-
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			// add all the jars that should be included when publishing to maven
-			artifact(remapJar) {
-				builtBy remapJar
-			}
-			artifact(sourcesJar) {
-				builtBy remapSourcesJar
-			}
-		}
-	}
-
-	// select the repositories you want to publish to
-	repositories {
-		// uncomment to publish to the local maven
-		mavenLocal()
-	}
 }

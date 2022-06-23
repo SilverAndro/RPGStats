@@ -30,14 +30,7 @@ import net.minecraft.util.math.BlockPos;
 import wraith.harvest_scythes.api.scythe.HSScythesEvents;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static mc.rpgstats.main.RPGStats.getConfig;
@@ -79,37 +72,19 @@ public class Events {
             public void reload(ResourceManager manager) {
                 CustomComponents.components.clear();
 
-                for (Resource resource : manager.getAllResources(getFabricId())) {
-                    System.out.println(resource);
-                    try {
-                        System.out.println(resource.getMetadata());
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    System.out.println(resource.getResourcePackName());
-                }
-
-                /*
-                for(Identifier id : manager.findResources("rpgstats", path -> System.out.println(path))) {
-                    try (InputStream stream = manager.getResource(id).getInputStream()) {
-                        final char[] buffer = new char[8192];
-                        final StringBuilder result = new StringBuilder();
-                        try (Reader reader = new InputStreamReader(stream, StandardCharsets.UTF_8)) {
-                            int charsRead;
-                            while ((charsRead = reader.read(buffer, 0, buffer.length)) > 0) {
-                                result.append(buffer, 0, charsRead);
-                            }
-                        
-                            String[] text = result.toString().split("\n");
-                            handleLines(text);
+                System.out.println("RPGStats reload!");
+                try {
+                    for (Map.Entry<Identifier, List<Resource>> entry : manager.findAllResources("rpgstats", identifier -> true).entrySet()) {
+                        System.out.println(entry.getKey());
+                        for (Resource resource : entry.getValue()) {
+                            handleLines(resource.getReader().lines().toArray(String[]::new));
                         }
-                    } catch(Throwable e) {
-                        RuntimeException clean = new RuntimeException("Failed to read " + id);
-                        clean.addSuppressed(e);
-                        throw clean;
                     }
+                } catch (IOException err) {
+                    RuntimeException clean = new RuntimeException("Failed to read resources");
+                    clean.addSuppressed(err);
+                    throw clean;
                 }
-                */
             }
         });
     }

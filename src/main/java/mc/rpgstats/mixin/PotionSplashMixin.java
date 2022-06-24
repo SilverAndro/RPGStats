@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.main.CustomComponents;
-import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -27,7 +27,7 @@ public class PotionSplashMixin {
         if (!list.isEmpty()) {
             for (LivingEntity le : list) {
                 if (le instanceof ServerPlayerEntity) {
-                    RPGStats.addXpAndLevelUp(CustomComponents.MAGIC, (ServerPlayerEntity)le, 10);
+                    LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, (ServerPlayerEntity)le, 10);
                 }
             }
         }
@@ -41,7 +41,7 @@ public class PotionSplashMixin {
         if (!list.isEmpty()) {
             for (LivingEntity le : list) {
                 if (le instanceof ServerPlayerEntity) {
-                    RPGStats.addXpAndLevelUp(CustomComponents.MAGIC, (ServerPlayerEntity)le, 10);
+                    LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, (ServerPlayerEntity)le, 10);
                 }
             }
         }

@@ -1,5 +1,6 @@
 package mc.rpgstats.mixin;
 
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.LivingEntity;
@@ -32,7 +33,7 @@ public class PotionDrinkMixin {
         StatusEffectInstance effect = args.get(0);
         
         if (entity instanceof ServerPlayerEntity playerEntity) {
-            RPGStats.addXpAndLevelUp(CustomComponents.MAGIC, playerEntity, 10);
+            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, playerEntity, 10);
             
             int newDuration;
             if (RPGStats.getComponentLevel(CustomComponents.MAGIC, playerEntity) > 0) {
@@ -64,7 +65,7 @@ public class PotionDrinkMixin {
     )
     private void rpgstats$OnFinishDrinkingHealthPotion(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
         if (user instanceof ServerPlayerEntity playerEntity) {
-            RPGStats.addXpAndLevelUp(CustomComponents.MAGIC, playerEntity, 10);
+            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, playerEntity, 10);
 
         }
     }

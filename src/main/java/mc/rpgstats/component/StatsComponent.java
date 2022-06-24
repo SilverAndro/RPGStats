@@ -2,7 +2,7 @@ package mc.rpgstats.component;
 
 import dev.onyxstudios.cca.api.v3.component.Component;
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent;
-import mc.rpgstats.main.RPGStats;
+import io.github.silverandro.rpgstats.Constants;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -24,7 +24,7 @@ public class StatsComponent implements Component, AutoSyncedComponent {
     
     @Override
     public boolean shouldSyncWith(ServerPlayerEntity player) {
-        return ServerPlayNetworking.canSend(player, RPGStats.SYNC_STATS_PACKET_ID);
+        return ServerPlayNetworking.canSend(player, Constants.INSTANCE.getSYNC_STATS_PACKET_ID());
     }
     
     @Override

@@ -5,6 +5,7 @@ import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
+import org.jetbrains.annotations.NotNull;
 
 public class PlayerHealthAttachComponent implements Component {
     public PlayerEntity playerEntity;
@@ -14,12 +15,12 @@ public class PlayerHealthAttachComponent implements Component {
     }
     
     @Override
-    public void readFromNbt(NbtCompound compoundTag) {
+    public void readFromNbt(@NotNull NbtCompound compoundTag) {
         if (playerEntity instanceof ServerPlayerEntity) {
             RPGStats.needsStatFix.add((ServerPlayerEntity)playerEntity);
         }
     }
     
     @Override
-    public void writeToNbt(NbtCompound compoundTag) {}
+    public void writeToNbt(@NotNull NbtCompound compoundTag) {}
 }

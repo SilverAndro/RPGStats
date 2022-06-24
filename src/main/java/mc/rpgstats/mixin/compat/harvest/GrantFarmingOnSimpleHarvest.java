@@ -1,8 +1,8 @@
 package mc.rpgstats.mixin.compat.harvest;
 
 import info.tehnut.harvest.Harvest;
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.main.CustomComponents;
-import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -24,7 +24,7 @@ public class GrantFarmingOnSimpleHarvest {
     )
     private static void rpgstats$giveFarmingXpOnSimpleHarvest(PlayerEntity player, World world, Hand hand, BlockHitResult blockHitResult, CallbackInfoReturnable<ActionResult> cir) {
         if (player instanceof ServerPlayerEntity) {
-            RPGStats.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)player, 1);
+            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)player, 1);
         }
     }
 }

@@ -2,6 +2,7 @@ package mc.rpgstats.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.event.LevelUpCallback;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.command.argument.EntityArgumentType;
@@ -108,13 +109,13 @@ public class CheatCommand {
     private static int executeAdd(ServerCommandSource source, Identifier id, Collection<ServerPlayerEntity> targets, CommandType type, int amount) {
         for (ServerPlayerEntity target : targets) {
             if (type == CommandType.XP) {
-                RPGStats.addXpAndLevelUp(id, target, amount);
+                LevelUtils.INSTANCE.addXpAndLevelUp(id, target, amount);
                 source.sendFeedback(Text.literal(amount + " XP added to stat " + id + " for " + targets.size() + " targets."), true);
             }
             if (type == CommandType.LEVELS) {
                 for (int x = 0; x < amount; x++) {
                     int needed = RPGStats.calculateXpNeededToReachLevel(RPGStats.getComponentLevel(id, target) + amount);
-                    RPGStats.addXpAndLevelUp(id, target, needed);
+                    LevelUtils.INSTANCE.addXpAndLevelUp(id, target, needed);
                 }
             }
         }

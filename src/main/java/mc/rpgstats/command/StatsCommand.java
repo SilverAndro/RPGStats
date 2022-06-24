@@ -1,6 +1,7 @@
 package mc.rpgstats.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import io.github.silverandro.rpgstats.Constants;
 import mc.rpgstats.component.internal.PlayerPreferencesComponent;
 import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
@@ -26,8 +27,8 @@ public class StatsCommand {
                     (commandContext) -> {
                         ServerCommandSource source = commandContext.getSource();
                         ServerPlayerEntity player = source.getPlayer();
-                        if (ServerPlayNetworking.canSend(player, RPGStats.OPEN_GUI)) {
-                            ServerPlayNetworking.send(player, RPGStats.OPEN_GUI, PacketByteBufs.empty());
+                        if (ServerPlayNetworking.canSend(player, Constants.INSTANCE.getOPEN_GUI())) {
+                            ServerPlayNetworking.send(player, Constants.INSTANCE.getOPEN_GUI(), PacketByteBufs.empty());
                             return 1;
                         } else {
                             source.sendError(Text.translatable("rpgstats.error.not_on_client"));

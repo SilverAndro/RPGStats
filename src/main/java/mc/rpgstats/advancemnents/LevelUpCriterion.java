@@ -1,6 +1,7 @@
 package mc.rpgstats.advancemnents;
 
 import com.google.gson.JsonObject;
+import io.github.silverandro.rpgstats.Constants;
 import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.advancement.criterion.AbstractCriterion;
@@ -12,8 +13,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class LevelUpCriterion extends AbstractCriterion<LevelUpCriterion.LevelCriteria> {
-    public static final Identifier ID = new Identifier(RPGStats.MOD_ID, "player_level");
-    private static final Identifier ANY_ID = new Identifier(RPGStats.MOD_ID, "_any");
+    public static final Identifier ID = new Identifier(Constants.MOD_ID, "player_level");
+    private static final Identifier ANY_ID = new Identifier(Constants.MOD_ID, "_any");
     
     @Override
     protected LevelCriteria conditionsFromJson(JsonObject obj, EntityPredicate.Extended pred, AdvancementEntityPredicateDeserializer predicateDeserializer) {

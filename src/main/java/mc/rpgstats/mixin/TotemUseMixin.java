@@ -1,10 +1,9 @@
 package mc.rpgstats.mixin;
 
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.main.CustomComponents;
-import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -26,7 +25,7 @@ public class TotemUseMixin {
     public void rpgstats$onUseTotem(DamageSource source, CallbackInfoReturnable<Boolean> cir) {
         //noinspection ConstantConditions
         if ((Object)this instanceof ServerPlayerEntity serverPlayerEntity) {
-            RPGStats.addXpAndLevelUp(CustomComponents.DEFENSE, serverPlayerEntity, 100);
+            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.DEFENSE, serverPlayerEntity, 100);
         }
     }
 }

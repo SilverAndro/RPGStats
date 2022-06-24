@@ -5,8 +5,8 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WLabel;
 import io.github.cottonmc.cotton.gui.widget.WListPanel;
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel;
-import mc.rpgstats.main.RPGStats;
-import mc.rpgstats.main.RPGStatsClient;
+import io.github.silverandro.rpgstats.LevelUtils;
+import io.github.silverandro.rpgstats.client.RPGStatsClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
@@ -19,7 +19,7 @@ public class RPGStatDisplayGUI extends LightweightGuiDescription {
     
     public RPGStatDisplayGUI() {
         super();
-        data.addAll(RPGStatsClient.currentStats.keySet());
+        data.addAll(RPGStatsClient.INSTANCE.getCurrentStats().keySet());
         
         WGridPanel root = new WGridPanel();
         setRootPanel(root);
@@ -29,17 +29,17 @@ public class RPGStatDisplayGUI extends LightweightGuiDescription {
         root.add(guiTitle, 5, 1);
     
         BiConsumer<Identifier, StatEntry> configurator = (Identifier identifier, StatEntry entry) -> {
-            int level = RPGStatsClient.currentStats.get(identifier).getLeft();
-            int xp = RPGStatsClient.currentStats.get(identifier).getRight();
+            int level = RPGStatsClient.INSTANCE.getCurrentStats().get(identifier).getLeft();
+            int xp = RPGStatsClient.INSTANCE.getCurrentStats().get(identifier).getRight();
             
-            String name = RPGStatsClient.nameMap.get(identifier);
+            String name = RPGStatsClient.INSTANCE.getNameMap().get(identifier);
             name = name.substring(0, 1).toUpperCase() + name.substring(1);
             entry.name.setText(
                     Text.literal(name)
                             .formatted(Formatting.DARK_AQUA).formatted(Formatting.BOLD)
             );
             entry.level.setText(Text.literal("Level: ").formatted(Formatting.DARK_GREEN).append(String.valueOf(level)));
-            entry.xp.setText(Text.literal("XP: ").formatted(Formatting.DARK_GREEN).append(xp + "/" + RPGStats.calculateXpNeededToReachLevel(level + 1)));
+            entry.xp.setText(Text.literal("XP: ").formatted(Formatting.DARK_GREEN).append(xp + "/" + LevelUtils.INSTANCE.calculateXpNeededToReachLevel(level + 1)));
         };
     
         WListPanel<Identifier, StatEntry> list = new WListPanel<>(data, StatEntry::new, configurator);

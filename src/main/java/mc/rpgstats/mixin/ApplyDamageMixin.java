@@ -1,5 +1,6 @@
 package mc.rpgstats.mixin;
 
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.main.RPGStats;
 import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStatsConfig;
@@ -28,7 +29,7 @@ public class ApplyDamageMixin {
             if (blockedDamage <= 3) {
                 return;
             }
-            RPGStats.addXpAndLevelUp(
+            LevelUtils.INSTANCE.addXpAndLevelUp(
                 CustomComponents.DEFENSE,
                 (ServerPlayerEntity)(Object)this,
                 Math.min((int)Math.floor(Math.log(Math.pow(blockedDamage, 5.0f))), 4));

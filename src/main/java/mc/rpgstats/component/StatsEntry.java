@@ -1,5 +1,6 @@
 package mc.rpgstats.component;
 
+import io.github.silverandro.rpgstats.Constants;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
@@ -43,7 +44,7 @@ public class StatsEntry {
     
     public void setLevel(int level) {
         if (RPGStats.getConfig().debug.logRawWrite) {
-            RPGStats.debugLogger.info("Im "+id.toString()+" and my level is now " + level);
+            Constants.INSTANCE.getDebugLogger().info("Im "+id.toString()+" and my level is now " + level);
         }
         this.level = level;
     }
@@ -54,7 +55,7 @@ public class StatsEntry {
     
     public void setXp(int xp) {
         if (RPGStats.getConfig().debug.logRawWrite) {
-            RPGStats.debugLogger.info("Im "+id.toString()+" and my xp is now " + xp);
+            Constants.INSTANCE.getDebugLogger().info("Im "+id.toString()+" and my xp is now " + xp);
         }
         this.xp = xp;
     }

@@ -9,18 +9,19 @@ import org.jetbrains.annotations.NotNull;
 
 public class PlayerHealthAttachComponent implements Component {
     public PlayerEntity playerEntity;
-    
+
     public PlayerHealthAttachComponent(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
     }
-    
+
     @Override
     public void readFromNbt(@NotNull NbtCompound compoundTag) {
         if (playerEntity instanceof ServerPlayerEntity) {
-            RPGStats.needsStatFix.add((ServerPlayerEntity)playerEntity);
+            RPGStats.needsStatFix.add((ServerPlayerEntity) playerEntity);
         }
     }
-    
+
     @Override
-    public void writeToNbt(@NotNull NbtCompound compoundTag) {}
+    public void writeToNbt(@NotNull NbtCompound compoundTag) {
+    }
 }

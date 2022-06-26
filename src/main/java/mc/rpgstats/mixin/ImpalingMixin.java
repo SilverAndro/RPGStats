@@ -1,5 +1,6 @@
 package mc.rpgstats.mixin;
 
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -17,19 +18,19 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(EnchantmentHelper.class)
 public class ImpalingMixin {
     @Inject(
-        method = "getAttackDamage",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/enchantment/EnchantmentHelper;forEachEnchantment(Lnet/minecraft/enchantment/EnchantmentHelper$Consumer;Lnet/minecraft/item/ItemStack;)V"
-        ),
-        locals = LocalCapture.CAPTURE_FAILHARD
+            method = "getAttackDamage",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/enchantment/EnchantmentHelper;forEachEnchantment(Lnet/minecraft/enchantment/EnchantmentHelper$Consumer;Lnet/minecraft/item/ItemStack;)V"
+            ),
+            locals = LocalCapture.CAPTURE_FAILHARD
     )
     private static void rpgstats$makeImpalingEffectAll(ItemStack stack, EntityGroup group, CallbackInfoReturnable<Float> cir, MutableFloat mutableFloat) {
         if (EnchantmentHelper.get(stack).containsKey(Enchantments.IMPALING) && !(group == EntityGroup.AQUATIC)) {
             if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
                 if (
-                    RPGStats.getComponentLevel(CustomComponents.RANGED, (ServerPlayerEntity)stack.getHolder()) >= 25
-                        && RPGStats.getConfig().toggles.ranged.enableLv25Buff
+                        LevelUtils.INSTANCE.getComponentLevel(CustomComponents.RANGED, (ServerPlayerEntity) stack.getHolder()) >= 25
+                                && RPGStats.getConfig().toggles.ranged.enableLv25Buff
                 ) {
                     int level = EnchantmentHelper.get(stack).get(Enchantments.IMPALING);
                     mutableFloat.add(level * 2.5F);

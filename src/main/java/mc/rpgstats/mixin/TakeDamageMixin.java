@@ -1,7 +1,8 @@
 package mc.rpgstats.mixin;
 
-import mc.rpgstats.main.RPGStats;
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.main.CustomComponents;
+import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,8 +15,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class TakeDamageMixin {
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void rpgstats$dodge(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-        ServerPlayerEntity spe = (ServerPlayerEntity)(Object)this;
-        int level = RPGStats.getComponentLevel(CustomComponents.DEFENSE, spe);
+        ServerPlayerEntity spe = (ServerPlayerEntity) (Object) this;
+        int level = LevelUtils.INSTANCE.getComponentLevel(CustomComponents.DEFENSE, spe);
         float chance = 0f;
         if (level >= 50 && RPGStats.getConfig().toggles.defense.enableLv50Buff) {
             chance = 0.1f;
@@ -26,7 +27,7 @@ public class TakeDamageMixin {
             cir.cancel();
         }
     }
-    
+
     @Inject(method = "onDeath", at = @At("HEAD"))
     public void rpgstats$onPlayerDeathRefreshStats(DamageSource source, CallbackInfo ci) {
         if ((Object) this instanceof ServerPlayerEntity le) {

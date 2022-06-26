@@ -1,5 +1,6 @@
 package mc.rpgstats.mixin;
 
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.LivingEntity;
@@ -24,35 +25,35 @@ public class ItemEatMixin {
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "applyFoodEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item;isFood()Z"))
     public void rpgstats$grantFishEffects(ItemStack stack, World world, LivingEntity targetEntity, CallbackInfo ci) {
-        LivingEntity le = (LivingEntity)(Object)this;
+        LivingEntity le = (LivingEntity) (Object) this;
         if (le instanceof ServerPlayerEntity) {
-            int level = RPGStats.getComponentLevel(CustomComponents.FISHING, (ServerPlayerEntity)le);
+            int level = LevelUtils.INSTANCE.getComponentLevel(CustomComponents.FISHING, (ServerPlayerEntity) le);
             if (level >= 25 && stack.isIn(ItemTags.FISHES) && RPGStats.getConfig().toggles.fishing.enableLv25Buff) {
                 List<StatusEffect> goodEffects = Arrays.asList(
-                    StatusEffects.ABSORPTION,
-                    StatusEffects.CONDUIT_POWER,
-                    StatusEffects.DOLPHINS_GRACE,
-                    StatusEffects.FIRE_RESISTANCE,
-                    StatusEffects.HASTE,
-                    StatusEffects.HEALTH_BOOST,
-                    StatusEffects.HERO_OF_THE_VILLAGE,
-                    StatusEffects.INSTANT_HEALTH,
-                    StatusEffects.JUMP_BOOST,
-                    StatusEffects.LUCK,
-                    StatusEffects.NIGHT_VISION,
-                    StatusEffects.REGENERATION,
-                    StatusEffects.RESISTANCE,
-                    StatusEffects.SPEED,
-                    StatusEffects.STRENGTH,
-                    StatusEffects.WATER_BREATHING
+                        StatusEffects.ABSORPTION,
+                        StatusEffects.CONDUIT_POWER,
+                        StatusEffects.DOLPHINS_GRACE,
+                        StatusEffects.FIRE_RESISTANCE,
+                        StatusEffects.HASTE,
+                        StatusEffects.HEALTH_BOOST,
+                        StatusEffects.HERO_OF_THE_VILLAGE,
+                        StatusEffects.INSTANT_HEALTH,
+                        StatusEffects.JUMP_BOOST,
+                        StatusEffects.LUCK,
+                        StatusEffects.NIGHT_VISION,
+                        StatusEffects.REGENERATION,
+                        StatusEffects.RESISTANCE,
+                        StatusEffects.SPEED,
+                        StatusEffects.STRENGTH,
+                        StatusEffects.WATER_BREATHING
                 );
-    
+
                 // im lazy
                 Collections.shuffle(goodEffects);
 
                 le.addStatusEffect(new StatusEffectInstance(goodEffects.get(0), 30 * 20, 0));
             }
-    
+
             if (level >= 50 && RPGStats.getConfig().toggles.fishing.enableLv50Buff) {
                 le.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 1, 0));
             }

@@ -19,16 +19,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SweetBerryBushBlock.class)
 public class SweetBerryHarvestMixin {
     @Inject(
-        method = "onUse",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/block/SweetBerryBushBlock;dropStack(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/item/ItemStack;)V",
-            shift = At.Shift.AFTER
-        )
+            method = "onUse",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/block/SweetBerryBushBlock;dropStack(Lnet/minecraft/world/World;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/item/ItemStack;)V",
+                    shift = At.Shift.AFTER
+            )
     )
     public void rpgstats$grantXpOnHarvestBerry(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit, CallbackInfoReturnable<ActionResult> cir) {
         if (!world.isClient) {
-            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)player, 1);
+            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity) player, 1);
         }
     }
 }

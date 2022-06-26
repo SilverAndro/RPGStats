@@ -9,11 +9,11 @@ import io.github.silverandro.rpgstats.LevelUtils.getComponentLevel
 import io.github.silverandro.rpgstats.LevelUtils.getComponentXP
 import io.github.silverandro.rpgstats.LevelUtils.getLowestLevel
 import io.github.silverandro.rpgstats.LevelUtils.softLevelUp
+import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.util.filterInPlace
 import io.netty.buffer.Unpooled
 import mc.rpgstats.command.CheatCommand
 import mc.rpgstats.command.StatsCommand
-import mc.rpgstats.event.LevelUpCallback
 import mc.rpgstats.main.CustomComponents
 import mc.rpgstats.main.RPGStats
 import mc.rpgstats.mixin_logic.OnSneakLogic

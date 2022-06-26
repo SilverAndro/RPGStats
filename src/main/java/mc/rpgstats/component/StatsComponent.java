@@ -15,18 +15,18 @@ import java.util.Objects;
 
 public class StatsComponent implements Component, AutoSyncedComponent {
     private final PlayerEntity playerEntity;
-    
+
     public HashMap<Identifier, StatsEntry> entries = new HashMap<>();
-    
+
     public StatsComponent(PlayerEntity playerEntity) {
         this.playerEntity = playerEntity;
     }
-    
+
     @Override
     public boolean shouldSyncWith(ServerPlayerEntity player) {
         return ServerPlayNetworking.canSend(player, Constants.INSTANCE.getSYNC_STATS_PACKET_ID());
     }
-    
+
     @Override
     public void readFromNbt(NbtCompound compoundTag) {
         entries.clear();
@@ -41,27 +41,27 @@ public class StatsComponent implements Component, AutoSyncedComponent {
             }
         });
     }
-    
+
     @Override
     public void writeToNbt(@NotNull NbtCompound compoundTag) {
         for (StatsEntry entry : entries.values()) {
             entry.toCompound(compoundTag);
         }
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (getClass() != o.getClass()) return false;
-        StatsComponent that = (StatsComponent)o;
+        StatsComponent that = (StatsComponent) o;
         return playerEntity.equals(that.playerEntity) && entries.equals(that.entries);
     }
-    
+
     @Override
     public int hashCode() {
         return Objects.hash(playerEntity, entries);
     }
-    
+
     public StatsEntry getOrCreateID(Identifier id) {
         return entries.computeIfAbsent(id, identifier -> new StatsEntry(id, 0, 0));
     }

@@ -16,22 +16,22 @@ import java.util.function.BiConsumer;
 
 public class RPGStatDisplayGUI extends LightweightGuiDescription {
     ArrayList<Identifier> data = new ArrayList<>();
-    
+
     public RPGStatDisplayGUI() {
         super();
         data.addAll(RPGStatsClient.INSTANCE.getCurrentStats().keySet());
-        
+
         WGridPanel root = new WGridPanel();
         setRootPanel(root);
         root.setSize(240, 180);
-        
+
         WLabel guiTitle = new WLabel(Text.of("  RPGStats"));
         root.add(guiTitle, 5, 1);
-    
+
         BiConsumer<Identifier, StatEntry> configurator = (Identifier identifier, StatEntry entry) -> {
             int level = RPGStatsClient.INSTANCE.getCurrentStats().get(identifier).getLeft();
             int xp = RPGStatsClient.INSTANCE.getCurrentStats().get(identifier).getRight();
-            
+
             String name = RPGStatsClient.INSTANCE.getNameMap().get(identifier);
             name = name.substring(0, 1).toUpperCase() + name.substring(1);
             entry.name.setText(
@@ -41,28 +41,28 @@ public class RPGStatDisplayGUI extends LightweightGuiDescription {
             entry.level.setText(Text.literal("Level: ").formatted(Formatting.DARK_GREEN).append(String.valueOf(level)));
             entry.xp.setText(Text.literal("XP: ").formatted(Formatting.DARK_GREEN).append(xp + "/" + LevelUtils.INSTANCE.calculateXpNeededToReachLevel(level + 1)));
         };
-    
+
         WListPanel<Identifier, StatEntry> list = new WListPanel<>(data, StatEntry::new, configurator);
         list.setListItemHeight(18);
         root.add(list, 1, 2, 11, 7);
-        
+
         root.validate(this);
     }
-    
+
     public static class StatEntry extends WPlainPanel {
         WLabel name;
         WLabel level;
         WLabel xp;
-        
+
         public StatEntry() {
             name = new WLabel(Text.literal("Foo"));
-            this.add(name, 0, 0, 5*18, 18);
+            this.add(name, 0, 0, 5 * 18, 18);
             level = new WLabel(Text.literal("0"));
-            this.add(level, 60, 0, 6*18, 18);
+            this.add(level, 60, 0, 6 * 18, 18);
             xp = new WLabel(Text.literal("0/0"));
-            this.add(xp, 120, 0, 6*18, 18);
-            
-            this.setSize(7*18, 2*18);
+            this.add(xp, 120, 0, 6 * 18, 18);
+
+            this.setSize(7 * 18, 2 * 18);
         }
     }
 }

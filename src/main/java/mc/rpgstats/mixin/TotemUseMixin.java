@@ -14,17 +14,17 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(LivingEntity.class)
 public class TotemUseMixin {
     @Inject(
-        method = "tryUseTotem(Lnet/minecraft/entity/damage/DamageSource;)Z",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/server/network/ServerPlayerEntity;incrementStat(Lnet/minecraft/stat/Stat;)V",
-            shift = At.Shift.AFTER
-        ),
-        locals = LocalCapture.CAPTURE_FAILHARD
+            method = "tryUseTotem(Lnet/minecraft/entity/damage/DamageSource;)Z",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/server/network/ServerPlayerEntity;incrementStat(Lnet/minecraft/stat/Stat;)V",
+                    shift = At.Shift.AFTER
+            ),
+            locals = LocalCapture.CAPTURE_FAILHARD
     )
     public void rpgstats$onUseTotem(DamageSource source, CallbackInfoReturnable<Boolean> cir) {
         //noinspection ConstantConditions
-        if ((Object)this instanceof ServerPlayerEntity serverPlayerEntity) {
+        if ((Object) this instanceof ServerPlayerEntity serverPlayerEntity) {
             LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.DEFENSE, serverPlayerEntity, 100);
         }
     }

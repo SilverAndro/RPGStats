@@ -10,8 +10,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public class BlockBreakSpeedMixin {
     @ModifyVariable(at = @At(value = "TAIL", shift = At.Shift.BEFORE), method = "getBlockBreakingSpeed", ordinal = 0)
     public float rpgstats$modifyFinalMiningSpeed(float f) {
-        PlayerEntity player = (PlayerEntity)(Object)this;
-    
+        PlayerEntity player = (PlayerEntity) (Object) this;
+
         if (CustomComponents.components.containsKey(CustomComponents.MINING)) {
             int level = CustomComponents.STATS.get(player).getOrCreateID(CustomComponents.MINING).getLevel();
             return (f + (level * 0.1f));

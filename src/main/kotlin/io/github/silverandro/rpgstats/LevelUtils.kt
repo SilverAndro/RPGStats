@@ -1,6 +1,6 @@
 package io.github.silverandro.rpgstats
 
-import mc.rpgstats.event.LevelUpCallback
+import io.github.silverandro.rpgstats.event.LevelUpCallback
 import mc.rpgstats.main.CustomComponents
 import mc.rpgstats.main.RPGStats
 import net.minecraft.server.network.ServerPlayerEntity

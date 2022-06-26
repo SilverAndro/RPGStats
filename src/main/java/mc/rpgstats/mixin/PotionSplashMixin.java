@@ -21,13 +21,13 @@ import java.util.List;
 public class PotionSplashMixin {
     @Inject(at = @At("HEAD"), method = "applySplashPotion")
     private void rpgstats$onSplash(List<StatusEffectInstance> statusEffects, Entity entity, CallbackInfo ci) {
-        PotionEntity pe = (PotionEntity)(Object)this;
+        PotionEntity pe = (PotionEntity) (Object) this;
         Box box = pe.getBoundingBox().expand(4.0D, 2.0D, 4.0D);
         List<LivingEntity> list = pe.world.getNonSpectatingEntities(LivingEntity.class, box);
         if (!list.isEmpty()) {
             for (LivingEntity le : list) {
                 if (le instanceof ServerPlayerEntity) {
-                    LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, (ServerPlayerEntity)le, 10);
+                    LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, (ServerPlayerEntity) le, 10);
                 }
             }
         }
@@ -35,13 +35,13 @@ public class PotionSplashMixin {
 
     @Inject(at = @At("HEAD"), method = "applyLingeringPotion")
     private void rpgstats$onLingering(ItemStack stack, Potion potion, CallbackInfo ci) {
-        PotionEntity pe = (PotionEntity)(Object)this;
+        PotionEntity pe = (PotionEntity) (Object) this;
         Box box = pe.getBoundingBox().expand(4.0D, 2.0D, 4.0D);
         List<LivingEntity> list = pe.world.getNonSpectatingEntities(LivingEntity.class, box);
         if (!list.isEmpty()) {
             for (LivingEntity le : list) {
                 if (le instanceof ServerPlayerEntity) {
-                    LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, (ServerPlayerEntity)le, 10);
+                    LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, (ServerPlayerEntity) le, 10);
                 }
             }
         }

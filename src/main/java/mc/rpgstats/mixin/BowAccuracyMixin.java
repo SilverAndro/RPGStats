@@ -1,6 +1,6 @@
 package mc.rpgstats.mixin;
 
-import mc.rpgstats.main.RPGStats;
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.main.CustomComponents;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,9 +21,9 @@ class BowAccuracyMixin {
     @Inject(
             method = "onStoppedUsing(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;I)V",
             at = @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;setProperties(Lnet/minecraft/entity/Entity;FFFFF)V",
-                shift = At.Shift.AFTER
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;setProperties(Lnet/minecraft/entity/Entity;FFFFF)V",
+                    shift = At.Shift.AFTER
             ),
             locals = LocalCapture.CAPTURE_FAILHARD
     )
@@ -43,7 +43,7 @@ class BowAccuracyMixin {
             PersistentProjectileEntity persistentProjectileEntity
     ) {
         if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
-            float newDistort = 1.0f - RPGStats.getComponentLevel(CustomComponents.RANGED, (ServerPlayerEntity)playerEntity) / 50f;
+            float newDistort = 1.0f - LevelUtils.INSTANCE.getComponentLevel(CustomComponents.RANGED, (ServerPlayerEntity) playerEntity) / 50f;
             persistentProjectileEntity.setProperties(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, f * 3.0F, newDistort);
         }
     }

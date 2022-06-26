@@ -1,7 +1,8 @@
 package mc.rpgstats.mixin;
 
-import mc.rpgstats.main.RPGStats;
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.main.CustomComponents;
+import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffect;
@@ -16,7 +17,7 @@ public class StatusEffectsImmuneMixin {
     public boolean rpgstats$negatePoison(LivingEntity livingEntity, DamageSource source, float amount) {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
-                int level = RPGStats.getComponentLevel(CustomComponents.MAGIC, (ServerPlayerEntity)livingEntity);
+                int level = LevelUtils.INSTANCE.getComponentLevel(CustomComponents.MAGIC, (ServerPlayerEntity) livingEntity);
                 if (level < 25 || !RPGStats.getConfig().toggles.magic.enableLv25Buff) {
                     return livingEntity.damage(source, amount);
                 }
@@ -31,7 +32,7 @@ public class StatusEffectsImmuneMixin {
     public boolean rpgstats$negateWither(LivingEntity livingEntity, DamageSource source, float amount) {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
-                int level = RPGStats.getComponentLevel(CustomComponents.MAGIC, (ServerPlayerEntity)livingEntity);
+                int level = LevelUtils.INSTANCE.getComponentLevel(CustomComponents.MAGIC, (ServerPlayerEntity) livingEntity);
                 if (level < 50 || !RPGStats.getConfig().toggles.magic.enableLv50Buff) {
                     return livingEntity.damage(source, amount);
                 }

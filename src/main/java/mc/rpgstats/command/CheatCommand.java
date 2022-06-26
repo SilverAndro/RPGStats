@@ -3,8 +3,7 @@ package mc.rpgstats.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import io.github.silverandro.rpgstats.LevelUtils;
-import mc.rpgstats.event.LevelUpCallback;
-import mc.rpgstats.main.RPGStats;
+import io.github.silverandro.rpgstats.event.LevelUpCallback;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.server.command.CommandManager;
@@ -20,92 +19,92 @@ import static net.minecraft.command.argument.IdentifierArgumentType.identifier;
 public class CheatCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(
-            // Base
-            CommandManager.literal("rpgcheat")
-                // OP only
-                .requires((serverCommandSource) -> serverCommandSource.hasPermissionLevel(2))
-                .then(
-                    // Target player
-                    CommandManager.argument("targets", EntityArgumentType.players())
+                // Base
+                CommandManager.literal("rpgcheat")
+                        // OP only
+                        .requires((serverCommandSource) -> serverCommandSource.hasPermissionLevel(2))
                         .then(
-                            // Select skill
-                            CommandManager.argument("skill", identifier())
-                                .suggests(new SkillSuggestionProvider())
-                                // Add xp/levels
-                                .then(
-                                    CommandManager.literal("add")
+                                // Target player
+                                CommandManager.argument("targets", EntityArgumentType.players())
                                         .then(
-                                            CommandManager.literal("xp")
-                                                .then(
-                                                    CommandManager.argument("amount", IntegerArgumentType.integer(0))
-                                                        .executes(
-                                                            (commandContext) -> executeAdd(
-                                                                commandContext.getSource(),
-                                                                IdentifierArgumentType.getIdentifier(commandContext, "skill"),
-                                                                EntityArgumentType.getPlayers(commandContext, "targets"),
-                                                                CommandType.XP,
-                                                                IntegerArgumentType.getInteger(commandContext, "amount")
-                                                            )
+                                                // Select skill
+                                                CommandManager.argument("skill", identifier())
+                                                        .suggests(new SkillSuggestionProvider())
+                                                        // Add xp/levels
+                                                        .then(
+                                                                CommandManager.literal("add")
+                                                                        .then(
+                                                                                CommandManager.literal("xp")
+                                                                                        .then(
+                                                                                                CommandManager.argument("amount", IntegerArgumentType.integer(0))
+                                                                                                        .executes(
+                                                                                                                (commandContext) -> executeAdd(
+                                                                                                                        commandContext.getSource(),
+                                                                                                                        IdentifierArgumentType.getIdentifier(commandContext, "skill"),
+                                                                                                                        EntityArgumentType.getPlayers(commandContext, "targets"),
+                                                                                                                        CommandType.XP,
+                                                                                                                        IntegerArgumentType.getInteger(commandContext, "amount")
+                                                                                                                )
+                                                                                                        )
+                                                                                        )
+                                                                        )
+                                                                        .then(
+                                                                                CommandManager.literal("levels")
+                                                                                        .then(
+                                                                                                CommandManager.argument("amount", IntegerArgumentType.integer(0))
+                                                                                                        .executes(
+                                                                                                                (commandContext) -> executeAdd(
+                                                                                                                        commandContext.getSource(),
+                                                                                                                        IdentifierArgumentType.getIdentifier(commandContext, "skill"),
+                                                                                                                        EntityArgumentType.getPlayers(commandContext, "targets"),
+                                                                                                                        CommandType.LEVELS,
+                                                                                                                        IntegerArgumentType.getInteger(commandContext, "amount")
+                                                                                                                )
+                                                                                                        )
+                                                                                        )
+                                                                        )
                                                         )
-                                                )
-                                        )
-                                        .then(
-                                            CommandManager.literal("levels")
-                                                .then(
-                                                    CommandManager.argument("amount", IntegerArgumentType.integer(0))
-                                                        .executes(
-                                                            (commandContext) -> executeAdd(
-                                                                commandContext.getSource(),
-                                                                IdentifierArgumentType.getIdentifier(commandContext, "skill"),
-                                                                EntityArgumentType.getPlayers(commandContext, "targets"),
-                                                                CommandType.LEVELS,
-                                                                IntegerArgumentType.getInteger(commandContext, "amount")
-                                                            )
+                                                        // Set xp/levels
+                                                        .then(
+                                                                CommandManager.literal("set")
+                                                                        // Set XP
+                                                                        .then(
+                                                                                CommandManager.literal("xp")
+                                                                                        .then(
+                                                                                                CommandManager.argument("amount", IntegerArgumentType.integer(0))
+                                                                                                        .executes(
+                                                                                                                (commandContext) -> executeSet(
+                                                                                                                        commandContext.getSource(),
+                                                                                                                        IdentifierArgumentType.getIdentifier(commandContext, "skill"),
+                                                                                                                        EntityArgumentType.getPlayers(commandContext, "targets"),
+                                                                                                                        CommandType.XP,
+                                                                                                                        IntegerArgumentType.getInteger(commandContext, "amount")
+                                                                                                                )
+                                                                                                        )
+                                                                                        )
+                                                                        )
+                                                                        // Set Levels
+                                                                        .then(
+                                                                                CommandManager.literal("levels")
+                                                                                        .then(
+                                                                                                CommandManager.argument("amount", IntegerArgumentType.integer(0))
+                                                                                                        .executes(
+                                                                                                                (commandContext) -> executeSet(
+                                                                                                                        commandContext.getSource(),
+                                                                                                                        IdentifierArgumentType.getIdentifier(commandContext, "skill"),
+                                                                                                                        EntityArgumentType.getPlayers(commandContext, "targets"),
+                                                                                                                        CommandType.LEVELS,
+                                                                                                                        IntegerArgumentType.getInteger(commandContext, "amount")
+                                                                                                                )
+                                                                                                        )
+                                                                                        )
+                                                                        )
                                                         )
-                                                )
                                         )
-                                )
-                                // Set xp/levels
-                                .then(
-                                    CommandManager.literal("set")
-                                        // Set XP
-                                        .then(
-                                            CommandManager.literal("xp")
-                                                .then(
-                                                    CommandManager.argument("amount", IntegerArgumentType.integer(0))
-                                                        .executes(
-                                                            (commandContext) -> executeSet(
-                                                                commandContext.getSource(),
-                                                                IdentifierArgumentType.getIdentifier(commandContext, "skill"),
-                                                                EntityArgumentType.getPlayers(commandContext, "targets"),
-                                                                CommandType.XP,
-                                                                IntegerArgumentType.getInteger(commandContext, "amount")
-                                                            )
-                                                        )
-                                                )
-                                        )
-                                        // Set Levels
-                                        .then(
-                                            CommandManager.literal("levels")
-                                                .then(
-                                                    CommandManager.argument("amount", IntegerArgumentType.integer(0))
-                                                        .executes(
-                                                            (commandContext) -> executeSet(
-                                                                commandContext.getSource(),
-                                                                IdentifierArgumentType.getIdentifier(commandContext, "skill"),
-                                                                EntityArgumentType.getPlayers(commandContext, "targets"),
-                                                                CommandType.LEVELS,
-                                                                IntegerArgumentType.getInteger(commandContext, "amount")
-                                                            )
-                                                        )
-                                                )
-                                        )
-                                )
                         )
-                )
         );
     }
-    
+
     private static int executeAdd(ServerCommandSource source, Identifier id, Collection<ServerPlayerEntity> targets, CommandType type, int amount) {
         for (ServerPlayerEntity target : targets) {
             if (type == CommandType.XP) {
@@ -114,28 +113,28 @@ public class CheatCommand {
             }
             if (type == CommandType.LEVELS) {
                 for (int x = 0; x < amount; x++) {
-                    int needed = RPGStats.calculateXpNeededToReachLevel(RPGStats.getComponentLevel(id, target) + amount);
+                    int needed = LevelUtils.INSTANCE.calculateXpNeededToReachLevel(LevelUtils.INSTANCE.getComponentLevel(id, target) + amount);
                     LevelUtils.INSTANCE.addXpAndLevelUp(id, target, needed);
                 }
             }
         }
         return 1;
     }
-    
+
     private static int executeSet(ServerCommandSource source, Identifier id, Collection<ServerPlayerEntity> targets, CommandType type, int amount) {
         for (ServerPlayerEntity target : targets) {
             if (type == CommandType.XP) {
-                RPGStats.setComponentXP(id, target, amount);
+                LevelUtils.INSTANCE.setComponentXP(id, target, amount);
             }
             if (type == CommandType.LEVELS) {
-                RPGStats.setComponentLevel(id, target, amount);
+                LevelUtils.INSTANCE.setComponentLevel(id, target, amount);
                 LevelUpCallback.EVENT.invoker().onLevelUp(target, id, amount, true);
             }
         }
         source.sendFeedback(Text.literal("XP set for stat " + id + " to " + amount + " for " + targets.size() + " targets."), true);
         return 1;
     }
-    
+
     enum CommandType {
         LEVELS,
         XP

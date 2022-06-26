@@ -17,7 +17,7 @@ public class BonemealGrowMixin {
         //noinspection ConstantConditions
         if ((Entity) (Object) this instanceof ServerPlayerEntity) {
             if (!CustomComponents.PREFERENCES.get(this).isOptedOutOfButtonSpam) {
-                OnSneakLogic.doLogic(sneaking, (ServerPlayerEntity)(Object)this);
+                OnSneakLogic.doLogic(sneaking, (ServerPlayerEntity) (Object) this);
             }
         }
     }

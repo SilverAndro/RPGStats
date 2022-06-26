@@ -15,16 +15,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(SheepEntity.class)
 public class ShearSheepMixin {
     @Inject(
-        method = "interactMob",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/item/ItemStack;damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V",
-            shift = At.Shift.AFTER
-        )
+            method = "interactMob",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/item/ItemStack;damage(ILnet/minecraft/entity/LivingEntity;Ljava/util/function/Consumer;)V",
+                    shift = At.Shift.AFTER
+            )
     )
     public void rpgstats$onShearedGrantXP(PlayerEntity player, Hand hand, CallbackInfoReturnable<ActionResult> cir) {
         if (!player.world.isClient) {
-            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)player, 1);
+            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity) player, 1);
         }
     }
 }

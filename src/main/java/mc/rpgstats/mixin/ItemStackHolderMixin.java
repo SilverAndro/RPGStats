@@ -13,9 +13,11 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackHolderMixin {
-    @Shadow public abstract void setHolder(Entity holder);
+    @Shadow
+    public abstract void setHolder(Entity holder);
 
-    @Shadow public abstract Entity getEntityHolder();
+    @Shadow
+    public abstract Entity getEntityHolder();
 
     @Inject(at = @At("HEAD"), method = "inventoryTick")
     private void rpgstats$onTick(World world, Entity entity, int slot, boolean selected, CallbackInfo ci) {

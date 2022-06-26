@@ -37,5 +37,7 @@ object RPGStatsMain : ModInitializer {
         if (QuiltLoader.isModLoaded("harvest_scythes")) {
             Events.registerHSCompat()
         }
+
+        QuiltLoader.
     }
 }

@@ -72,8 +72,8 @@ dependencies {
 	include "com.github.p03w-rehost:AutoConfig:1.18-SNAPSHOT"
 
 	// Translations
-	modImplementation "fr.catcore:server-translations-api:1.4.14+1.19-rc2"
-	include "fr.catcore:server-translations-api:1.4.14+1.19-rc2"
+	modImplementation "fr.catcore:server-translations-api:1.4.16+1.19"
+	include "fr.catcore:server-translations-api:1.4.16+1.19"
 
 	// Harvest scythes
 	modImplementation "curse.maven:harvestscythes-412225:3823173"

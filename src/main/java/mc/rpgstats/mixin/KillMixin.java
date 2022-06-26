@@ -20,45 +20,45 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @SuppressWarnings("ConstantConditions")
 @Mixin(LivingEntity.class)
 public abstract class KillMixin {
-	@Inject(at = @At("HEAD"), method = "onDeath")
-	private void rpgstats$onKilledXPTracker(DamageSource source, CallbackInfo info) {
-		LivingEntity le = (LivingEntity)(Object)this;
-		if (!le.world.isClient && !le.isRemoved()) {
-			Entity entity = source.getAttacker();
-			if (entity instanceof ServerPlayerEntity serverPlayer) {
-				if (source.isProjectile()) {
-					if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-						LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.RANGED, serverPlayer, 130);
-					} else {
-						LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.RANGED, serverPlayer, 1);
-					}
-				} else if (source.isMagic()) {
-					LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, serverPlayer, 1);
-				} else if (!source.isExplosive() && !source.isFire()) {
-					if (le instanceof PassiveEntity) {
-						LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.FARMING, serverPlayer, 1);
-					} else {
-						int level = RPGStats.getComponentLevel(CustomComponents.MELEE, serverPlayer);
-						
-						int duration = 0;
-						if (level >= 50 && RPGStats.getConfig().toggles.melee.enableLv50Buff) {
-							duration = 200;
-						} else if (level >= 25 && RPGStats.getConfig().toggles.melee.enableLv25Buff) {
-							duration = 100;
-						}
-						
-						if (duration > 0) {
-							((ServerPlayerEntity)entity).addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, duration));
-						}
-						
-						if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-							LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MELEE, serverPlayer, 130);
-						} else {
-							LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MELEE, serverPlayer, 1);
-						}
-					}
-				}
-			}
-		}
-	}
+    @Inject(at = @At("HEAD"), method = "onDeath")
+    private void rpgstats$onKilledXPTracker(DamageSource source, CallbackInfo info) {
+        LivingEntity le = (LivingEntity) (Object) this;
+        if (!le.world.isClient && !le.isRemoved()) {
+            Entity entity = source.getAttacker();
+            if (entity instanceof ServerPlayerEntity serverPlayer) {
+                if (source.isProjectile()) {
+                    if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
+                        LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.RANGED, serverPlayer, 130);
+                    } else {
+                        LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.RANGED, serverPlayer, 1);
+                    }
+                } else if (source.isMagic()) {
+                    LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, serverPlayer, 1);
+                } else if (!source.isExplosive() && !source.isFire()) {
+                    if (le instanceof PassiveEntity) {
+                        LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.FARMING, serverPlayer, 1);
+                    } else {
+                        int level = LevelUtils.INSTANCE.getComponentLevel(CustomComponents.MELEE, serverPlayer);
+
+                        int duration = 0;
+                        if (level >= 50 && RPGStats.getConfig().toggles.melee.enableLv50Buff) {
+                            duration = 200;
+                        } else if (level >= 25 && RPGStats.getConfig().toggles.melee.enableLv25Buff) {
+                            duration = 100;
+                        }
+
+                        if (duration > 0) {
+                            ((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, duration));
+                        }
+
+                        if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
+                            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MELEE, serverPlayer, 130);
+                        } else {
+                            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MELEE, serverPlayer, 1);
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

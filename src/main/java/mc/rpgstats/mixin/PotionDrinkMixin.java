@@ -22,36 +22,36 @@ public class PotionDrinkMixin {
     // What is this bruh. None of the capturing is documented, and it's a core feature of the annotation
     // Also it literally says Redirect is better :rolling_eyes:
     @ModifyArgs(
-        method = "finishUsing",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/entity/LivingEntity;addStatusEffect(Lnet/minecraft/entity/effect/StatusEffectInstance;)Z"
-        )
+            method = "finishUsing",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/entity/LivingEntity;addStatusEffect(Lnet/minecraft/entity/effect/StatusEffectInstance;)Z"
+            )
     )
     private void rpgstats$OnFinishDrinkingPotion(Args args, ItemStack stack, World world, LivingEntity entity) {
         // Yay! no type safety
         StatusEffectInstance effect = args.get(0);
-        
+
         if (entity instanceof ServerPlayerEntity playerEntity) {
             LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, playerEntity, 10);
-            
+
             int newDuration;
-            if (RPGStats.getComponentLevel(CustomComponents.MAGIC, playerEntity) > 0) {
-                newDuration = effect.getDuration() + (effect.getDuration() / ((RPGStats.getConfig().scaling.maxLevel * 5) / RPGStats.getComponentLevel(CustomComponents.MAGIC, playerEntity)));
+            if (LevelUtils.INSTANCE.getComponentLevel(CustomComponents.MAGIC, playerEntity) > 0) {
+                newDuration = effect.getDuration() + (effect.getDuration() / ((RPGStats.getConfig().scaling.maxLevel * 5) / LevelUtils.INSTANCE.getComponentLevel(CustomComponents.MAGIC, playerEntity)));
             } else {
                 newDuration = effect.getDuration();
             }
-            
+
             // Why is `permanent` mutable but not anything else
             StatusEffectInstance newInstance = new StatusEffectInstance(
-                effect.getEffectType(),
-                newDuration,
-                effect.getAmplifier(),
-                effect.isAmbient(),
-                effect.shouldShowParticles(),
-                effect.shouldShowIcon()
+                    effect.getEffectType(),
+                    newDuration,
+                    effect.getAmplifier(),
+                    effect.isAmbient(),
+                    effect.shouldShowParticles(),
+                    effect.shouldShowIcon()
             );
-    
+
             args.set(0, newInstance);
         }
     }
@@ -69,11 +69,11 @@ public class PotionDrinkMixin {
 
         }
     }
-    
+
     @Inject(at = @At("HEAD"), method = "getMaxUseTime", cancellable = true)
     private void rpgstats$getPotionUseTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity holder) {
-            cir.setReturnValue((int)(32 - Math.floor(RPGStats.getComponentLevel(CustomComponents.MAGIC, holder) / 3.0f)));
+            cir.setReturnValue((int) (32 - Math.floor(LevelUtils.INSTANCE.getComponentLevel(CustomComponents.MAGIC, holder) / 3.0f)));
         }
     }
 }

@@ -19,12 +19,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Harvest.class)
 public class GrantFarmingOnSimpleHarvest {
     @Inject(
-        method = "lambda$onInitialize$3",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;addExhaustion(F)V")
+            method = "lambda$onInitialize$3",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;addExhaustion(F)V")
     )
     private static void rpgstats$giveFarmingXpOnSimpleHarvest(PlayerEntity player, World world, Hand hand, BlockHitResult blockHitResult, CallbackInfoReturnable<ActionResult> cir) {
         if (player instanceof ServerPlayerEntity) {
-            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity)player, 1);
+            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.FARMING, (ServerPlayerEntity) player, 1);
         }
     }
 }

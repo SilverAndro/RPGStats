@@ -1,5 +1,6 @@
 package mc.rpgstats.mixin;
 
+import io.github.silverandro.rpgstats.LevelUtils;
 import mc.rpgstats.main.CustomComponents;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.enchantment.UnbreakingEnchantment;
@@ -17,8 +18,8 @@ public class UnbreakingEnchantmentMixin {
     private static void rpgstats$bonusUnbreaking(ItemStack item, int level, RandomGenerator randomGenerator, CallbackInfoReturnable<Boolean> cir) {
         if (item.getHolder() != null && item.getHolder() instanceof ServerPlayerEntity) {
             if (
-                RPGStats.getComponentLevel(CustomComponents.MINING, (ServerPlayerEntity)item.getHolder()) >= 25
-                && RPGStats.getConfig().toggles.mining.enableLv25Buff
+                    LevelUtils.INSTANCE.getComponentLevel(CustomComponents.MINING, (ServerPlayerEntity) item.getHolder()) >= 25
+                            && RPGStats.getConfig().toggles.mining.enableLv25Buff
             ) {
                 if (!cir.getReturnValue() && randomGenerator.nextFloat() <= 0.05f) {
                     cir.setReturnValue(true);

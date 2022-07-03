@@ -9,14 +9,13 @@ import io.github.silverandro.rpgstats.LevelUtils.getComponentLevel
 import io.github.silverandro.rpgstats.LevelUtils.getComponentXP
 import io.github.silverandro.rpgstats.LevelUtils.getLowestLevel
 import io.github.silverandro.rpgstats.LevelUtils.softLevelUp
+import io.github.silverandro.rpgstats.command.CheatCommand
 import io.github.silverandro.rpgstats.commands.StatsCommand
 import io.github.silverandro.rpgstats.event.LevelUpCallback
+import io.github.silverandro.rpgstats.mixin_logic.OnSneakLogic
 import io.github.silverandro.rpgstats.stats.Components
 import io.github.silverandro.rpgstats.util.filterInPlace
 import io.netty.buffer.Unpooled
-import io.github.silverandro.rpgstats.command.CheatCommand
-import io.github.silverandro.rpgstats.main.RPGStats
-import io.github.silverandro.rpgstats.mixin_logic.OnSneakLogic
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener
@@ -40,6 +39,9 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 object Events {
+    @JvmField
+    val needsStatFix = mutableListOf<ServerPlayerEntity>()
+
     private var tickCount = 0
     private val blacklistedPos = ConcurrentHashMap<BlockPos, Int>()
 
@@ -124,12 +126,12 @@ object Events {
                     }
 
                     // Fix stats for respawning players
-                    if (RPGStats.needsStatFix.contains(player) && player.isAlive) {
+                    if (needsStatFix.contains(player) && player.isAlive) {
                         Components.components.forEach { (id, _) ->
                             softLevelUp(id, player)
                         }
-                        RPGStats.needsStatFix.remove(player)
                     }
+                    needsStatFix.filterInPlace { it.isAlive }
 
                     // Grant the hidden max level advancement
                     val possible = advancements
@@ -168,11 +170,11 @@ object Events {
                     }
 
                     // Mining lv 50 effect
-                    if (player.blockPos.y <= RPGStats.getConfig().toggles.mining.effectLevelTrigger &&
+                    if (player.blockPos.y <= RPGStatsMain.levelConfig.mining.effectLevelTrigger &&
                         getComponentLevel(
                             Components.MINING,
                             player
-                        ) >= 50 && RPGStats.getConfig().toggles.mining.enableLv50Buff
+                        ) >= 50 && RPGStatsMain.levelConfig.mining.enableLv50Buff
                     ) {
                         player.addStatusEffect(
                             StatusEffectInstance(
@@ -205,19 +207,19 @@ object Events {
     fun registerBlockBreakListeners() {
         PlayerBlockBreakEvents.AFTER.register { world, playerEntity, blockPos, blockState, _ ->
             if (!world.isClient) {
-                if (RPGStats.getConfig().antiCheat.blockBreakPos) {
+                if (RPGStatsMain.config.antiCheat.blockBreakPos) {
                     if (blacklistedPos.containsKey(blockPos)) {
-                        if (RPGStats.getConfig().debug.logAntiCheatPrevention) {
+                        if (RPGStatsMain.config.debug.logAntiCheatPrevention) {
                             debugLogger.info("Ignoring block break at $blockPos because it was previously broken")
                         }
                         return@register
                     } else {
-                        blacklistedPos[blockPos] = RPGStats.getConfig().antiCheat.blockBreakDelay
+                        blacklistedPos[blockPos] = RPGStatsMain.config.antiCheat.blockBreakDelay
                     }
                 }
 
                 val block = blockState.block
-                if (RPGStats.getConfig().debug.logBrokenBlocks) {
+                if (RPGStatsMain.config.debug.logBrokenBlocks) {
                     debugLogger.info(playerEntity.entityName + " broke " + block.translationKey + " at " + blockPos)
                 }
 
@@ -231,20 +233,20 @@ object Events {
 
                 val random = Random()
                 if ((block === Blocks.ANCIENT_DEBRIS || Registry.BLOCK.getId(block).path.contains("ore")) && random.nextBoolean()) {
-                    val amount =
-                        if (block === Blocks.COAL_ORE || block === Blocks.NETHER_GOLD_ORE || block === Blocks.DEEPSLATE_COAL_ORE) {
-                            1
-                        } else if (block === Blocks.IRON_ORE || block === Blocks.NETHER_QUARTZ_ORE || block === Blocks.DEEPSLATE_IRON_ORE || block === Blocks.COPPER_ORE || block === Blocks.DEEPSLATE_COPPER_ORE) {
-                            2
-                        } else if (block === Blocks.GOLD_ORE || block === Blocks.LAPIS_ORE || block === Blocks.REDSTONE_ORE || block === Blocks.DEEPSLATE_GOLD_ORE || block === Blocks.DEEPSLATE_LAPIS_ORE || block === Blocks.DEEPSLATE_REDSTONE_ORE) {
-                            3
-                        } else if (block === Blocks.EMERALD_ORE || block === Blocks.DEEPSLATE_EMERALD_ORE) {
-                            4
-                        } else if (block === Blocks.DIAMOND_ORE || block === Blocks.ANCIENT_DEBRIS || block === Blocks.DEEPSLATE_DIAMOND_ORE) {
-                            5
-                        } else {
-                            2
-                        }
+                    val amount = when (block) {
+                        Blocks.COAL_ORE, Blocks.NETHER_GOLD_ORE, Blocks.DEEPSLATE_COAL_ORE -> 1
+
+                        Blocks.IRON_ORE, Blocks.NETHER_QUARTZ_ORE, Blocks.DEEPSLATE_IRON_ORE -> 2
+
+                        Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.REDSTONE_ORE,
+                        Blocks.DEEPSLATE_GOLD_ORE, Blocks.DEEPSLATE_LAPIS_ORE, Blocks.DEEPSLATE_REDSTONE_ORE -> 3
+
+                        Blocks.EMERALD_ORE, Blocks.DEEPSLATE_EMERALD_ORE -> 4
+
+                        Blocks.DIAMOND_ORE, Blocks.ANCIENT_DEBRIS, Blocks.DEEPSLATE_DIAMOND_ORE -> 5
+
+                        else -> 2
+                    }
                     addXpAndLevelUp(Components.MINING, (playerEntity as ServerPlayerEntity), amount)
                 }
             }

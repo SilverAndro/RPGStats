@@ -2,7 +2,6 @@ package io.github.silverandro.rpgstats
 
 import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.stats.Components
-import io.github.silverandro.rpgstats.main.RPGStats
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.MutableText
 import net.minecraft.text.Text
@@ -14,7 +13,7 @@ import kotlin.math.pow
 
 object LevelUtils {
     fun setComponentXP(id: Identifier, player: ServerPlayerEntity, newValue: Int) {
-        if (RPGStats.getConfig().debug.logRawOps) {
+        if (RPGStatsMain.config.debug.logRawOps) {
             Constants.debugLogger.info(player.entityName + " xp was set to " + newValue + " in stat " + id.toString())
             Constants.debugLogger.info("Stat is loaded: " + Components.components.containsKey(id))
         }
@@ -30,7 +29,7 @@ object LevelUtils {
     }
 
     fun setComponentLevel(id: Identifier, player: ServerPlayerEntity, newValue: Int) {
-        if (RPGStats.getConfig().debug.logRawOps) {
+        if (RPGStatsMain.config.debug.logRawOps) {
             Constants.debugLogger.info(player.entityName + " level was set to " + newValue + " in stat " + id.toString())
             Constants.debugLogger.info("Stat is loaded: " + Components.components.containsKey(id))
         }
@@ -46,7 +45,7 @@ object LevelUtils {
     }
 
     fun calculateXpNeededToReachLevel(level: Int): Int {
-        val config = RPGStats.getConfig()
+        val config = RPGStatsMain.config
         return if (config.scaling.isCumulative) {
             var required = 0
             for (i in 1..level) {
@@ -61,17 +60,17 @@ object LevelUtils {
     }
 
     fun addXpAndLevelUp(id: Identifier, player: ServerPlayerEntity, addedXP: Int) {
-        if (RPGStats.getConfig().debug.logXpGain) {
+        if (RPGStatsMain.config.debug.logXpGain) {
             Constants.debugLogger.info(player.entityName + " gained " + addedXP + " xp in stat " + id.toString())
             Constants.debugLogger.info("Stat is loaded: " + Components.components.containsKey(id))
         }
         if (Components.components.containsKey(id)) {
             var nextXP = getComponentXP(id, player) + addedXP
             var currentLevel = getComponentLevel(id, player)
-            if (currentLevel < RPGStats.getConfig().scaling.maxLevel) {
+            if (currentLevel < RPGStatsMain.config.scaling.maxLevel) {
                 // Enough to level up
                 var nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1)
-                while (nextXP >= nextXPForLevelUp && currentLevel < RPGStats.getConfig().scaling.maxLevel) {
+                while (nextXP >= nextXPForLevelUp && currentLevel < RPGStatsMain.config.scaling.maxLevel) {
                     nextXP -= nextXPForLevelUp
                     currentLevel += 1
                     setComponentLevel(id, player, currentLevel)
@@ -110,7 +109,7 @@ object LevelUtils {
         val xp = getComponentXP(id, player)
         val name = Components.components[id]
         val capped = name!!.substring(0, 1).uppercase(Locale.getDefault()) + name.substring(1)
-        return if (currentLevel < RPGStats.getConfig().scaling.maxLevel) {
+        return if (currentLevel < RPGStatsMain.config.scaling.maxLevel) {
             val nextXP = calculateXpNeededToReachLevel(currentLevel + 1)
             Text.literal(capped)
                 .formatted(Formatting.GOLD)
@@ -130,7 +129,7 @@ object LevelUtils {
         val xp = getComponentXP(id, player)
         val name = Components.components[id]
         val capped = name!!.substring(0, 1).uppercase(Locale.getDefault()) + name.substring(1)
-        return if (currentLevel < RPGStats.getConfig().scaling.maxLevel) {
+        return if (currentLevel < RPGStatsMain.config.scaling.maxLevel) {
             val nextXP = calculateXpNeededToReachLevel(currentLevel + 1)
             Text.translatable("rpgstats.notmaxlevel", capped, currentLevel, xp, nextXP)
         } else {
@@ -158,10 +157,10 @@ object LevelUtils {
 
     fun softLevelUp(id: Identifier, player: ServerPlayerEntity) {
         val currentLevel = getComponentLevel(id, player)
-        val savedLevel = if (currentLevel > RPGStats.getConfig().scaling.maxLevel) {
-            setComponentLevel(id, player, RPGStats.getConfig().scaling.maxLevel)
+        val savedLevel = if (currentLevel > RPGStatsMain.config.scaling.maxLevel) {
+            setComponentLevel(id, player, RPGStatsMain.config.scaling.maxLevel)
             setComponentXP(id, player, 0)
-            RPGStats.getConfig().scaling.maxLevel
+            RPGStatsMain.config.scaling.maxLevel
         } else currentLevel
 
         for (i in 1..savedLevel) {

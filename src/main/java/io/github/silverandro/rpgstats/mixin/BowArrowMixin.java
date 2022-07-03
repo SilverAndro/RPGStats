@@ -1,8 +1,8 @@
 package io.github.silverandro.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
+import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.stats.Components;
-import io.github.silverandro.rpgstats.main.RPGStats;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
@@ -25,12 +25,13 @@ public class BowArrowMixin {
         }
     }
 
+    @SuppressWarnings({"InvalidInjectorMethodSignature", "MixinAnnotationTarget"})
     @ModifyVariable(method = "onStoppedUsing", at = @At(value = "INVOKE_ASSIGN", ordinal = 2, shift = At.Shift.AFTER), ordinal = 0)
     public boolean rpgstats$forceCanShootArrow(boolean bl) {
         if (
                 itemUser != null
                         && LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, itemUser) >= 50
-                        && RPGStats.getConfig().toggles.ranged.enableLv50Buff
+                        && RPGStatsMain.levelConfig.ranged.enableLv50Buff
         ) {
             itemUser = null;
             return true;

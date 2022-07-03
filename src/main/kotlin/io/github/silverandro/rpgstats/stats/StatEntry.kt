@@ -1,7 +1,7 @@
 package io.github.silverandro.rpgstats.stats
 
 import io.github.silverandro.rpgstats.Constants.debugLogger
-import io.github.silverandro.rpgstats.main.RPGStats
+import io.github.silverandro.rpgstats.RPGStatsMain
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.Identifier
 
@@ -14,14 +14,14 @@ class StatEntry(
 
     var level: Int = 0
         set(value) {
-            if (RPGStats.getConfig().debug.logRawWrite) {
+            if (RPGStatsMain.config.debug.logRawWrite) {
                 debugLogger.info("Im $id and my level is now $level")
             }
             field = value
         }
     var xp: Int = 0
         set(value) {
-            if (RPGStats.getConfig().debug.logRawWrite) {
+            if (RPGStatsMain.config.debug.logRawWrite) {
                 debugLogger.info("Im $id and my xp is now $xp")
             }
             field = value

@@ -26,7 +26,7 @@ class LevelUpCriterion : AbstractCriterion<LevelCriteria>() {
         return ID
     }
 
-    fun trigger(player: ServerPlayerEntity?) {
+    fun trigger(player: ServerPlayerEntity) {
         this.trigger(player) { levelCriteria: LevelCriteria -> levelCriteria.matches(player) }
     }
 
@@ -35,8 +35,8 @@ class LevelUpCriterion : AbstractCriterion<LevelCriteria>() {
         private val level: Int,
         id: String
     ) : AbstractCriterionConditions(
-            ID,
-            playerPredicate
+        ID,
+        playerPredicate
     ) {
         private val statId: Identifier
 
@@ -44,8 +44,8 @@ class LevelUpCriterion : AbstractCriterion<LevelCriteria>() {
             statId = Identifier(id)
         }
 
-        fun matches(player: ServerPlayerEntity?): Boolean {
-            return if (statId == ANY_ID) getHighestLevel(player!!) >= level else Components.STATS.get(player)
+        fun matches(player: ServerPlayerEntity): Boolean {
+            return if (statId == ANY_ID) getHighestLevel(player) >= level else Components.STATS.get(player)
                 .getOrCreateID(id).level >= level
         }
 

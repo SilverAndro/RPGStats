@@ -1,7 +1,7 @@
 package io.github.silverandro.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import io.github.silverandro.rpgstats.main.RPGStats;
+import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.enchantment.UnbreakingEnchantment;
 import net.minecraft.item.ItemStack;
@@ -19,7 +19,7 @@ public class UnbreakingEnchantmentMixin {
         if (item.getHolder() != null && item.getHolder() instanceof ServerPlayerEntity) {
             if (
                     LevelUtils.INSTANCE.getComponentLevel(Components.MINING, (ServerPlayerEntity) item.getHolder()) >= 25
-                            && RPGStats.getConfig().toggles.mining.enableLv25Buff
+                            && RPGStatsMain.levelConfig.mining.enableLv25Buff
             ) {
                 if (!cir.getReturnValue() && randomGenerator.nextFloat() <= 0.05f) {
                     cir.setReturnValue(true);

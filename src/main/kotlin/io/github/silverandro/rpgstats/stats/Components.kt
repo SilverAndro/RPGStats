@@ -5,13 +5,13 @@ import dev.onyxstudios.cca.api.v3.component.ComponentRegistry
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy
+import io.github.silverandro.rpgstats.RPGStatsMain
 import io.github.silverandro.rpgstats.stats.internal.PlayerHealthAttachComponent
 import io.github.silverandro.rpgstats.stats.internal.PlayerPreferencesComponent
 import io.github.silverandro.rpgstats.stats.systems.StatAction
 import io.github.silverandro.rpgstats.stats.systems.StatAttributeAction
 import io.github.silverandro.rpgstats.stats.systems.StatFakeAttributeAction
 import io.github.silverandro.rpgstats.stats.systems.StatSpecialAction
-import io.github.silverandro.rpgstats.main.RPGStats
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.util.Identifier
@@ -46,7 +46,7 @@ class Components : EntityComponentInitializer {
             Identifier("rpgstats:stats"),
             StatsComponent::class.java
         )
-        if (RPGStats.getConfig().hardcoreMode) {
+        if (RPGStatsMain.config.hardcoreMode) {
             registry.registerForPlayers(
                 STATS,
                 { playerEntity -> StatsComponent(playerEntity) },
@@ -81,7 +81,7 @@ class Components : EntityComponentInitializer {
             Identifier("rpgstats:melee"),
             StatAttributeAction(
                 EntityAttributes.GENERIC_ATTACK_DAMAGE,
-                RPGStats.getConfig().melee.attackDamagePerLevel
+                RPGStatsMain.levelConfig.melee.attackDamagePerLevel
             ) { true },
             StatSpecialAction(
                 "Bloodthirst",
@@ -106,7 +106,7 @@ class Components : EntityComponentInitializer {
             ) { it == 25 },
             StatSpecialAction(
                 "Miners sight",
-                "Night vision below y" + RPGStats.getConfig().toggles.mining.effectLevelTrigger
+                "Night vision below y" + RPGStatsMain.levelConfig.mining.effectLevelTrigger
             ) { it == 50 }
         )
 
@@ -174,8 +174,8 @@ class Components : EntityComponentInitializer {
             ) { true },
             StatAttributeAction(
                 EntityAttributes.GENERIC_MAX_HEALTH,
-                1.0
-            ) { it % RPGStats.getConfig().defenseHP.everyXLevels == 0 && it > RPGStats.getConfig().defenseHP.afterLevel },
+                RPGStatsMain.levelConfig.defense.addAmount.toDouble()
+            ) { it % RPGStatsMain.levelConfig.defense.everyXLevels == 0 && it > RPGStatsMain.levelConfig.defense.afterLevel },
             StatSpecialAction(
                 "Nimble",
                 "5% chance to avoid damage"

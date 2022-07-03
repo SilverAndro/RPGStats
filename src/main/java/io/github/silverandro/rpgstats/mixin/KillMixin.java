@@ -1,7 +1,7 @@
 package io.github.silverandro.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import io.github.silverandro.rpgstats.main.RPGStats;
+import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -41,9 +41,9 @@ public abstract class KillMixin {
                         int level = LevelUtils.INSTANCE.getComponentLevel(Components.MELEE, serverPlayer);
 
                         int duration = 0;
-                        if (level >= 50 && RPGStats.getConfig().toggles.melee.enableLv50Buff) {
+                        if (level >= 50 && RPGStatsMain.levelConfig.melee.enableLv50Buff) {
                             duration = 200;
-                        } else if (level >= 25 && RPGStats.getConfig().toggles.melee.enableLv25Buff) {
+                        } else if (level >= 25 && RPGStatsMain.levelConfig.melee.enableLv25Buff) {
                             duration = 100;
                         }
 

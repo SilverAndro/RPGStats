@@ -1,7 +1,7 @@
 package io.github.silverandro.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import io.github.silverandro.rpgstats.main.RPGStats;
+import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.Enchantments;
@@ -30,7 +30,7 @@ public class ImpalingMixin {
             if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
                 if (
                         LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, (ServerPlayerEntity) stack.getHolder()) >= 25
-                                && RPGStats.getConfig().toggles.ranged.enableLv25Buff
+                                && RPGStatsMain.levelConfig.ranged.enableLv25Buff
                 ) {
                     int level = EnchantmentHelper.get(stack).get(Enchantments.IMPALING);
                     mutableFloat.add(level * 2.5F);

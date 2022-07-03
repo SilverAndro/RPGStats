@@ -46,8 +46,10 @@ data class StatSpecialAction(
         if (!shouldApply(newLevel) || hideMessages) return
         player.sendMessage(
             Text.literal(name).formatted(Formatting.GREEN)
-                .append(Text.of(description)
-        ), false)
+                .append(
+                    Text.of(description)
+                ), false
+        )
     }
 }
 

@@ -1,8 +1,8 @@
 package io.github.silverandro.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import io.github.silverandro.rpgstats.main.RPGStats;
-import io.github.silverandro.rpgstats.main.RPGStatsConfig;
+import io.github.silverandro.rpgstats.RPGStatsDamageBlacklist;
+import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -37,7 +37,7 @@ public class ApplyDamageMixin {
     }
 
     public boolean sourceCanGrantXp(DamageSource source) {
-        RPGStatsConfig.DamageSourceBlacklist blacklist = RPGStats.getConfig().damageBlacklist;
+        RPGStatsDamageBlacklist blacklist = RPGStatsMain.damageBlacklist;
         if (source == DamageSource.IN_FIRE) return blacklist.inFire;
         if (source == DamageSource.LIGHTNING_BOLT) return blacklist.lightning;
         if (source == DamageSource.ON_FIRE) return blacklist.onFire;

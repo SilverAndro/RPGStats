@@ -1,6 +1,6 @@
 package io.github.silverandro.rpgstats.event
 
-import io.github.silverandro.rpgstats.main.RPGStats
+import io.github.silverandro.rpgstats.RPGStatsMain
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
@@ -19,7 +19,7 @@ fun interface LevelUpCallback {
         @JvmField
         val EVENT: Event<LevelUpCallback> = Event.create(LevelUpCallback::class.java) { listeners ->
             return@create LevelUpCallback { player, id, newLevel, hideMessages ->
-                RPGStats.levelUpCriterion.trigger(player as ServerPlayerEntity?)
+                RPGStatsMain.levelUpCriterion.trigger(player as ServerPlayerEntity)
                 for (listener in listeners) {
                     listener.onLevelUp(player, id, newLevel, hideMessages)
                 }

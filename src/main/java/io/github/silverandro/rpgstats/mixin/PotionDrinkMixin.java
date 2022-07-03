@@ -1,8 +1,8 @@
 package io.github.silverandro.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
+import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.stats.Components;
-import io.github.silverandro.rpgstats.main.RPGStats;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.item.ItemStack;
@@ -37,7 +37,7 @@ public class PotionDrinkMixin {
 
             int newDuration;
             if (LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, playerEntity) > 0) {
-                newDuration = effect.getDuration() + (effect.getDuration() / ((RPGStats.getConfig().scaling.maxLevel * 5) / LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, playerEntity)));
+                newDuration = effect.getDuration() + (effect.getDuration() / ((RPGStatsMain.config.scaling.maxLevel * 5) / LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, playerEntity)));
             } else {
                 newDuration = effect.getDuration();
             }

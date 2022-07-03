@@ -1,7 +1,7 @@
 package io.github.silverandro.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import io.github.silverandro.rpgstats.main.RPGStats;
+import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
@@ -18,7 +18,7 @@ public class StatusEffectsImmuneMixin {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
                 int level = LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, (ServerPlayerEntity) livingEntity);
-                if (level < 25 || !RPGStats.getConfig().toggles.magic.enableLv25Buff) {
+                if (level < 25 || !RPGStatsMain.levelConfig.magic.enableLv25Buff) {
                     return livingEntity.damage(source, amount);
                 }
             } else {
@@ -33,7 +33,7 @@ public class StatusEffectsImmuneMixin {
         if (!livingEntity.world.isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
                 int level = LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, (ServerPlayerEntity) livingEntity);
-                if (level < 50 || !RPGStats.getConfig().toggles.magic.enableLv50Buff) {
+                if (level < 50 || !RPGStatsMain.levelConfig.magic.enableLv50Buff) {
                     return livingEntity.damage(source, amount);
                 }
             } else {

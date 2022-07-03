@@ -1,7 +1,7 @@
 package io.github.silverandro.rpgstats.mixin_logic;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import io.github.silverandro.rpgstats.main.RPGStats;
+import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
@@ -22,9 +22,9 @@ public class OnSneakLogic {
             int level = LevelUtils.INSTANCE.getComponentLevel(Components.FARMING, playerEntity);
             int amount = 0;
 
-            if (level >= 50 && RPGStats.getConfig().toggles.farming.enableLv50Buff) {
+            if (level >= 50 && RPGStatsMain.levelConfig.farming.enableLv50Buff) {
                 amount = 5;
-            } else if (level >= 25 && RPGStats.getConfig().toggles.farming.enableLv25Buff) {
+            } else if (level >= 25 && RPGStatsMain.levelConfig.farming.enableLv25Buff) {
                 amount = 3;
             }
 

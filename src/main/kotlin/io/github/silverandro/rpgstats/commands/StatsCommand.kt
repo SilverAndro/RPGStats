@@ -65,9 +65,12 @@ object StatsCommand {
             source.sendFeedback(
                 Text.literal("RPGStats > ")
                     .formatted(Formatting.GREEN)
-                    .append(Text.translatable("rpgstats.stats_for", target.entityName)
-                        .formatted(Formatting.WHITE)),
-                false)
+                    .append(
+                        Text.translatable("rpgstats.stats_for", target.entityName)
+                            .formatted(Formatting.WHITE)
+                    ),
+                false
+            )
 
             Components.components.keys.forEach { identifier ->
                 source.sendFeedback(LevelUtils.getFormattedLevelData(identifier, target), false)

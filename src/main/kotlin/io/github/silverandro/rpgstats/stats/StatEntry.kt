@@ -1,7 +1,7 @@
 package io.github.silverandro.rpgstats.stats
 
 import io.github.silverandro.rpgstats.Constants.debugLogger
-import mc.rpgstats.main.RPGStats
+import io.github.silverandro.rpgstats.main.RPGStats
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.Identifier
 

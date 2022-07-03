@@ -1,6 +1,6 @@
 package io.github.silverandro.rpgstats.event
 
-import mc.rpgstats.main.RPGStats
+import io.github.silverandro.rpgstats.main.RPGStats
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier

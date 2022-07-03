@@ -1,9 +1,9 @@
 package io.github.silverandro.rpgstats
 
 import io.github.silverandro.rpgstats.advancemnents.LevelUpCriterion
-import mc.rpgstats.main.RPGStats
-import mc.rpgstats.main.RPGStatsConfig
-import mc.rpgstats.mixin.accessor.CriteriaAccessor
+import io.github.silverandro.rpgstats.main.RPGStats
+import io.github.silverandro.rpgstats.main.RPGStatsConfig
+import io.github.silverandro.rpgstats.mixin.accessor.CriteriaAccessor
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig
 import me.sargunvohra.mcmods.autoconfig1u.annotation.Config
 import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer

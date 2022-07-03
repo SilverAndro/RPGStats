@@ -14,9 +14,9 @@ import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.stats.Components
 import io.github.silverandro.rpgstats.util.filterInPlace
 import io.netty.buffer.Unpooled
-import mc.rpgstats.command.CheatCommand
-import mc.rpgstats.main.RPGStats
-import mc.rpgstats.mixin_logic.OnSneakLogic
+import io.github.silverandro.rpgstats.command.CheatCommand
+import io.github.silverandro.rpgstats.main.RPGStats
+import io.github.silverandro.rpgstats.mixin_logic.OnSneakLogic
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener

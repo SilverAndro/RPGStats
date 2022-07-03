@@ -2,7 +2,7 @@ package io.github.silverandro.rpgstats
 
 import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.stats.Components
-import mc.rpgstats.main.RPGStats
+import io.github.silverandro.rpgstats.main.RPGStats
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.MutableText
 import net.minecraft.text.Text

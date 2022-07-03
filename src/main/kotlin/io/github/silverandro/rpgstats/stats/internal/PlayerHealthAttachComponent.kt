@@ -1,7 +1,7 @@
 package io.github.silverandro.rpgstats.stats.internal
 
 import dev.onyxstudios.cca.api.v3.component.Component
-import mc.rpgstats.main.RPGStats
+import io.github.silverandro.rpgstats.main.RPGStats
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.network.ServerPlayerEntity

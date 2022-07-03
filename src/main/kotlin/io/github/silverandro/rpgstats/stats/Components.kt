@@ -11,7 +11,7 @@ import io.github.silverandro.rpgstats.stats.systems.StatAction
 import io.github.silverandro.rpgstats.stats.systems.StatAttributeAction
 import io.github.silverandro.rpgstats.stats.systems.StatFakeAttributeAction
 import io.github.silverandro.rpgstats.stats.systems.StatSpecialAction
-import mc.rpgstats.main.RPGStats
+import io.github.silverandro.rpgstats.main.RPGStats
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.util.Identifier

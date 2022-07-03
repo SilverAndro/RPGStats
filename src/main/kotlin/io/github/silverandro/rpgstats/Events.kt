@@ -22,15 +22,12 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener
 import net.minecraft.advancement.Advancement
 import net.minecraft.block.*
-import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.entity.effect.StatusEffects
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.resource.ResourceManager
 import net.minecraft.resource.ResourceType
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.registry.Registry
@@ -163,7 +160,7 @@ object Events {
                             nameData.writeIdentifier(statId)
                             // Write the level and XP
                             statData.writeInt(getComponentLevel(statId, player))
-                            statData.writeInt(getComponentXP(statId!!, player))
+                            statData.writeInt(getComponentXP(statId, player))
                             nameData.writeString(Components.components[statId])
                         }
                         ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, statData)
@@ -197,83 +194,10 @@ object Events {
 
     fun registerLevelUpEvents() {
         LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            val actions = Components.actions.get(id) ?:
-                throw IllegalStateException("Attempting to grant XP to a player in stat $id when no stat has been registered!")
-            actions.forEach {
+            // Data driven stats have no actions and won't be registered
+            val actions = Components.actions.get(id)
+            actions?.forEach {
                 it.onLevelUp(player, newLevel, hideMessages)
-            }
-        }
-
-        LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (id == Components.DEFENSE) {
-                player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)!!.baseValue =
-                    player.getAttributeBaseValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) + 0.01
-                if (!hideMessages) player.sendMessage(Text.literal("§a+0.01§r Knockback resistance"), false)
-                if (newLevel % RPGStats.getConfig().defenseHP.everyXLevels == 0 && newLevel > RPGStats.getConfig().defenseHP.afterLevel) {
-                    player.getAttributeInstance(EntityAttributes.GENERIC_MAX_HEALTH)!!.baseValue =
-                        player.getAttributeBaseValue(EntityAttributes.GENERIC_MAX_HEALTH) + RPGStats.getConfig().defenseHP.addAmount
-                    if (!hideMessages) player.sendMessage(Text.literal("§a+1§r Health"), false)
-                }
-                if (!hideMessages) {
-                    if (newLevel == 25) {
-                        player.sendMessage(Text.literal("§aNimble§r - 5% chance to avoid damage"), false)
-                    } else if (newLevel == 50) {
-                        player.sendMessage(Text.literal("§aNimble II§r - 10% chance to avoid damage"), false)
-                    }
-                }
-            }
-        }
-
-        LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (id == Components.FARMING) {
-                if (!hideMessages) {
-                    player.sendMessage(Text.literal("§a+1§r Bonemeal efficiency"), false)
-                    if (newLevel == 25) {
-                        player.sendMessage(
-                            Text.literal("§aNurturing§r - Shift rapidly to grow nearby crops (while holding hoe)"),
-                            false
-                        )
-                    } else if (newLevel == 50) {
-                        player.sendMessage(Text.literal("§aNurturing II§r - Nurturing has increased range"), false)
-                    }
-                }
-            }
-        }
-
-        LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (id == Components.FISHING) {
-                player.getAttributeInstance(EntityAttributes.GENERIC_LUCK)!!.baseValue =
-                    player.getAttributeBaseValue(EntityAttributes.GENERIC_LUCK) + 0.05
-                if (!hideMessages) {
-                    player.sendMessage(Text.literal("§a+0.05§r Luck"), false)
-                    if (newLevel == 25) {
-                        player.sendMessage(
-                            Text.literal("§aVitamin rich§r - Eating fish grants you a temporary positive effect"),
-                            false
-                        )
-                    } else if (newLevel == 50) {
-                        player.sendMessage(
-                            Text.literal("§aTeach a man to fish§r - Extra saturation when eating"),
-                            false
-                        )
-                    }
-                }
-            }
-        }
-
-        LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (id == Components.MAGIC) {
-                if (!hideMessages) {
-                    player.sendMessage(Text.literal("§a+1§r Drunk potion duration"), false)
-                    if (newLevel % 3 == 0) {
-                        player.sendMessage(Text.literal("§a+1§r Potion drink speed"), false)
-                    }
-                    if (newLevel == 25) {
-                        player.sendMessage(Text.literal("§aVax§r - Immune to poison"), false)
-                    } else if (newLevel == 50) {
-                        player.sendMessage(Text.literal("§aDead inside§r - Immune to wither"), false)
-                    }
-                }
             }
         }
     }

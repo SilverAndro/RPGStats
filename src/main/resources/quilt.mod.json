@@ -27,7 +27,7 @@
         "adapter": "kotlin",
         "value": "io.github.silverandro.rpgstats.client.RPGStatsClient"
       },
-      "cardinal-components": "mc.rpgstats.main.CustomComponents"
+      "cardinal-components": "io.github.silverandro.rpgstats.stats.Components"
     },
     "depends": [
       {

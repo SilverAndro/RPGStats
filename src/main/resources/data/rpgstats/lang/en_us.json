@@ -14,5 +14,8 @@
   "rpgstats.error.not_on_client": "You don't have RPGStats installed on your client, unable to open the GUI",
 
   "rpgstats.fakestat.mining_speed": "Additional Mining Speed",
-  "rpgstats.fakestat.bow_accuracy": "Bow accuracy"
+  "rpgstats.fakestat.bow_accuracy": "Bow accuracy",
+  "rpgstats.fakestat.drunk_potion_duration": "Dunk potion duration",
+  "rpgstats.fakestat.potion_drink_speed": "Potion drink speed",
+  "rpgstats.fakestat.bonemeal_efficiency": "Bonemeal efficiency"
 }

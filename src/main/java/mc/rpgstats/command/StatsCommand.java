@@ -4,6 +4,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import io.github.silverandro.rpgstats.Constants;
 import io.github.silverandro.rpgstats.LevelUtils;
 import io.github.silverandro.rpgstats.stats.Components;
+import io.github.silverandro.rpgstats.stats.internal.PlayerPreferencesComponent;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
@@ -13,6 +14,7 @@ import net.minecraft.util.Formatting;
 import org.quiltmc.qsl.networking.api.PacketByteBufs;
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking;
 
+/*
 public class StatsCommand {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(
@@ -94,3 +96,4 @@ public class StatsCommand {
         return 1;
     }
 }
+*/

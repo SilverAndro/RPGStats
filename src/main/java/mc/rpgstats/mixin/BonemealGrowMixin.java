@@ -16,7 +16,7 @@ public class BonemealGrowMixin {
     public void rpgstats$onShift(boolean sneaking, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Entity) (Object) this instanceof ServerPlayerEntity) {
-            if (!Components.PREFERENCES.get(this).isOptedOutOfButtonSpam) {
+            if (!Components.PREFERENCES.get(this).isOptedOutOfButtonSpam()) {
                 OnSneakLogic.doLogic(sneaking, (ServerPlayerEntity) (Object) this);
             }
         }

@@ -1,6 +1,5 @@
 package io.github.silverandro.rpgstats.stats
 
-import com.mojang.serialization.Lifecycle
 import dev.onyxstudios.cca.api.v3.component.ComponentKey
 import dev.onyxstudios.cca.api.v3.component.ComponentRegistry
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry
@@ -17,9 +16,7 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
-import net.minecraft.util.registry.RegistryKey
 import net.minecraft.util.registry.SimpleRegistry
-import org.quiltmc.qkl.wrapper.qsl.registry.register
 
 class Components : EntityComponentInitializer {
     override fun registerEntityComponentFactories(registry: EntityComponentFactoryRegistry) {
@@ -84,6 +81,7 @@ class Components : EntityComponentInitializer {
             return stat.id
         }
 
+        @JvmField
         val MELEE = registerStat(
             Identifier("rpgstats:melee"),
             StatAttributeAction(
@@ -100,6 +98,7 @@ class Components : EntityComponentInitializer {
             ) { it == 50 }
         )
 
+        @JvmField
         val MINING = registerStat(
             Identifier("rpgstats:mining"),
             StatFakeAttributeAction(
@@ -116,6 +115,7 @@ class Components : EntityComponentInitializer {
             ) { it == 50 }
         )
 
+        @JvmField
         val RANGED = registerStat(
             Identifier("rpgstats:ranged"),
             StatFakeAttributeAction(
@@ -129,6 +129,82 @@ class Components : EntityComponentInitializer {
             StatSpecialAction(
                 "Nix",
                 "You no longer need arrows"
+            ) { it == 50 }
+        )
+
+        @JvmField
+        val MAGIC = registerStat(
+            Identifier("rpgstats:magic"),
+            StatFakeAttributeAction(
+                "rpgstats.fakestat.drunk_potion_duration",
+                1.0
+            ) { true },
+            StatFakeAttributeAction(
+                "rpgstats.fakestat.potion_drink_speed",
+                1.0
+            ) { it % 3 == 0 },
+            StatSpecialAction(
+                "Vax",
+                "Immune to poison"
+            ) { it == 25 },
+            StatSpecialAction(
+                "Dead inside",
+                "Immune to wither"
+            ) { it == 50 }
+        )
+
+        @JvmField
+        val FARMING = registerStat(
+            Identifier("rpgstats:farming"),
+            StatFakeAttributeAction(
+                "rpgstats.fakestat.bonemeal_efficiency",
+                1.0
+            ) { true },
+            StatSpecialAction(
+                "Nurturing",
+                "Shift rapidly to grow nearby crops (while holding a hoe)"
+            ) { it == 25 },
+            StatSpecialAction(
+                "Nurturing II",
+                "Nurturing has increased range"
+            ) { it == 50 }
+        )
+
+        @JvmField
+        val DEFENSE = registerStat(
+            Identifier("rpgstats:defense"),
+            StatAttributeAction(
+                EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE,
+                0.01
+            ) { true },
+            StatAttributeAction(
+                EntityAttributes.GENERIC_MAX_HEALTH,
+                1.0
+            ) { it % RPGStats.getConfig().defenseHP.everyXLevels == 0 && it > RPGStats.getConfig().defenseHP.afterLevel },
+            StatSpecialAction(
+                "Nimble",
+                "5% chance to avoid damage"
+            ) { it == 25 },
+            StatSpecialAction(
+                "Nimble II",
+                "10% chance to avoid damage"
+            ) { it == 50 }
+        )
+
+        @JvmField
+        val FISHING = registerStat(
+            Identifier("rpgstats:fishing"),
+            StatAttributeAction(
+                EntityAttributes.GENERIC_LUCK,
+                0.05
+            ) { true },
+            StatSpecialAction(
+                "Vitamin rich",
+                "Eating fish grants you a temporary positive effect"
+            ) { it == 25 },
+            StatSpecialAction(
+                "Teach a man to fish",
+                "Extra saturation when eating"
             ) { it == 50 }
         )
 

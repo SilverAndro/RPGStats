@@ -6,11 +6,12 @@ import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.Identifier
 
 class StatEntry(
-    val translationKey: String,
     val id: Identifier,
     level: Int = 0,
     xp: Int = 0
 ) {
+    val translationKey = "${id.namespace}.stat.${id.path.replace("/", "_")}"
+
     var level: Int = 0
         set(value) {
             if (RPGStats.getConfig().debug.logRawWrite) {
@@ -31,11 +32,12 @@ class StatEntry(
         this.xp = xp
     }
 
-    fun toNbt(): NbtCompound {
-        return NbtCompound().apply {
-            putString("id", id.toString())
-            putInt("level", level)
-            putInt("xp", xp)
+    fun addToCompound(nbt: NbtCompound) {
+        nbt.apply {
+            put(id.toString(), NbtCompound().apply {
+                putInt("level", level)
+                putInt("xp", xp)
+            })
         }
     }
 

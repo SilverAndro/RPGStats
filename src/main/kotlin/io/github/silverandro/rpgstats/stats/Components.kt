@@ -70,15 +70,10 @@ class Components : EntityComponentInitializer {
         ).buildAndRegister()
 
         fun registerStat(id: Identifier, vararg action: StatAction): Identifier {
-            val stat = StatEntry(
-                "rpgstats.stat.${id.path.replace("/", "_")}",
-                id
-            )
-
             @Suppress("UNCHECKED_CAST")
             Registry.register(actions, id, action as Array<StatAction>)
 
-            return stat.id
+            return id
         }
 
         @JvmField

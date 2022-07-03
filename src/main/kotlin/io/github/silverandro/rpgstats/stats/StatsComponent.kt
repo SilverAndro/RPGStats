@@ -3,7 +3,6 @@ package io.github.silverandro.rpgstats.stats
 import dev.onyxstudios.cca.api.v3.component.Component
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent
 import io.github.silverandro.rpgstats.Constants.SYNC_STATS_PACKET_ID
-import mc.rpgstats.component.StatsEntry
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.server.network.ServerPlayerEntity
@@ -13,7 +12,7 @@ import java.util.*
 import java.util.function.Consumer
 
 class StatsComponent(private val playerEntity: PlayerEntity) : Component, AutoSyncedComponent {
-    var entries = HashMap<Identifier, StatsEntry>()
+    var entries = HashMap<Identifier, StatEntry>()
     override fun shouldSyncWith(player: ServerPlayerEntity): Boolean {
         return ServerPlayNetworking.canSend(player, SYNC_STATS_PACKET_ID)
     }
@@ -24,7 +23,7 @@ class StatsComponent(private val playerEntity: PlayerEntity) : Component, AutoSy
             val identifier = Identifier.tryParse(s)
             if (identifier != null) {
                 val data = compoundTag.getCompound(identifier.toString())!!
-                entries[identifier] = StatsEntry(identifier, data.getInt("level"), data.getInt("xp"))
+                entries[identifier] = StatEntry(identifier, data.getInt("level"), data.getInt("xp"))
             } else {
                 System.err.println("Failed to parse stat identifier: $s")
             }
@@ -33,7 +32,7 @@ class StatsComponent(private val playerEntity: PlayerEntity) : Component, AutoSy
 
     override fun writeToNbt(compoundTag: NbtCompound) {
         for (entry in entries.values) {
-            entry.toCompound(compoundTag)
+            entry.addToCompound(compoundTag)
         }
     }
 
@@ -48,7 +47,7 @@ class StatsComponent(private val playerEntity: PlayerEntity) : Component, AutoSy
         return Objects.hash(playerEntity, entries)
     }
 
-    fun getOrCreateID(id: Identifier): StatsEntry {
-        return entries.computeIfAbsent(id) { identifier: Identifier? -> StatsEntry(id, 0, 0) }
+    fun getOrCreateID(id: Identifier): StatEntry {
+        return entries.computeIfAbsent(id) { identifier: Identifier? -> StatEntry(id, 0, 0) }
     }
 }

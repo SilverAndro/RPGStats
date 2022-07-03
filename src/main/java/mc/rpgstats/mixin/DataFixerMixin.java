@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.stats.Components;
-import mc.rpgstats.component.StatsEntry;
+import io.github.silverandro.rpgstats.stats.StatEntry;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -9,6 +9,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.Objects;
 
 @Mixin(ServerPlayerEntity.class)
 public class DataFixerMixin {
@@ -31,7 +33,7 @@ public class DataFixerMixin {
         }
 
         for (String key : newTag.getKeys()) {
-            StatsEntry entry = Components.STATS.get(this).getOrCreateID(Identifier.tryParse(key));
+            StatEntry entry = Components.STATS.get(this).getOrCreateID(Objects.requireNonNull(Identifier.tryParse(key)));
             entry.setLevel(newTag.getCompound(key).getInt("level"));
             entry.setXp(newTag.getCompound(key).getInt("xp"));
         }

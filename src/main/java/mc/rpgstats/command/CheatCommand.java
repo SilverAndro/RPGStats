@@ -3,6 +3,7 @@ package mc.rpgstats.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import io.github.silverandro.rpgstats.LevelUtils;
+import io.github.silverandro.rpgstats.commands.SkillSuggestionProvider;
 import io.github.silverandro.rpgstats.event.LevelUpCallback;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.command.argument.IdentifierArgumentType;

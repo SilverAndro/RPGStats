@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import mc.rpgstats.main.CustomComponents;
+import io.github.silverandro.rpgstats.stats.Components;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -16,7 +16,7 @@ public class TakeDamageMixin {
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void rpgstats$dodge(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         ServerPlayerEntity spe = (ServerPlayerEntity) (Object) this;
-        int level = LevelUtils.INSTANCE.getComponentLevel(CustomComponents.DEFENSE, spe);
+        int level = LevelUtils.INSTANCE.getComponentLevel(Components.DEFENSE, spe);
         float chance = 0f;
         if (level >= 50 && RPGStats.getConfig().toggles.defense.enableLv50Buff) {
             chance = 0.1f;

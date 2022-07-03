@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import mc.rpgstats.main.CustomComponents;
+import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.block.*;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
@@ -31,7 +31,7 @@ public class BonemealMixin {
         if (world.getBlockState(blockPos).isOf(Blocks.WATER) && world.getFluidState(blockPos).getLevel() == 8) {
             if (world instanceof ServerWorld && stack.getHolder() != null) {
                 RandomGenerator random = world.getRandom();
-                int level = LevelUtils.INSTANCE.getComponentLevel(CustomComponents.FARMING, (ServerPlayerEntity) stack.getHolder());
+                int level = LevelUtils.INSTANCE.getComponentLevel(Components.FARMING, (ServerPlayerEntity) stack.getHolder());
 
                 loop:
                 for (int i = 0; i < level; ++i) {
@@ -87,7 +87,7 @@ public class BonemealMixin {
     @Inject(at = @At("HEAD"), method = "useOnFertilizable")
     private static void rpgstats$onGrowable(ItemStack stack, World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (!world.isClient && stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
-            int level = LevelUtils.INSTANCE.getComponentLevel(CustomComponents.FARMING, (ServerPlayerEntity) stack.getHolder());
+            int level = LevelUtils.INSTANCE.getComponentLevel(Components.FARMING, (ServerPlayerEntity) stack.getHolder());
             BlockState blockState = world.getBlockState(pos);
             if (blockState.getBlock() instanceof Fertilizable fertilizable) {
                 if (fertilizable.isFertilizable(world, pos, blockState, false)) {

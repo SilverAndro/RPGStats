@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import mc.rpgstats.main.CustomComponents;
+import io.github.silverandro.rpgstats.stats.Components;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffectInstance;
@@ -33,11 +33,11 @@ public class PotionDrinkMixin {
         StatusEffectInstance effect = args.get(0);
 
         if (entity instanceof ServerPlayerEntity playerEntity) {
-            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, playerEntity, 10);
+            LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, playerEntity, 10);
 
             int newDuration;
-            if (LevelUtils.INSTANCE.getComponentLevel(CustomComponents.MAGIC, playerEntity) > 0) {
-                newDuration = effect.getDuration() + (effect.getDuration() / ((RPGStats.getConfig().scaling.maxLevel * 5) / LevelUtils.INSTANCE.getComponentLevel(CustomComponents.MAGIC, playerEntity)));
+            if (LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, playerEntity) > 0) {
+                newDuration = effect.getDuration() + (effect.getDuration() / ((RPGStats.getConfig().scaling.maxLevel * 5) / LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, playerEntity)));
             } else {
                 newDuration = effect.getDuration();
             }
@@ -65,7 +65,7 @@ public class PotionDrinkMixin {
     )
     private void rpgstats$OnFinishDrinkingHealthPotion(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
         if (user instanceof ServerPlayerEntity playerEntity) {
-            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, playerEntity, 10);
+            LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, playerEntity, 10);
 
         }
     }
@@ -73,7 +73,7 @@ public class PotionDrinkMixin {
     @Inject(at = @At("HEAD"), method = "getMaxUseTime", cancellable = true)
     private void rpgstats$getPotionUseTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
         if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity holder) {
-            cir.setReturnValue((int) (32 - Math.floor(LevelUtils.INSTANCE.getComponentLevel(CustomComponents.MAGIC, holder) / 3.0f)));
+            cir.setReturnValue((int) (32 - Math.floor(LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, holder) / 3.0f)));
         }
     }
 }

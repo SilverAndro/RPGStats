@@ -1,6 +1,6 @@
 package mc.rpgstats.mixin;
 
-import mc.rpgstats.main.CustomComponents;
+import io.github.silverandro.rpgstats.stats.Components;
 import mc.rpgstats.mixin_logic.OnSneakLogic;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -16,7 +16,7 @@ public class BonemealGrowMixin {
     public void rpgstats$onShift(boolean sneaking, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Entity) (Object) this instanceof ServerPlayerEntity) {
-            if (!CustomComponents.PREFERENCES.get(this).isOptedOutOfButtonSpam) {
+            if (!Components.PREFERENCES.get(this).isOptedOutOfButtonSpam) {
                 OnSneakLogic.doLogic(sneaking, (ServerPlayerEntity) (Object) this);
             }
         }

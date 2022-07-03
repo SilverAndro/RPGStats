@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import mc.rpgstats.main.CustomComponents;
+import io.github.silverandro.rpgstats.stats.Components;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -28,17 +28,17 @@ public abstract class KillMixin {
             if (entity instanceof ServerPlayerEntity serverPlayer) {
                 if (source.isProjectile()) {
                     if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-                        LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.RANGED, serverPlayer, 130);
+                        LevelUtils.INSTANCE.addXpAndLevelUp(Components.RANGED, serverPlayer, 130);
                     } else {
-                        LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.RANGED, serverPlayer, 1);
+                        LevelUtils.INSTANCE.addXpAndLevelUp(Components.RANGED, serverPlayer, 1);
                     }
                 } else if (source.isMagic()) {
-                    LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MAGIC, serverPlayer, 1);
+                    LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, serverPlayer, 1);
                 } else if (!source.isExplosive() && !source.isFire()) {
                     if (le instanceof PassiveEntity) {
-                        LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.FARMING, serverPlayer, 1);
+                        LevelUtils.INSTANCE.addXpAndLevelUp(Components.FARMING, serverPlayer, 1);
                     } else {
-                        int level = LevelUtils.INSTANCE.getComponentLevel(CustomComponents.MELEE, serverPlayer);
+                        int level = LevelUtils.INSTANCE.getComponentLevel(Components.MELEE, serverPlayer);
 
                         int duration = 0;
                         if (level >= 50 && RPGStats.getConfig().toggles.melee.enableLv50Buff) {
@@ -52,9 +52,9 @@ public abstract class KillMixin {
                         }
 
                         if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-                            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MELEE, serverPlayer, 130);
+                            LevelUtils.INSTANCE.addXpAndLevelUp(Components.MELEE, serverPlayer, 130);
                         } else {
-                            LevelUtils.INSTANCE.addXpAndLevelUp(CustomComponents.MELEE, serverPlayer, 1);
+                            LevelUtils.INSTANCE.addXpAndLevelUp(Components.MELEE, serverPlayer, 1);
                         }
                     }
                 }

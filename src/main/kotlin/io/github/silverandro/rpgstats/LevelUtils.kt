@@ -1,7 +1,7 @@
 package io.github.silverandro.rpgstats
 
 import io.github.silverandro.rpgstats.event.LevelUpCallback
-import mc.rpgstats.main.CustomComponents
+import io.github.silverandro.rpgstats.stats.Components
 import mc.rpgstats.main.RPGStats
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.MutableText
@@ -16,32 +16,32 @@ object LevelUtils {
     fun setComponentXP(id: Identifier, player: ServerPlayerEntity, newValue: Int) {
         if (RPGStats.getConfig().debug.logRawOps) {
             Constants.debugLogger.info(player.entityName + " xp was set to " + newValue + " in stat " + id.toString())
-            Constants.debugLogger.info("Stat is loaded: " + CustomComponents.components.containsKey(id))
+            Constants.debugLogger.info("Stat is loaded: " + Components.components.containsKey(id))
         }
-        if (CustomComponents.components.containsKey(id)) {
-            CustomComponents.STATS.get(player).getOrCreateID(id).xp = newValue
-            CustomComponents.STATS.sync(player)
+        if (Components.components.containsKey(id)) {
+            Components.STATS.get(player).getOrCreateID(id).xp = newValue
+            Components.STATS.sync(player)
         }
     }
 
     fun getComponentXP(id: Identifier, player: ServerPlayerEntity): Int {
-        return if (CustomComponents.components.containsKey(id)) CustomComponents.STATS.get(player)
+        return if (Components.components.containsKey(id)) Components.STATS.get(player)
             .getOrCreateID(id).xp else -1
     }
 
     fun setComponentLevel(id: Identifier, player: ServerPlayerEntity, newValue: Int) {
         if (RPGStats.getConfig().debug.logRawOps) {
             Constants.debugLogger.info(player.entityName + " level was set to " + newValue + " in stat " + id.toString())
-            Constants.debugLogger.info("Stat is loaded: " + CustomComponents.components.containsKey(id))
+            Constants.debugLogger.info("Stat is loaded: " + Components.components.containsKey(id))
         }
-        if (CustomComponents.components.containsKey(id)) {
-            CustomComponents.STATS.get(player).getOrCreateID(id).level = newValue
-            CustomComponents.STATS.sync(player)
+        if (Components.components.containsKey(id)) {
+            Components.STATS.get(player).getOrCreateID(id).level = newValue
+            Components.STATS.sync(player)
         }
     }
 
-    fun getComponentLevel(id: Identifier?, player: ServerPlayerEntity): Int {
-        return if (CustomComponents.components.containsKey(id)) CustomComponents.STATS.get(player)
+    fun getComponentLevel(id: Identifier, player: ServerPlayerEntity): Int {
+        return if (Components.components.containsKey(id)) Components.STATS.get(player)
             .getOrCreateID(id).level else -1
     }
 
@@ -63,9 +63,9 @@ object LevelUtils {
     fun addXpAndLevelUp(id: Identifier, player: ServerPlayerEntity, addedXP: Int) {
         if (RPGStats.getConfig().debug.logXpGain) {
             Constants.debugLogger.info(player.entityName + " gained " + addedXP + " xp in stat " + id.toString())
-            Constants.debugLogger.info("Stat is loaded: " + CustomComponents.components.containsKey(id))
+            Constants.debugLogger.info("Stat is loaded: " + Components.components.containsKey(id))
         }
-        if (CustomComponents.components.containsKey(id)) {
+        if (Components.components.containsKey(id)) {
             var nextXP = getComponentXP(id, player) + addedXP
             var currentLevel = getComponentLevel(id, player)
             if (currentLevel < RPGStats.getConfig().scaling.maxLevel) {
@@ -75,7 +75,7 @@ object LevelUtils {
                     nextXP -= nextXPForLevelUp
                     currentLevel += 1
                     setComponentLevel(id, player, currentLevel)
-                    CustomComponents.STATS.sync(player)
+                    Components.STATS.sync(player)
                     player.sendMessage(
                         Text.literal("§aRPGStats >§r ")
                             .formatted(Formatting.GREEN)
@@ -83,7 +83,7 @@ object LevelUtils {
                                 Text.translatable("rpgstats.levelup_1")
                                     .formatted(Formatting.WHITE)
                                     .append(
-                                        Text.literal(CustomComponents.components[id])
+                                        Text.literal(Components.components[id])
                                             .formatted(Formatting.GOLD)
                                             .append(
                                                 Text.translatable("rpgstats.levelup_2")
@@ -100,7 +100,7 @@ object LevelUtils {
                     nextXPForLevelUp = calculateXpNeededToReachLevel(currentLevel + 1)
                 }
                 setComponentXP(id, player, nextXP)
-                CustomComponents.STATS.sync(player)
+                Components.STATS.sync(player)
             }
         }
     }
@@ -108,7 +108,7 @@ object LevelUtils {
     fun getFormattedLevelData(id: Identifier, player: ServerPlayerEntity): MutableText? {
         val currentLevel = getComponentLevel(id, player)
         val xp = getComponentXP(id, player)
-        val name = CustomComponents.components[id]
+        val name = Components.components[id]
         val capped = name!!.substring(0, 1).uppercase(Locale.getDefault()) + name.substring(1)
         return if (currentLevel < RPGStats.getConfig().scaling.maxLevel) {
             val nextXP = calculateXpNeededToReachLevel(currentLevel + 1)
@@ -128,7 +128,7 @@ object LevelUtils {
     fun getNotFormattedLevelData(id: Identifier, player: ServerPlayerEntity): Text? {
         val currentLevel = getComponentLevel(id, player)
         val xp = getComponentXP(id, player)
-        val name = CustomComponents.components[id]
+        val name = Components.components[id]
         val capped = name!!.substring(0, 1).uppercase(Locale.getDefault()) + name.substring(1)
         return if (currentLevel < RPGStats.getConfig().scaling.maxLevel) {
             val nextXP = calculateXpNeededToReachLevel(currentLevel + 1)
@@ -140,7 +140,7 @@ object LevelUtils {
 
     fun getStatLevelsForPlayer(player: ServerPlayerEntity): ArrayList<Int> {
         val result = ArrayList<Int>()
-        for (stat in CustomComponents.components.keys) {
+        for (stat in Components.components.keys) {
             result.add(getComponentLevel(stat, player))
         }
         return result
@@ -169,6 +169,6 @@ object LevelUtils {
             LevelUpCallback.EVENT.invoker().onLevelUp(player, id, i, true)
         }
 
-        CustomComponents.STATS.sync(player)
+        Components.STATS.sync(player)
     }
 }

@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import mc.rpgstats.main.CustomComponents;
+import io.github.silverandro.rpgstats.stats.Components;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
@@ -27,7 +27,7 @@ public class ItemEatMixin {
     public void rpgstats$grantFishEffects(ItemStack stack, World world, LivingEntity targetEntity, CallbackInfo ci) {
         LivingEntity le = (LivingEntity) (Object) this;
         if (le instanceof ServerPlayerEntity) {
-            int level = LevelUtils.INSTANCE.getComponentLevel(CustomComponents.FISHING, (ServerPlayerEntity) le);
+            int level = LevelUtils.INSTANCE.getComponentLevel(Components.FISHING, (ServerPlayerEntity) le);
             if (level >= 25 && stack.isIn(ItemTags.FISHES) && RPGStats.getConfig().toggles.fishing.enableLv25Buff) {
                 List<StatusEffect> goodEffects = Arrays.asList(
                         StatusEffects.ABSORPTION,

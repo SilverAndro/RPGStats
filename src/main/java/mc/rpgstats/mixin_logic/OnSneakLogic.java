@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin_logic;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import mc.rpgstats.main.CustomComponents;
+import io.github.silverandro.rpgstats.stats.Components;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
@@ -19,7 +19,7 @@ public class OnSneakLogic {
 
         // Check if all conditions met
         if (isSneaking && playerEntity.getMainHandStack().getItem() instanceof HoeItem && new Random().nextBoolean()) {
-            int level = LevelUtils.INSTANCE.getComponentLevel(CustomComponents.FARMING, playerEntity);
+            int level = LevelUtils.INSTANCE.getComponentLevel(Components.FARMING, playerEntity);
             int amount = 0;
 
             if (level >= 50 && RPGStats.getConfig().toggles.farming.enableLv50Buff) {

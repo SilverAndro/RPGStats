@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import mc.rpgstats.main.CustomComponents;
+import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -43,7 +43,7 @@ class BowAccuracyMixin {
             PersistentProjectileEntity persistentProjectileEntity
     ) {
         if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
-            float newDistort = 1.0f - LevelUtils.INSTANCE.getComponentLevel(CustomComponents.RANGED, (ServerPlayerEntity) playerEntity) / 50f;
+            float newDistort = 1.0f - LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, (ServerPlayerEntity) playerEntity) / 50f;
             persistentProjectileEntity.setProperties(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, f * 3.0F, newDistort);
         }
     }

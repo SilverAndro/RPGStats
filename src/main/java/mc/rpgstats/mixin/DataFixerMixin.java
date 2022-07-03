@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
+import io.github.silverandro.rpgstats.stats.Components;
 import mc.rpgstats.component.StatsEntry;
-import mc.rpgstats.main.CustomComponents;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -31,7 +31,7 @@ public class DataFixerMixin {
         }
 
         for (String key : newTag.getKeys()) {
-            StatsEntry entry = CustomComponents.STATS.get(this).getOrCreateID(Identifier.tryParse(key));
+            StatsEntry entry = Components.STATS.get(this).getOrCreateID(Identifier.tryParse(key));
             entry.setLevel(newTag.getCompound(key).getInt("level"));
             entry.setXp(newTag.getCompound(key).getInt("xp"));
         }

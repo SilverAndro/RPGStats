@@ -11,5 +11,8 @@
   "rpgstats.feedback.toggle_sneak": "Hold sneak instead of spamming: %s",
 
   "rpgstats.error.console_player_required": "A player must be passed when executing that command from the console",
-  "rpgstats.error.not_on_client": "You don't have RPGStats installed on your client, unable to open the GUI"
+  "rpgstats.error.not_on_client": "You don't have RPGStats installed on your client, unable to open the GUI",
+
+  "rpgstats.fakestat.mining_speed": "Additional Mining Speed",
+  "rpgstats.fakestat.bow_accuracy": "Bow accuracy"
 }

@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import mc.rpgstats.main.CustomComponents;
+import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -17,7 +17,7 @@ public class BowCanUseMixin {
     public void rpgstats$modifyGetArrow(ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
         //noinspection ConstantConditions
         if ((Object) this instanceof ServerPlayerEntity) {
-            if (LevelUtils.INSTANCE.getComponentLevel(CustomComponents.RANGED, (ServerPlayerEntity) (Object) this) >= 50) {
+            if (LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, (ServerPlayerEntity) (Object) this) >= 50) {
                 cir.setReturnValue(new ItemStack(Items.ARROW));
             }
         }

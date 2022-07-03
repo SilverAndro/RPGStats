@@ -1,6 +1,6 @@
 package io.github.silverandro.rpgstats
 
-import mc.rpgstats.advancemnents.LevelUpCriterion
+import io.github.silverandro.rpgstats.advancemnents.LevelUpCriterion
 import mc.rpgstats.main.RPGStats
 import mc.rpgstats.main.RPGStatsConfig
 import mc.rpgstats.mixin.accessor.CriteriaAccessor
@@ -10,6 +10,7 @@ import me.sargunvohra.mcmods.autoconfig1u.serializer.JanksonConfigSerializer
 import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.loader.api.QuiltLoader
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer
+import org.spongepowered.asm.mixin.MixinEnvironment
 
 object RPGStatsMain : ModInitializer {
     override fun onInitialize(mod: ModContainer) {
@@ -36,6 +37,11 @@ object RPGStatsMain : ModInitializer {
 
         if (QuiltLoader.isModLoaded("harvest_scythes")) {
             Events.registerHSCompat()
+        }
+
+        if (QuiltLoader.isDevelopmentEnvironment()) {
+            // Audit mixins for issues
+            MixinEnvironment.getCurrentEnvironment().audit()
         }
     }
 }

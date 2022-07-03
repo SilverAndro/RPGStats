@@ -1,6 +1,6 @@
 package mc.rpgstats.mixin;
 
-import mc.rpgstats.main.CustomComponents;
+import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,8 +12,8 @@ public class BlockBreakSpeedMixin {
     public float rpgstats$modifyFinalMiningSpeed(float f) {
         PlayerEntity player = (PlayerEntity) (Object) this;
 
-        if (CustomComponents.components.containsKey(CustomComponents.MINING)) {
-            int level = CustomComponents.STATS.get(player).getOrCreateID(CustomComponents.MINING).getLevel();
+        if (Components.components.containsKey(Components.MINING)) {
+            int level = Components.STATS.get(player).getOrCreateID(Components.MINING).getLevel();
             return (f + (level * 0.1f));
         }
         return f;

@@ -1,6 +1,6 @@
 package mc.rpgstats.main;
 
-import mc.rpgstats.advancemnents.LevelUpCriterion;
+import io.github.silverandro.rpgstats.advancemnents.LevelUpCriterion;
 import me.sargunvohra.mcmods.autoconfig1u.AutoConfig;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.server.network.ServerPlayerEntity;

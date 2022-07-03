@@ -9,12 +9,12 @@ import io.github.silverandro.rpgstats.LevelUtils.getComponentLevel
 import io.github.silverandro.rpgstats.LevelUtils.getComponentXP
 import io.github.silverandro.rpgstats.LevelUtils.getLowestLevel
 import io.github.silverandro.rpgstats.LevelUtils.softLevelUp
+import io.github.silverandro.rpgstats.commands.StatsCommand
 import io.github.silverandro.rpgstats.event.LevelUpCallback
+import io.github.silverandro.rpgstats.stats.Components
 import io.github.silverandro.rpgstats.util.filterInPlace
 import io.netty.buffer.Unpooled
 import mc.rpgstats.command.CheatCommand
-import mc.rpgstats.command.StatsCommand
-import mc.rpgstats.main.CustomComponents
 import mc.rpgstats.main.RPGStats
 import mc.rpgstats.mixin_logic.OnSneakLogic
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
@@ -25,6 +25,7 @@ import net.minecraft.block.*
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.entity.effect.StatusEffects
+import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.resource.ResourceManager
 import net.minecraft.resource.ResourceType
@@ -58,7 +59,7 @@ object Events {
             val user = harvestEvent.user
             if (user is ServerPlayerEntity) {
                 addXpAndLevelUp(
-                    CustomComponents.FARMING,
+                    Components.FARMING,
                     user,
                     harvestEvent.totalBlocksHarvested()
                 )
@@ -75,7 +76,7 @@ object Events {
                 }
 
                 override fun reload(manager: ResourceManager) {
-                    CustomComponents.components.clear()
+                    Components.components.clear()
                     println("RPGStats reload!")
                     manager.findAllResources("rpgstats") { true }.forEach { _, list ->
                         list.forEach { resource ->
@@ -101,9 +102,9 @@ object Events {
                 )
 
             if (id.startsWith("-")) {
-                CustomComponents.components.remove(possible)
+                Components.components.remove(possible)
             } else {
-                CustomComponents.components[possible] = name
+                Components.components[possible] = name
             }
         }
     }
@@ -120,14 +121,14 @@ object Events {
                 val advancements = server.advancementLoader.advancements
                 PlayerLookup.all(server).forEach { player ->
                     // Do sneak logic if holding sneak and opted out of spam
-                    val preferences = CustomComponents.PREFERENCES.get(player)
+                    val preferences = Components.PREFERENCES.get(player)
                     if (preferences.isOptedOutOfButtonSpam && player.isSneaking) {
                         OnSneakLogic.doLogic(true, player)
                     }
 
                     // Fix stats for respawning players
                     if (RPGStats.needsStatFix.contains(player) && player.isAlive) {
-                        CustomComponents.components.forEach { (id, _) ->
+                        Components.components.forEach { (id, _) ->
                             softLevelUp(id, player)
                         }
                         RPGStats.needsStatFix.remove(player)
@@ -148,7 +149,7 @@ object Events {
 
                     // Client has the mod installed
                     if (ServerPlayNetworking.canSend(player, SYNC_NAMES_PACKET_ID)) {
-                        val count = CustomComponents.components.size
+                        val count = Components.components.size
                         val nameData = PacketByteBuf(Unpooled.buffer())
                         val statData = PacketByteBuf(Unpooled.buffer())
 
@@ -156,14 +157,14 @@ object Events {
                         statData.writeInt(count)
                         nameData.writeInt(count)
                         // For each stat
-                        for (statId in CustomComponents.components.keys) {
+                        for (statId in Components.components.keys) {
                             // Write the stat identifier
                             statData.writeIdentifier(statId)
                             nameData.writeIdentifier(statId)
                             // Write the level and XP
                             statData.writeInt(getComponentLevel(statId, player))
                             statData.writeInt(getComponentXP(statId!!, player))
-                            nameData.writeString(CustomComponents.components[statId])
+                            nameData.writeString(Components.components[statId])
                         }
                         ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, statData)
                         ServerPlayNetworking.send(player, SYNC_NAMES_PACKET_ID, nameData)
@@ -172,7 +173,7 @@ object Events {
                     // Mining lv 50 effect
                     if (player.blockPos.y <= RPGStats.getConfig().toggles.mining.effectLevelTrigger &&
                         getComponentLevel(
-                            CustomComponents.MINING,
+                            Components.MINING,
                             player
                         ) >= 50 && RPGStats.getConfig().toggles.mining.enableLv50Buff
                     ) {
@@ -187,7 +188,7 @@ object Events {
                             )
                         )
                     }
-                    CustomComponents.STATS.sync(player)
+                    Components.STATS.sync(player)
                 }
                 tickCount = 0
             }
@@ -196,7 +197,15 @@ object Events {
 
     fun registerLevelUpEvents() {
         LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (id == CustomComponents.DEFENSE) {
+            val actions = Components.actions.get(id) ?:
+                throw IllegalStateException("Attempting to grant XP to a player in stat $id when no stat has been registered!")
+            actions.forEach {
+                it.onLevelUp(player, newLevel, hideMessages)
+            }
+        }
+
+        LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
+            if (id == Components.DEFENSE) {
                 player.getAttributeInstance(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE)!!.baseValue =
                     player.getAttributeBaseValue(EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE) + 0.01
                 if (!hideMessages) player.sendMessage(Text.literal("§a+0.01§r Knockback resistance"), false)
@@ -216,7 +225,7 @@ object Events {
         }
 
         LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (id == CustomComponents.FARMING) {
+            if (id == Components.FARMING) {
                 if (!hideMessages) {
                     player.sendMessage(Text.literal("§a+1§r Bonemeal efficiency"), false)
                     if (newLevel == 25) {
@@ -232,7 +241,7 @@ object Events {
         }
 
         LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (id == CustomComponents.FISHING) {
+            if (id == Components.FISHING) {
                 player.getAttributeInstance(EntityAttributes.GENERIC_LUCK)!!.baseValue =
                     player.getAttributeBaseValue(EntityAttributes.GENERIC_LUCK) + 0.05
                 if (!hideMessages) {
@@ -253,7 +262,7 @@ object Events {
         }
 
         LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (id == CustomComponents.MAGIC) {
+            if (id == Components.MAGIC) {
                 if (!hideMessages) {
                     player.sendMessage(Text.literal("§a+1§r Drunk potion duration"), false)
                     if (newLevel % 3 == 0) {
@@ -263,65 +272,6 @@ object Events {
                         player.sendMessage(Text.literal("§aVax§r - Immune to poison"), false)
                     } else if (newLevel == 50) {
                         player.sendMessage(Text.literal("§aDead inside§r - Immune to wither"), false)
-                    }
-                }
-            }
-        }
-
-        LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (id == CustomComponents.MELEE) {
-                player.getAttributeInstance(EntityAttributes.GENERIC_ATTACK_DAMAGE)!!.baseValue =
-                    player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_DAMAGE) + RPGStats.getConfig().melee.attackDamagePerLevel
-                if (!hideMessages) {
-                    player.sendMessage(
-                        Text.literal("§a+" + RPGStats.getConfig().melee.attackDamagePerLevel + "§r Melee damage"),
-                        false
-                    )
-                    if (newLevel == 25) {
-                        player.sendMessage(
-                            Text.literal("§aBloodthirst§r - Regain 1 heart after killing a monster"),
-                            false
-                        )
-                    } else if (newLevel == 50) {
-                        player.sendMessage(
-                            Text.literal("§aBloodthirst II§r - Regain 2 hearts after killing a monster"),
-                            false
-                        )
-                    }
-                }
-            }
-        }
-
-        LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (id == CustomComponents.MINING) {
-                if (!hideMessages) {
-                    player.sendMessage(Text.literal("§a+0.1§r Additional Mining Speed"), false)
-                    if (newLevel == 25) {
-                        player.sendMessage(
-                            Text.literal("§aMagically infused§r - Extra 5% chance to not consume durability with unbreaking."),
-                            false
-                        )
-                    } else if (newLevel == 50) {
-                        player.sendMessage(
-                            Text.literal("§aMiners sight§r - Night vision below y" + RPGStats.getConfig().toggles.mining.effectLevelTrigger),
-                            false
-                        )
-                    }
-                }
-            }
-        }
-
-        LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (id == CustomComponents.RANGED) {
-                if (!hideMessages) {
-                    player.sendMessage(Text.literal("§a+1§r Bow accuracy"), false)
-                    if (newLevel == 25) {
-                        player.sendMessage(
-                            Text.literal("§aAqueus§r - Impaling applies to all mobs, not just water based ones"),
-                            false
-                        )
-                    } else if (newLevel == 50) {
-                        player.sendMessage(Text.literal("§aNix§r - You no longer need arrows"), false)
                     }
                 }
             }
@@ -349,9 +299,9 @@ object Events {
 
                 if (block is CropBlock || block is PumpkinBlock || block is MelonBlock || block is CocoaBlock) {
                     if (block is CropBlock && block.isMature(blockState)) {
-                        addXpAndLevelUp(CustomComponents.FARMING, (playerEntity as ServerPlayerEntity), 1)
+                        addXpAndLevelUp(Components.FARMING, (playerEntity as ServerPlayerEntity), 1)
                     } else {
-                        addXpAndLevelUp(CustomComponents.FARMING, (playerEntity as ServerPlayerEntity), 1)
+                        addXpAndLevelUp(Components.FARMING, (playerEntity as ServerPlayerEntity), 1)
                     }
                 }
 
@@ -371,7 +321,7 @@ object Events {
                         } else {
                             2
                         }
-                    addXpAndLevelUp(CustomComponents.MINING, (playerEntity as ServerPlayerEntity), amount)
+                    addXpAndLevelUp(Components.MINING, (playerEntity as ServerPlayerEntity), amount)
                 }
             }
         }

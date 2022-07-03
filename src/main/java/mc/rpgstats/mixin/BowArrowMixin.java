@@ -1,7 +1,7 @@
 package mc.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import mc.rpgstats.main.CustomComponents;
+import io.github.silverandro.rpgstats.stats.Components;
 import mc.rpgstats.main.RPGStats;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.BowItem;
@@ -29,7 +29,7 @@ public class BowArrowMixin {
     public boolean rpgstats$forceCanShootArrow(boolean bl) {
         if (
                 itemUser != null
-                        && LevelUtils.INSTANCE.getComponentLevel(CustomComponents.RANGED, itemUser) >= 50
+                        && LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, itemUser) >= 50
                         && RPGStats.getConfig().toggles.ranged.enableLv50Buff
         ) {
             itemUser = null;

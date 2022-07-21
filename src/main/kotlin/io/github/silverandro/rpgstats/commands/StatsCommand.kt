@@ -4,14 +4,13 @@ import com.mojang.brigadier.CommandDispatcher
 import io.github.silverandro.rpgstats.Constants.OPEN_GUI
 import io.github.silverandro.rpgstats.LevelUtils
 import io.github.silverandro.rpgstats.stats.Components
-import net.minecraft.command.argument.EntityArgumentType
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.literal
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.player
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.register
+import org.quiltmc.qkl.wrapper.minecraft.brigadier.*
+import org.quiltmc.qkl.wrapper.minecraft.brigadier.argument.*
+import org.quiltmc.qkl.wrapper.minecraft.brigadier.util.required
 import org.quiltmc.qsl.networking.api.PacketByteBufs
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking
 
@@ -24,37 +23,38 @@ object StatsCommand {
                     it.source.player
                 )
             }
-            literal("for_player") {
-                player("targetPlayer") {
-                    executes {
-                        displayStats(it.source, EntityArgumentType.getPlayer(it, "targetPlayer"))
-                    }
+            required(
+                literal("for_player"),
+                player("targetPlayer")
+            ) { _, getTargetPlayer ->
+                execute {
+                    displayStats(source, getTargetPlayer().value())
                 }
             }
-            literal("gui") {
-                executes {
-                    if (ServerPlayNetworking.canSend(it.source.player, OPEN_GUI)) {
-                        ServerPlayNetworking.send(it.source.player, OPEN_GUI, PacketByteBufs.empty())
-                        1
+
+            required(literal("gui")) {
+                execute {
+                    if (ServerPlayNetworking.canSend(source.player, OPEN_GUI)) {
+                        ServerPlayNetworking.send(source.player, OPEN_GUI, PacketByteBufs.empty())
                     } else {
-                        it.source.sendError(Text.translatable("rpgstats.error.not_on_client"))
-                        0
+                        source.sendError(Text.translatable("rpgstats.error.not_on_client"))
                     }
                 }
             }
-            literal("toggleSetting") {
-                literal("spamSneak") {
-                    executes {
-                        val component = Components.PREFERENCES.get(it.source.player)
-                        component.isOptedOutOfButtonSpam = !component.isOptedOutOfButtonSpam
-                        it.source.sendFeedback(
-                            Text.translatable(
-                                "rpgstats.feedback.toggle_sneak",
-                                component.isOptedOutOfButtonSpam
-                            ), false
-                        )
-                        1
-                    }
+
+            required(
+                literal("toggleSetting"),
+                literal("spamSneak")
+            ) { _, _ ->
+                execute {
+                    val component = Components.PREFERENCES.get(source.player)
+                    component.isOptedOutOfButtonSpam = !component.isOptedOutOfButtonSpam
+                    source.sendFeedback(
+                        Text.translatable(
+                            "rpgstats.feedback.toggle_sneak",
+                            component.isOptedOutOfButtonSpam
+                        ), false
+                    )
                 }
             }
         }

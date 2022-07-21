@@ -1,7 +1,7 @@
 plugins {
 	id 'io.github.p03w.machete' version '1.1.3'
 	id 'org.quiltmc.loom' version '0.12+'
-	id 'org.jetbrains.kotlin.jvm' version '1.7.0'
+	id 'org.jetbrains.kotlin.jvm' version '1.7.10'
 }
 
 sourceCompatibility = JavaVersion.VERSION_16
@@ -119,4 +119,11 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 
 jar {
 	from "LICENSE"
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+	kotlinOptions {
+		jvmTarget = '17'
+		freeCompilerArgs += '-include-runtime'
+	}
 }

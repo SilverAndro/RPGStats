@@ -26,6 +26,7 @@ public class TotemUseMixin {
         //noinspection ConstantConditions
         if ((Object) this instanceof ServerPlayerEntity serverPlayerEntity) {
             LevelUtils.INSTANCE.addXpAndLevelUp(Components.DEFENSE, serverPlayerEntity, 100);
+            LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, serverPlayerEntity, 40);
         }
     }
 }

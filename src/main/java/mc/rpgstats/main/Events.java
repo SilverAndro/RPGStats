@@ -128,7 +128,7 @@ public class Events {
             toRemove.forEach(blacklistedPos::remove);
             
             tickCount++;
-            if (tickCount >= 20) {
+            if (tickCount >= 200) {
                 Collection<Advancement> collection = server.getAdvancementLoader().getAdvancements();
                 PlayerLookup.all(server).forEach(
                     (player) -> {

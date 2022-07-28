@@ -24,7 +24,7 @@ object RPGStatsClient : ClientModInitializer {
     private lateinit var openGUIKeybind: KeyBind
 
     override fun onInitializeClient(mod: ModContainer) {
-        ClientPlayNetworking.registerGlobalReceiver(Constants.SYNC_NAMES_PACKET_ID) { client: MinecraftClient?, handler: ClientPlayNetworkHandler?, byteBuf: PacketByteBuf, packetSender: PacketSender? ->
+        ClientPlayNetworking.registerGlobalReceiver(Constants.SYNC_NAMES_PACKET_ID) { _, _, byteBuf, _ ->
             // Clear data
             nameMap.clear()
 

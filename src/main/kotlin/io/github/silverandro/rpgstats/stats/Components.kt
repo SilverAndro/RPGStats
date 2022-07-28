@@ -69,7 +69,7 @@ class Components : EntityComponentInitializer {
             Identifier("rpgstats:actions")
         ).buildAndRegister()
 
-        fun registerStat(id: Identifier, vararg action: StatAction): Identifier {
+        private fun registerStat(id: Identifier, vararg action: StatAction): Identifier {
             @Suppress("UNCHECKED_CAST")
             Registry.register(actions, id, action as Array<StatAction>)
 
@@ -84,12 +84,14 @@ class Components : EntityComponentInitializer {
                 RPGStatsMain.levelConfig.melee.attackDamagePerLevel
             ) { true },
             StatSpecialAction(
-                "Bloodthirst",
-                "Regain 1 heart after killing a monster"
+                "rpgstats.special.bloodthirst",
+                "rpgstats.special.bloodthirst.description",
+                1
             ) { it == 25 },
             StatSpecialAction(
-                "Bloodthirst II",
-                "Regain 2 hearts after killing a monster"
+                "rpgstats.special.bloodthirst_2",
+                "rpgstats.special.bloodthirst.description",
+                2
             ) { it == 50 }
         )
 
@@ -101,12 +103,13 @@ class Components : EntityComponentInitializer {
                 0.1
             ) { true },
             StatSpecialAction(
-                "Magically infused",
-                "Extra 5% chance to not consume durability with unbreaking"
+                "rpgstats.special.magical_infusion",
+                "rpgstats.special.magical_infusion.description"
             ) { it == 25 },
             StatSpecialAction(
-                "Miners sight",
-                "Night vision below y" + RPGStatsMain.levelConfig.mining.effectLevelTrigger
+                "rpgstats.special.miner_sight",
+                "rpgstats.special.miner_sight.description",
+                RPGStatsMain.levelConfig.mining.effectLevelTrigger
             ) { it == 50 }
         )
 
@@ -118,12 +121,12 @@ class Components : EntityComponentInitializer {
                 1.0
             ) { true },
             StatSpecialAction(
-                "Aqueus",
-                "Impaling applies to all mobs, not just water based ones"
+                "rpgstats.special.aqueus",
+                "rpgstats.special.aqueus.description"
             ) { it == 25 },
             StatSpecialAction(
-                "Nix",
-                "You no longer need arrows"
+                "rpgstats.special.nix",
+                "rpgstats.special.nix.description"
             ) { it == 50 }
         )
 
@@ -139,12 +142,12 @@ class Components : EntityComponentInitializer {
                 1.0
             ) { it % 3 == 0 },
             StatSpecialAction(
-                "Vax",
-                "Immune to poison"
+                "rpgstats.special.vax",
+                "rpgstats.special.vax.description"
             ) { it == 25 },
             StatSpecialAction(
-                "Dead inside",
-                "Immune to wither"
+                "rpgstats.special.dead_inside",
+                "rpgstats.special.dead_inside.description"
             ) { it == 50 }
         )
 

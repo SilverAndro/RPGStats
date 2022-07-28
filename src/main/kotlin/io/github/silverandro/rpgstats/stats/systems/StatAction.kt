@@ -27,10 +27,9 @@ data class StatAttributeAction(
         }
         if (!hideMessages) {
             player.sendMessage(
-                Text.literal(
-                    (if (value > 0) "+" else "-") + value.cleanDisplay
-                ).formatted(Formatting.GREEN)
-                    .append(Text.translatable(stat.translationKey)),
+                Text.literal("| ").formatted(Formatting.GREEN)
+                    .append(Text.literal((if (value > 0) "+" else "-") + value.cleanDisplay).formatted(Formatting.YELLOW))
+                    .append(Text.translatable(stat.translationKey).formatted(Formatting.WHITE)),
                 false
             )
         }
@@ -40,15 +39,17 @@ data class StatAttributeAction(
 data class StatSpecialAction(
     val name: String,
     val description: String,
+    val descriptionExtra: Any? = null,
     val shouldApply: (Int) -> Boolean
 ) : StatAction {
     override fun onLevelUp(player: PlayerEntity, newLevel: Int, hideMessages: Boolean) {
         if (!shouldApply(newLevel) || hideMessages) return
         player.sendMessage(
-            Text.literal(name).formatted(Formatting.GREEN)
-                .append(
-                    Text.of(description)
-                ), false
+            Text.literal("| ").formatted(Formatting.GREEN)
+                .append(Text.translatable(name).formatted(Formatting.YELLOW))
+                .append(Text.literal(" - ").formatted(Formatting.WHITE))
+                .append(Text.translatable(description, descriptionExtra ?: arrayOf(0)).formatted(Formatting.WHITE)),
+            false
         )
     }
 }
@@ -61,10 +62,9 @@ data class StatFakeAttributeAction(
     override fun onLevelUp(player: PlayerEntity, newLevel: Int, hideMessages: Boolean) {
         if (!shouldApply(newLevel) || hideMessages) return
         player.sendMessage(
-            Text.literal(
-                (if (fakeValue > 0) "+" else "-") + fakeValue.cleanDisplay
-            ).formatted(Formatting.GREEN)
-                .append(Text.translatable(nameTranslationKey)),
+            Text.literal("| ").formatted(Formatting.GREEN)
+                .append(Text.literal((if (fakeValue > 0) "+" else "-") + fakeValue.cleanDisplay + " ").formatted(Formatting.YELLOW))
+                .append(Text.translatable(nameTranslationKey).formatted(Formatting.WHITE)),
             false
         )
     }

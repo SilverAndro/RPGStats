@@ -48,6 +48,6 @@ class StatsComponent(private val playerEntity: PlayerEntity) : Component, AutoSy
     }
 
     fun getOrCreateID(id: Identifier): StatEntry {
-        return entries.computeIfAbsent(id) { identifier: Identifier? -> StatEntry(id, 0, 0) }
+        return entries.computeIfAbsent(id) { StatEntry(id, 0, 0) }
     }
 }

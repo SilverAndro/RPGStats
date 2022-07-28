@@ -117,7 +117,7 @@ object Events {
                 i <= 0
             }
 
-            if (tickCount++ >= 20) {
+            if (tickCount++ >= 200) {
                 val advancements = server.advancementLoader.advancements
                 PlayerLookup.all(server).forEach { player ->
                     // Do sneak logic if holding sneak and opted out of spam

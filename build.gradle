@@ -1,5 +1,5 @@
 plugins {
-	id 'io.github.p03w.machete' version '1.1.+'
+	id 'io.github.p03w.machete' version '1.+'
 	id 'org.quiltmc.loom' version '0.12+'
 	id 'org.jetbrains.kotlin.jvm' version '1.7.10'
 }

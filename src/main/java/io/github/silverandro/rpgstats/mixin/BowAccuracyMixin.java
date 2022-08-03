@@ -44,7 +44,14 @@ class BowAccuracyMixin {
     ) {
         if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
             float newDistort = 1.0f - LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, (ServerPlayerEntity) playerEntity) / 50f;
-            persistentProjectileEntity.setProperties(playerEntity, playerEntity.getPitch(), playerEntity.getYaw(), 0.0F, f * 3.0F, newDistort);
+            persistentProjectileEntity.setProperties(
+                    playerEntity,
+                    playerEntity.getPitch(),
+                    playerEntity.getYaw(),
+                    0.0F,
+                    f * 3.0F,
+                    Math.max(newDistort, 0.0f)
+            );
         }
     }
 }

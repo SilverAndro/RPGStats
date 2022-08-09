@@ -26,18 +26,26 @@ import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.resource.ResourceManager
+import net.minecraft.resource.ResourceReloader
 import net.minecraft.resource.ResourceType
+import net.minecraft.server.MinecraftServer
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
+import net.minecraft.util.profiler.Profiler
 import net.minecraft.util.registry.Registry
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback
 import org.quiltmc.qsl.lifecycle.api.event.ServerTickEvents
 import org.quiltmc.qsl.networking.api.PlayerLookup
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking
+import org.quiltmc.qsl.resource.loader.api.ResourceLoader
+import org.quiltmc.qsl.resource.loader.api.ResourceLoaderEvents
+import org.quiltmc.qsl.resource.loader.api.reloader.IdentifiableResourceReloader
 import wraith.harvest_scythes.api.scythe.HSScythesEvents
 import java.util.*
+import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executor
 
 object Events {
     @JvmField
@@ -69,16 +77,19 @@ object Events {
 
     fun registerResourceReloadListeners() {
         // Data driven stuff
-        ResourceManagerHelper.get(ResourceType.SERVER_DATA)
-            .registerReloadListener(object : SimpleSynchronousResourceReloadListener {
-                override fun getFabricId(): Identifier {
-                    return Identifier("rpgstats:stats")
-                }
-
-                override fun reload(manager: ResourceManager) {
+        ResourceLoader.get(ResourceType.SERVER_DATA).registerReloader(object : IdentifiableResourceReloader {
+            override fun reload(
+                synchronizer: ResourceReloader.Synchronizer,
+                manager: ResourceManager,
+                prepareProfiler: Profiler,
+                applyProfiler: Profiler,
+                prepareExecutor: Executor,
+                applyExecutor: Executor
+            ): CompletableFuture<Void> {
+                return synchronizer.whenPrepared(Unit).thenRun {
                     Components.components.clear()
                     println("RPGStats reload!")
-                    manager.findAllResources("rpgstats") { true }.forEach { _, list ->
+                    manager.findAllResources("rpgstats") { true }.forEach { (_, list) ->
                         list.forEach { resource ->
                             resource.openBufferedReader().use {
                                 handleLines(it.lines().toList().toTypedArray())
@@ -86,7 +97,12 @@ object Events {
                         }
                     }
                 }
-            })
+            }
+
+            override fun getQuiltId(): Identifier {
+                return Identifier("rpgstats", "stat_loader")
+            }
+        })
     }
 
     private fun handleLines(text: Array<String>) {

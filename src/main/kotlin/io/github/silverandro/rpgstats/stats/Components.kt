@@ -6,7 +6,6 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy
 import io.github.silverandro.rpgstats.RPGStatsMain
-import io.github.silverandro.rpgstats.stats.internal.PlayerHealthAttachComponent
 import io.github.silverandro.rpgstats.stats.internal.PlayerPreferencesComponent
 import io.github.silverandro.rpgstats.stats.systems.StatAction
 import io.github.silverandro.rpgstats.stats.systems.StatAttributeAction
@@ -15,8 +14,11 @@ import io.github.silverandro.rpgstats.stats.systems.StatSpecialAction
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.util.Identifier
+import net.minecraft.util.math.MathHelper
+import net.minecraft.util.random.RandomGenerator
 import net.minecraft.util.registry.Registry
 import net.minecraft.util.registry.SimpleRegistry
+import java.util.UUID
 
 class Components : EntityComponentInitializer {
     override fun registerEntityComponentFactories(registry: EntityComponentFactoryRegistry) {
@@ -29,17 +31,6 @@ class Components : EntityComponentInitializer {
             PREFERENCES,
             { playerEntity -> PlayerPreferencesComponent(playerEntity) },
             RespawnCopyStrategy.ALWAYS_COPY
-        )
-
-        MAX_HEALTH = ComponentRegistry
-            .getOrCreate(
-                Identifier("rpgstats:max_health"),
-                PlayerHealthAttachComponent::class.java
-            )
-        registry.registerForPlayers(
-            MAX_HEALTH,
-            { playerEntity -> PlayerHealthAttachComponent(playerEntity) },
-            RespawnCopyStrategy.LOSSLESS_ONLY
         )
 
         STATS = ComponentRegistry.getOrCreate(
@@ -169,8 +160,8 @@ class Components : EntityComponentInitializer {
         )
 
         @JvmField
-        val DEFENSE = registerStat(
-            Identifier("rpgstats:defense"),
+        val DEFENCE = registerStat(
+            Identifier("rpgstats:defence"),
             StatAttributeAction(
                 EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE,
                 0.01
@@ -212,7 +203,11 @@ class Components : EntityComponentInitializer {
         @JvmStatic
         lateinit var PREFERENCES: ComponentKey<PlayerPreferencesComponent>
 
-        @JvmStatic
-        lateinit var MAX_HEALTH: ComponentKey<PlayerHealthAttachComponent>
+        private val modifierIDs = mutableMapOf<String, UUID>()
+        fun modifierIDFor(name: String, index: Int): UUID {
+            return modifierIDs.computeIfAbsent("$name$index") {
+                MathHelper.m_vkfnsave(RandomGenerator.createThreaded())
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 package io.github.silverandro.rpgstats.commands
 
 import com.mojang.brigadier.CommandDispatcher
+import io.github.silverandro.rpgstats.LevelUtils
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
@@ -55,6 +56,12 @@ object CheatCommand {
         type: Type,
         amount: Int
     ) {
-
+        if (operation == Operation.ADD) {
+            if (type == Type.LEVELS) {
+                repeat(amount) {
+                    TODO()
+                }
+            }
+        }
     }
 }

@@ -21,14 +21,10 @@ data class StatAttributeAction(
 ) : StatAction {
     override fun onLevelUp(player: PlayerEntity, newLevel: Int, hideMessages: Boolean) {
         if (!shouldApply(newLevel)) return
-        val attrInst = player.getAttributeInstance(stat)
-        if (attrInst != null) {
-            attrInst.baseValue += value
-        }
         if (!hideMessages) {
             player.sendMessage(
                 Text.literal("| ").formatted(Formatting.GREEN)
-                    .append(Text.literal((if (value > 0) "+" else "-") + value.cleanDisplay).formatted(Formatting.YELLOW))
+                    .append(Text.literal((if (value > 0) "+" else "-") + value.cleanDisplay + " ").formatted(Formatting.YELLOW))
                     .append(Text.translatable(stat.translationKey).formatted(Formatting.WHITE)),
                 false
             )

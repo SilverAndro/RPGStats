@@ -17,7 +17,7 @@ public class ShieldMixin {
     private void rpgstats$onShieldUse(float amount, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Object) this instanceof ServerPlayerEntity && new Random().nextBoolean()) {
-            LevelUtils.INSTANCE.addXpAndLevelUp(Components.DEFENSE, (ServerPlayerEntity) (Object) this, (int) Math.floor(amount / 2.2));
+            LevelUtils.INSTANCE.addXpAndLevelUp(Components.DEFENCE, (ServerPlayerEntity) (Object) this, (int) Math.floor(amount / 2.2));
         }
     }
 }

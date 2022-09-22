@@ -30,7 +30,7 @@ public class ApplyDamageMixin {
                 return;
             }
             LevelUtils.INSTANCE.addXpAndLevelUp(
-                    Components.DEFENSE,
+                    Components.DEFENCE,
                     (ServerPlayerEntity) (Object) this,
                     Math.min((int) Math.floor(Math.log(Math.pow(blockedDamage, 5.0f))), 4));
         }

@@ -15,31 +15,30 @@ import io.github.silverandro.rpgstats.commands.StatsCommand
 import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.mixin_logic.OnSneakLogic
 import io.github.silverandro.rpgstats.stats.Components
+import io.github.silverandro.rpgstats.stats.systems.StatAttributeAction
 import io.github.silverandro.rpgstats.util.filterInPlace
 import io.netty.buffer.Unpooled
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener
 import net.minecraft.advancement.Advancement
 import net.minecraft.block.*
+import net.minecraft.entity.attribute.EntityAttributeModifier
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.resource.ResourceManager
 import net.minecraft.resource.ResourceReloader
 import net.minecraft.resource.ResourceType
-import net.minecraft.server.MinecraftServer
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.profiler.Profiler
 import net.minecraft.util.registry.Registry
+import org.quiltmc.qkl.wrapper.qsl.networking.allPlayers
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback
 import org.quiltmc.qsl.lifecycle.api.event.ServerTickEvents
 import org.quiltmc.qsl.networking.api.PlayerLookup
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking
 import org.quiltmc.qsl.resource.loader.api.ResourceLoader
-import org.quiltmc.qsl.resource.loader.api.ResourceLoaderEvents
 import org.quiltmc.qsl.resource.loader.api.reloader.IdentifiableResourceReloader
 import wraith.harvest_scythes.api.scythe.HSScythesEvents
 import java.util.*
@@ -207,6 +206,35 @@ object Events {
                     Components.STATS.sync(player)
                 }
                 tickCount = 0
+            }
+
+            server.allPlayers.forEach { player ->
+                Components.components.keys.forEach { id ->
+                    Components.actions.get(id)?.forEachIndexed { actionIndex, action ->
+                        if (action is StatAttributeAction) {
+                            var total = 0.0
+                            for (x in 1..getComponentLevel(id, player)) {
+                                if (action.shouldApply(x)) {
+                                    total += action.value
+                                }
+                            }
+
+                            val modifier = EntityAttributeModifier(
+                                Components.modifierIDFor(id.toUnderscoreSeparatedString(), actionIndex),
+                                "$id ${action.stat.translationKey}",
+                                total,
+                                EntityAttributeModifier.Operation.ADDITION
+                            )
+
+                            with (player.getAttributeInstance(action.stat) ?: return@forEachIndexed) {
+                                if (hasModifier(modifier)) {
+                                    removeModifier(modifier)
+                                }
+                                player.getAttributeInstance(action.stat)?.addTemporaryModifier(modifier)
+                            }
+                        }
+                    }
+                }
             }
         }
     }

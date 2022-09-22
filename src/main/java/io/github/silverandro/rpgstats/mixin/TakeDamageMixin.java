@@ -17,7 +17,7 @@ public class TakeDamageMixin {
     @Inject(method = "damage", at = @At("HEAD"), cancellable = true)
     public void rpgstats$dodge(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         ServerPlayerEntity spe = (ServerPlayerEntity) (Object) this;
-        int level = LevelUtils.INSTANCE.getComponentLevel(Components.DEFENSE, spe);
+        int level = LevelUtils.INSTANCE.getComponentLevel(Components.DEFENCE, spe);
         float chance = 0f;
         if (level >= 50 && RPGStatsMain.levelConfig.defense.enableLv50Buff) {
             chance = 0.1f;

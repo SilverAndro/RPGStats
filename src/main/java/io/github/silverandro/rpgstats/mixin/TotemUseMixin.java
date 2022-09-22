@@ -25,7 +25,7 @@ public class TotemUseMixin {
     public void rpgstats$onUseTotem(DamageSource source, CallbackInfoReturnable<Boolean> cir) {
         //noinspection ConstantConditions
         if ((Object) this instanceof ServerPlayerEntity serverPlayerEntity) {
-            LevelUtils.INSTANCE.addXpAndLevelUp(Components.DEFENSE, serverPlayerEntity, 100);
+            LevelUtils.INSTANCE.addXpAndLevelUp(Components.DEFENCE, serverPlayerEntity, 100);
             LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, serverPlayerEntity, 40);
         }
     }

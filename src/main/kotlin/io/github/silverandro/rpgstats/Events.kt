@@ -208,10 +208,15 @@ object Events {
                 tickCount = 0
             }
 
+            // For every player
             server.allPlayers.forEach { player ->
+                // Get all their stats/components
                 Components.components.keys.forEach { id ->
+                    // Map those into actions
                     Components.actions.get(id)?.forEachIndexed { actionIndex, action ->
+                        // If the action modifies an attribute
                         if (action is StatAttributeAction) {
+                            // Compute the total modification
                             var total = 0.0
                             for (x in 1..getComponentLevel(id, player)) {
                                 if (action.shouldApply(x)) {
@@ -219,6 +224,7 @@ object Events {
                                 }
                             }
 
+                            // Generate a modifier based on the total amount for this player
                             val modifier = EntityAttributeModifier(
                                 Components.modifierIDFor(id.toUnderscoreSeparatedString(), actionIndex),
                                 "$id ${action.stat.translationKey}",
@@ -226,11 +232,14 @@ object Events {
                                 EntityAttributeModifier.Operation.ADDITION
                             )
 
+                            // If the player has an attribute that is modified by this modifier
                             with (player.getAttributeInstance(action.stat) ?: return@forEachIndexed) {
+                                // Remove it if we already applied this action
                                 if (hasModifier(modifier)) {
                                     removeModifier(modifier)
                                 }
-                                player.getAttributeInstance(action.stat)?.addTemporaryModifier(modifier)
+                                // Apply modifier in a way that wont save
+                                addTemporaryModifier(modifier)
                             }
                         }
                     }

@@ -26,7 +26,11 @@ public class BowArrowMixin {
         }
     }
     
-    @ModifyVariable(method = "onStoppedUsing", at = @At(value = "INVOKE_ASSIGN", ordinal = 2, shift = At.Shift.AFTER), ordinal = 0)
+    @ModifyVariable(
+            method = "onStoppedUsing",
+            at = @At(value = "STORE"),
+            ordinal = 0
+    )
     public boolean rpgstats$forceCanShootArrow(boolean bl) {
         if (
             itemUser != null

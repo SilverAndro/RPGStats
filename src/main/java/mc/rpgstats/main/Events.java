@@ -1,5 +1,7 @@
 package mc.rpgstats.main;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.netty.buffer.Unpooled;
 import mc.rpgstats.command.CheatCommand;
 import mc.rpgstats.command.StatsCommand;
@@ -27,9 +29,11 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import wraith.harvest_scythes.api.scythe.HSScythesEvents;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,7 +44,9 @@ import static mc.rpgstats.main.RPGStats.softLevelUp;
 public class Events {
     private static int tickCount = 0;
     private static final ConcurrentHashMap<BlockPos, Integer> blacklistedPos = new ConcurrentHashMap<>();
-    
+
+    private static final ConcurrentHashMap<Identifier, Integer> blockMiningXp = new ConcurrentHashMap<>();
+
     public static void registerCommandRegisters() {
         // Commands
         CommandRegistrationCallback.EVENT.register(
@@ -59,8 +65,8 @@ public class Events {
         });
     }
     
+    @SuppressWarnings("DuplicatedCode")
     public static void registerResourceReloadListeners() {
-        
         // Data driven stuff
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
             @Override
@@ -74,10 +80,35 @@ public class Events {
 
                 System.out.println("RPGStats reload!");
                 try {
-                    for (Map.Entry<Identifier, List<Resource>> entry : manager.findAllResources("rpgstats", identifier -> true).entrySet()) {
-                        System.out.println(entry.getKey());
+                    for (Map.Entry<Identifier, List<Resource>> entry : manager.findAllResources("rpgstats", identifier -> identifier.getPath().endsWith(".stat")).entrySet()) {
                         for (Resource resource : entry.getValue()) {
                             handleLines(resource.getReader().lines().toArray(String[]::new));
+                        }
+                    }
+                } catch (IOException err) {
+                    RuntimeException clean = new RuntimeException("Failed to read resources");
+                    clean.addSuppressed(err);
+                    throw clean;
+                }
+            }
+        });
+
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+            @Override
+            public Identifier getFabricId() {
+                return new Identifier("rpgstats:block_xp");
+            }
+
+            @Override
+            public void reload(ResourceManager manager) {
+                blockMiningXp.clear();
+                try {
+                    for (Map.Entry<Identifier, List<Resource>> entry : manager.findAllResources("rpgstats", identifier -> identifier.getPath().contains("mining_xp")).entrySet()) {
+                        for (Resource resource : entry.getValue()) {
+                            Gson gson = new Gson();
+                            Type mapType = new TypeToken<Map<String, Integer>>() {}.getType();
+                            Map<String, Integer> data = gson.fromJson(resource.getReader(), mapType);
+                            data.forEach((identifier, integer) -> blockMiningXp.put(new Identifier(identifier), integer));
                         }
                     }
                 } catch (IOException err) {
@@ -342,42 +373,9 @@ public class Events {
                 }
         
                 Random random = new Random();
-                if ((block == Blocks.ANCIENT_DEBRIS || block instanceof OreBlock) && random.nextBoolean()) {
+                if (random.nextBoolean()) {
                     int amount;
-                    if (
-                        block == Blocks.COAL_ORE ||
-                            block == Blocks.NETHER_GOLD_ORE ||
-                            block == Blocks.DEEPSLATE_COAL_ORE
-                    ) {
-                        amount = 1;
-                    } else if (
-                        block == Blocks.IRON_ORE ||
-                            block == Blocks.NETHER_QUARTZ_ORE ||
-                            block == Blocks.DEEPSLATE_IRON_ORE ||
-                            block == Blocks.COPPER_ORE ||
-                            block == Blocks.DEEPSLATE_COPPER_ORE
-                    ) {
-                        amount = 2;
-                    } else if (
-                        block == Blocks.GOLD_ORE ||
-                            block == Blocks.LAPIS_ORE ||
-                            block == Blocks.REDSTONE_ORE ||
-                            block == Blocks.DEEPSLATE_GOLD_ORE ||
-                            block == Blocks.DEEPSLATE_LAPIS_ORE ||
-                            block == Blocks.DEEPSLATE_REDSTONE_ORE
-                    ) {
-                        amount = 3;
-                    } else if (block == Blocks.EMERALD_ORE || block == Blocks.DEEPSLATE_EMERALD_ORE) {
-                        amount = 4;
-                    } else if (
-                        block == Blocks.DIAMOND_ORE ||
-                            block == Blocks.ANCIENT_DEBRIS ||
-                            block == Blocks.DEEPSLATE_DIAMOND_ORE
-                    ) {
-                        amount = 5;
-                    } else {
-                        amount = 2;
-                    }
+                    amount = blockMiningXp.getOrDefault(Registry.BLOCK.getId(block), 2);
                     RPGStats.addXpAndLevelUp(CustomComponents.MINING, (ServerPlayerEntity)playerEntity, amount);
                 }
             }

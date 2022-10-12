@@ -1,0 +1,40 @@
+{
+  "values": {
+    "minecraft:coal_ore": { "id": "rpgstats:mining", "amount": 1 },
+    "minecraft:nether_gold_ore": { "id": "rpgstats:mining", "amount": 1 },
+    "minecraft:deepslate_coal_ore": { "id": "rpgstats:mining", "amount": 1 },
+
+    "minecraft:iron_ore": { "id": "rpgstats:mining", "amount": 2 },
+    "minecraft:nether_quartz_ore": { "id": "rpgstats:mining", "amount": 2 },
+    "minecraft:deepslate_iron_ore": { "id": "rpgstats:mining", "amount": 2 },
+    "minecraft:copper_ore": { "id": "rpgstats:mining", "amount": 2 },
+    "minecraft:deepslate_copper_ore": { "id": "rpgstats:mining", "amount": 2 },
+
+    "minecraft:gold_ore": { "id": "rpgstats:mining", "amount": 3 },
+    "minecraft:lapis_ore": { "id": "rpgstats:mining", "amount": 3 },
+    "minecraft:redstone_ore": { "id": "rpgstats:mining", "amount": 3 },
+    "minecraft:deepslate_gold_ore": { "id": "rpgstats:mining", "amount": 3 },
+    "minecraft:deepslate_lapis_ore": { "id": "rpgstats:mining", "amount": 3 },
+    "minecraft:deepslate_redstone_ore": { "id": "rpgstats:mining", "amount": 3 },
+
+    "minecraft:emerald_ore": { "id": "rpgstats:mining", "amount": 4 },
+    "minecraft_deepslate_emerald_ore": { "id": "rpgstats:mining", "amount": 4 },
+
+    "minecraft:diamond_ore": { "id": "rpgstats:mining", "amount": 5 },
+    "minecraft:ancient_debris": { "id": "rpgstats:mining", "amount": 5 },
+    "minecraft:deepslate_diamond_ore": { "id": "rpgstats:mining", "amount": 5 },
+
+    "minecraft:pumpkin": { "id": "rpgstats:farming", "amount": 1 },
+    "minecraft:melon": { "id": "rpgstats:farming", "amount": 1 },
+    "minecraft:cocoa": { "id": "rpgstats:farming", "amount": 1 },
+    "minecraft:wheat": { "id": "rpgstats:farming", "amount": 1 },
+    "minecraft:sugar_cane": { "id": "rpgstats:farming", "amount": 1 },
+    "minecraft:nether_wart": { "id": "rpgstats:farming", "amount": 1 },
+    "minecraft:carrots": { "id": "rpgstats:farming", "amount": 1 },
+    "minecraft:potatoes": { "id": "rpgstats:farming", "amount": 1 },
+    "minecraft:chorus_flower": { "id": "rpgstats:farming", "amount": 1 },
+    "minecraft:beetroots": { "id": "rpgstats:farming", "amount": 1 },
+    "minecraft:brown_mushroom": { "id": "rpgstats:farming", "amount": 1 },
+    "minecraft:red_mushroom": { "id": "rpgstats:farming", "amount": 1 }
+  }
+}

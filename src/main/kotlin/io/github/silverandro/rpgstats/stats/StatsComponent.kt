@@ -2,6 +2,7 @@ package io.github.silverandro.rpgstats.stats
 
 import dev.onyxstudios.cca.api.v3.component.Component
 import dev.onyxstudios.cca.api.v3.component.sync.AutoSyncedComponent
+import io.github.silverandro.rpgstats.Constants
 import io.github.silverandro.rpgstats.Constants.SYNC_STATS_PACKET_ID
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.NbtCompound
@@ -25,7 +26,7 @@ class StatsComponent(private val playerEntity: PlayerEntity) : Component, AutoSy
                 val data = compoundTag.getCompound(identifier.toString())!!
                 entries[identifier] = StatEntry(identifier, data.getInt("level"), data.getInt("xp"))
             } else {
-                System.err.println("Failed to parse stat identifier: $s")
+                Constants.LOG.error("Failed to parse stat identifier: $s")
             }
         })
     }

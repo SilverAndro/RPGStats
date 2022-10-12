@@ -1,5 +1,6 @@
 package io.github.silverandro.rpgstats
 
+//import io.github.silverandro.rpgstats.commands.CheatCommand
 import io.github.silverandro.rpgstats.Constants.LEVELS_MAX
 import io.github.silverandro.rpgstats.Constants.SYNC_NAMES_PACKET_ID
 import io.github.silverandro.rpgstats.Constants.SYNC_STATS_PACKET_ID
@@ -10,8 +11,9 @@ import io.github.silverandro.rpgstats.LevelUtils.getComponentXP
 import io.github.silverandro.rpgstats.LevelUtils.getLowestLevel
 import io.github.silverandro.rpgstats.LevelUtils.softLevelUp
 import io.github.silverandro.rpgstats.command.CheatCommand
-//import io.github.silverandro.rpgstats.commands.CheatCommand
 import io.github.silverandro.rpgstats.commands.StatsCommand
+import io.github.silverandro.rpgstats.datadrive.stats.StatsManager
+import io.github.silverandro.rpgstats.datadrive.xp.XpData
 import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.mixin_logic.OnSneakLogic
 import io.github.silverandro.rpgstats.stats.Components
@@ -20,31 +22,21 @@ import io.github.silverandro.rpgstats.util.filterInPlace
 import io.netty.buffer.Unpooled
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents
 import net.minecraft.advancement.Advancement
-import net.minecraft.block.*
+import net.minecraft.block.CropBlock
 import net.minecraft.entity.attribute.EntityAttributeModifier
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.network.PacketByteBuf
-import net.minecraft.resource.ResourceManager
-import net.minecraft.resource.ResourceReloader
-import net.minecraft.resource.ResourceType
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
-import net.minecraft.util.profiler.Profiler
-import net.minecraft.util.registry.Registry
 import org.quiltmc.qkl.wrapper.qsl.networking.allPlayers
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback
 import org.quiltmc.qsl.lifecycle.api.event.ServerTickEvents
 import org.quiltmc.qsl.networking.api.PlayerLookup
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking
-import org.quiltmc.qsl.resource.loader.api.ResourceLoader
-import org.quiltmc.qsl.resource.loader.api.reloader.IdentifiableResourceReloader
 import wraith.harvest_scythes.api.scythe.HSScythesEvents
 import java.util.*
-import java.util.concurrent.CompletableFuture
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.Executor
 
 object Events {
     @JvmField
@@ -75,53 +67,8 @@ object Events {
     }
 
     fun registerResourceReloadListeners() {
-        // Data driven stuff
-        ResourceLoader.get(ResourceType.SERVER_DATA).registerReloader(object : IdentifiableResourceReloader {
-            override fun reload(
-                synchronizer: ResourceReloader.Synchronizer,
-                manager: ResourceManager,
-                prepareProfiler: Profiler,
-                applyProfiler: Profiler,
-                prepareExecutor: Executor,
-                applyExecutor: Executor
-            ): CompletableFuture<Void> {
-                return synchronizer.whenPrepared(Unit).thenRun {
-                    Components.components.clear()
-                    println("RPGStats reload!")
-                    manager.findAllResources("rpgstats") { true }.forEach { (_, list) ->
-                        list.forEach { resource ->
-                            resource.openBufferedReader().use {
-                                handleLines(it.lines().toList().toTypedArray())
-                            }
-                        }
-                    }
-                }
-            }
-
-            override fun getQuiltId(): Identifier {
-                return Identifier("rpgstats", "stat_loader")
-            }
-        })
-    }
-
-    private fun handleLines(text: Array<String>) {
-        text.forEach {
-            val (id, name) = it
-                .replace("\r", "")
-                .split(">".toRegex())
-                .dropLastWhile { it.isBlank() }
-                .toTypedArray()
-            val possible =
-                Identifier.tryParse(id) ?: Identifier.tryParse(id.substring(1)) ?: throw IllegalArgumentException(
-                    "Could not parse lines in rpgstats stat loading, got $id and $name before error"
-                )
-
-            if (id.startsWith("-")) {
-                Components.components.remove(possible)
-            } else {
-                Components.components[possible] = name
-            }
-        }
+        StatsManager.register()
+        XpData.poke()
     }
 
     fun registerServerTickEvents() {
@@ -238,7 +185,7 @@ object Events {
                                 if (hasModifier(modifier)) {
                                     removeModifier(modifier)
                                 }
-                                // Apply modifier in a way that wont save
+                                // Apply modifier in a way that won't save
                                 addTemporaryModifier(modifier)
                             }
                         }
@@ -277,31 +224,18 @@ object Events {
                     debugLogger.info(playerEntity.entityName + " broke " + block.translationKey + " at " + blockPos)
                 }
 
-                if (block is CropBlock || block is PumpkinBlock || block is MelonBlock || block is CocoaBlock) {
-                    if (block is CropBlock && block.isMature(blockState)) {
-                        addXpAndLevelUp(Components.FARMING, (playerEntity as ServerPlayerEntity), 1)
-                    } else {
-                        addXpAndLevelUp(Components.FARMING, (playerEntity as ServerPlayerEntity), 1)
+                val player = playerEntity as ServerPlayerEntity
+                if (Random().nextBoolean()) {
+                    if (block is CropBlock && !block.isMature(blockState)) return@register
+
+                    val amount = XpData.BLOCK_XP.get(block).orElse(null) ?: return@register
+                    amount.ifLeft {
+                        addXpAndLevelUp(it.id, player, it.amount)
+                    }.ifRight {
+                        it.forEach {
+                            addXpAndLevelUp(it.id, player, it.amount)
+                        }
                     }
-                }
-
-                val random = Random()
-                if ((block === Blocks.ANCIENT_DEBRIS || Registry.BLOCK.getId(block).path.contains("ore")) && random.nextBoolean()) {
-                    val amount = when (block) {
-                        Blocks.COAL_ORE, Blocks.NETHER_GOLD_ORE, Blocks.DEEPSLATE_COAL_ORE -> 1
-
-                        Blocks.IRON_ORE, Blocks.NETHER_QUARTZ_ORE, Blocks.DEEPSLATE_IRON_ORE -> 2
-
-                        Blocks.GOLD_ORE, Blocks.LAPIS_ORE, Blocks.REDSTONE_ORE,
-                        Blocks.DEEPSLATE_GOLD_ORE, Blocks.DEEPSLATE_LAPIS_ORE, Blocks.DEEPSLATE_REDSTONE_ORE -> 3
-
-                        Blocks.EMERALD_ORE, Blocks.DEEPSLATE_EMERALD_ORE -> 4
-
-                        Blocks.DIAMOND_ORE, Blocks.ANCIENT_DEBRIS, Blocks.DEEPSLATE_DIAMOND_ORE -> 5
-
-                        else -> 2
-                    }
-                    addXpAndLevelUp(Components.MINING, (playerEntity as ServerPlayerEntity), amount)
                 }
             }
         }

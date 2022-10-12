@@ -1,0 +1,24 @@
+{
+  "rpgstats:melee": {
+    "translationKey": "rpgstats.stat.melee",
+    "shouldRemove": false
+  },
+  "rpgstats:ranged": {
+    "translationKey": "rpgstats.stat.ranged"
+  },
+  "rpgstats:defense": {
+    "translationKey": "rpgstats.stat.defense"
+  },
+  "rpgstats:magic": {
+    "translationKey": "rpgstats.stat.magic"
+  },
+  "rpgstats:farming": {
+    "translationKey": "rpgstats.stat.farming"
+  },
+  "rpgstats:mining": {
+    "translationKey": "rpgstats.stat.mining"
+  },
+  "rpgstats:fishing": {
+    "translationKey": "rpgstats.stat.fishing"
+  }
+}

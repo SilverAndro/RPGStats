@@ -34,7 +34,7 @@ object RPGStatsMain : ModInitializer {
     val levelUpCriterion = LevelUpCriterion()
 
     override fun onInitialize(mod: ModContainer) {
-        println("Hello from ${mod.metadata().name()}")
+        Constants.LOG.info("Hello from ${mod.metadata().name()}")
         // Criterion
         CriteriaAccessor.getValues()[LevelUpCriterion.ID] = levelUpCriterion
 

@@ -13,6 +13,14 @@
   "rpgstats.error.console_player_required": "A player must be passed when executing that command from the console",
   "rpgstats.error.not_on_client": "You don't have RPGStats installed on your client, unable to open the GUI",
 
+  "rpgstats.stat_name.melee": "Melee",
+  "rpgstats.stat_name.ranged": "Ranged",
+  "rpgstats.stat_name.defense": "Defense",
+  "rpgstats.stat_name.magic": "Magic",
+  "rpgstats.stat_name.farming": "Farming",
+  "rpgstats.stat_name.mining": "Mining",
+  "rpgstats.stat_name.fishing": "Fishing",
+
   "rpgstats.special.bloodthirst": "Bloodthirst",
   "rpgstats.special.bloodthirst_2": "Bloodthirst II",
   "rpgstats.special.bloodthirst.description": "Regain %d heart after killing a monster",

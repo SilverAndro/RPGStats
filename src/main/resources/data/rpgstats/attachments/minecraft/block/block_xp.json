@@ -18,7 +18,7 @@
     "minecraft:deepslate_redstone_ore": { "id": "rpgstats:mining", "amount": 3 },
 
     "minecraft:emerald_ore": { "id": "rpgstats:mining", "amount": 4 },
-    "minecraft_deepslate_emerald_ore": { "id": "rpgstats:mining", "amount": 4 },
+    "minecraft:deepslate_emerald_ore": { "id": "rpgstats:mining", "amount": 4 },
 
     "minecraft:diamond_ore": { "id": "rpgstats:mining", "amount": 5 },
     "minecraft:ancient_debris": { "id": "rpgstats:mining", "amount": 5 },

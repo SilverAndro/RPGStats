@@ -108,17 +108,16 @@ object LevelUtils {
         val currentLevel = getComponentLevel(id, player)
         val xp = getComponentXP(id, player)
         val name = Components.components[id]
-        val capped = name!!.substring(0, 1).uppercase(Locale.getDefault()) + name.substring(1)
         return if (currentLevel < RPGStatsMain.config.scaling.maxLevel) {
             val nextXP = calculateXpNeededToReachLevel(currentLevel + 1)
-            Text.literal(capped)
+            Text.translatable(name)
                 .formatted(Formatting.GOLD)
                 .append(
                     Text.translatable("rpgstats.notmaxlevel_trunc", currentLevel, xp, nextXP)
                         .formatted(Formatting.WHITE)
                 )
         } else {
-            Text.literal(capped)
+            Text.translatable(name)
                 .formatted(Formatting.GOLD)
                 .append(Text.translatable("rpgstats.maxlevel_trunc", currentLevel).formatted(Formatting.WHITE))
         }

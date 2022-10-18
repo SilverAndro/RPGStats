@@ -46,6 +46,10 @@
         "id": "harvest_scythes",
         "versions": ">=2.2.2",
         "optional": true
+      },
+      {
+        "id": "qkl_core",
+        "versions": "*"
       }
     ]
   },

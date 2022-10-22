@@ -1,6 +1,5 @@
 package io.github.silverandro.rpgstats
 
-//import io.github.silverandro.rpgstats.commands.CheatCommand
 import io.github.silverandro.rpgstats.Constants.LEVELS_MAX
 import io.github.silverandro.rpgstats.Constants.SYNC_NAMES_PACKET_ID
 import io.github.silverandro.rpgstats.Constants.SYNC_STATS_PACKET_ID
@@ -10,7 +9,7 @@ import io.github.silverandro.rpgstats.LevelUtils.getComponentLevel
 import io.github.silverandro.rpgstats.LevelUtils.getComponentXP
 import io.github.silverandro.rpgstats.LevelUtils.getLowestLevel
 import io.github.silverandro.rpgstats.LevelUtils.softLevelUp
-import io.github.silverandro.rpgstats.command.CheatCommand
+import io.github.silverandro.rpgstats.commands.CheatCommand
 import io.github.silverandro.rpgstats.commands.StatsCommand
 import io.github.silverandro.rpgstats.datadrive.stats.StatsManager
 import io.github.silverandro.rpgstats.datadrive.xp.XpData

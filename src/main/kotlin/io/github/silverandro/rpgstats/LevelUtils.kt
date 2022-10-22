@@ -9,6 +9,7 @@ import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
 import java.util.*
 import kotlin.math.floor
+import kotlin.math.min
 import kotlin.math.pow
 
 object LevelUtils {
@@ -168,5 +169,32 @@ object LevelUtils {
         }
 
         Components.STATS.sync(player)
+    }
+
+    fun levelUp(id: Identifier, player: ServerPlayerEntity, amount: Int = 1) {
+        val currentLevel = getComponentLevel(id, player)
+        val newLevel = min(currentLevel + amount, RPGStatsMain.config.scaling.maxLevel)
+        for (i in currentLevel..newLevel) {
+            setComponentLevel(id, player, i)
+            LevelUpCallback.EVENT.invoker().onLevelUp(player, id, i, false)
+        }
+    }
+
+    fun removeXp(id: Identifier, player: ServerPlayerEntity, amount: Int) {
+        val currentXp = getComponentXP(id, player)
+        setComponentXP(id, player, currentXp - amount)
+        while (getComponentXP(id, player) < 0) {
+            val currentLevel = getComponentLevel(id, player)
+            setComponentLevel(id, player, currentLevel - 1)
+            val newXp = getComponentXP(id, player)
+            val toLevelUp = newXp + calculateXpNeededToReachLevel(currentLevel)
+            setComponentXP(id, player, toLevelUp)
+
+            if (currentLevel - 1 < 0) {
+                setComponentLevel(id, player, 0)
+                setComponentXP(id, player, 0)
+                break
+            }
+        }
     }
 }

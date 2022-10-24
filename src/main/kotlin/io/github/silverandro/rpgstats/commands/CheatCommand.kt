@@ -4,12 +4,12 @@ import com.mojang.brigadier.CommandDispatcher
 import io.github.silverandro.rpgstats.LevelUtils
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.text.Text
 import net.minecraft.util.Identifier
+import org.quiltmc.qkl.wrapper.minecraft.brigadier.*
 import org.quiltmc.qkl.wrapper.minecraft.brigadier.argument.*
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.execute
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.register
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.required
 import org.quiltmc.qkl.wrapper.minecraft.brigadier.util.required
+import kotlin.math.floor
 
 object CheatCommand {
     enum class Operation {
@@ -34,14 +34,15 @@ object CheatCommand {
                         enum("type", Type::class),
                         integer("amount", min = 0)
                     ) { getOperation, getType, getAmount ->
-                        execute {
-                            modifyXpAndLevels(
+                        executeWithResult {
+                            val count = modifyXpAndLevels(
                                 getTargetPlayers().required(),
                                 getSkillIdentifier().value(),
                                 getOperation().value(),
                                 getType().value(),
                                 getAmount().value()
                             )
+                            CommandResult.success(count)
                         }
                     }
                 }
@@ -55,7 +56,7 @@ object CheatCommand {
         operation: Operation,
         type: Type,
         amount: Int
-    ) {
+    ): Int {
         if (operation == Operation.SET) {
             if (type == Type.LEVELS) {
                 players.forEach {
@@ -69,28 +70,53 @@ object CheatCommand {
                     LevelUtils.addXpAndLevelUp(skillId, it, 0)
                 }
             }
+            return amount
         }
         if (operation == Operation.ADD) {
+            var total = 0
             if (type == Type.LEVELS) {
                 players.forEach {
+                    val original = LevelUtils.getComponentLevel(skillId, it)
                     LevelUtils.levelUp(skillId, it, amount)
+                    total += LevelUtils.getComponentLevel(skillId, it) - original
                 }
             }
             if (type == Type.XP) {
                 players.forEach {
+                    val original = LevelUtils.getComponentXP(skillId, it)
                     LevelUtils.addXpAndLevelUp(skillId, it, amount)
+                    total += LevelUtils.getComponentXP(skillId, it) - original
                 }
             }
+            return total
         }
         if (operation == Operation.SUBTRACT) {
+            var total = 0
             if (type == Type.LEVELS) {
-                TODO("Add removing levels, preserve XP ratio?")
-            }
-            if (type == Type.XP) {
                 players.forEach {
-                    LevelUtils.removeXp(skillId, it, amount)
+                    val ratio = LevelUtils.getComponentXP(skillId, it).toDouble() /
+                                LevelUtils.calculateXpNeededToReachLevel(
+                                    LevelUtils.getComponentLevel(skillId, it) + 1
+                                ).toDouble()
+                    val originalLevel = LevelUtils.getComponentLevel(skillId, it)
+                    LevelUtils.setComponentLevel(skillId, it, originalLevel - amount)
+                    LevelUtils.setComponentXP(skillId, it,
+                        floor(LevelUtils.calculateXpNeededToReachLevel(
+                            LevelUtils.getComponentLevel(skillId, it)) * ratio
+                        ).toInt()
+                    )
+                    total += originalLevel - LevelUtils.getComponentLevel(skillId, it)
                 }
             }
+            if (type == Type.XP) {
+                // TODO: Proper return count
+                players.forEach {
+                    LevelUtils.removeXp(skillId, it, amount)
+                    total += LevelUtils.getComponentXP(skillId, it)
+                }
+            }
+            return total
         }
+        return 0
     }
 }

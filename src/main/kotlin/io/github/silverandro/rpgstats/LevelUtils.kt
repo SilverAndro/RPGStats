@@ -22,6 +22,10 @@ object LevelUtils {
             Components.STATS.get(player).getOrCreateID(id).xp = newValue
             Components.STATS.sync(player)
         }
+
+        if (getComponentXP(id, player) < 0) {
+            setComponentXP(id, player, 0)
+        }
     }
 
     fun getComponentXP(id: Identifier, player: ServerPlayerEntity): Int {
@@ -37,6 +41,10 @@ object LevelUtils {
         if (Components.components.containsKey(id)) {
             Components.STATS.get(player).getOrCreateID(id).level = newValue
             Components.STATS.sync(player)
+        }
+
+        if (getComponentLevel(id, player) < 0) {
+            setComponentLevel(id, player, 0)
         }
     }
 

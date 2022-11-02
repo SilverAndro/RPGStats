@@ -8,7 +8,6 @@ import io.github.silverandro.rpgstats.LevelUtils.addXpAndLevelUp
 import io.github.silverandro.rpgstats.LevelUtils.getComponentLevel
 import io.github.silverandro.rpgstats.LevelUtils.getComponentXP
 import io.github.silverandro.rpgstats.LevelUtils.getLowestLevel
-import io.github.silverandro.rpgstats.LevelUtils.softLevelUp
 import io.github.silverandro.rpgstats.commands.CheatCommand
 import io.github.silverandro.rpgstats.commands.StatsCommand
 import io.github.silverandro.rpgstats.datadrive.stats.StatsManager
@@ -38,9 +37,6 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 object Events {
-    @JvmField
-    val needsStatFix = mutableListOf<ServerPlayerEntity>()
-
     private var tickCount = 0
     private val blacklistedPos = ConcurrentHashMap<BlockPos, Int>()
 
@@ -86,14 +82,6 @@ object Events {
                     if (preferences.isOptedOutOfButtonSpam && player.isSneaking) {
                         OnSneakLogic.doLogic(true, player)
                     }
-
-                    // Fix stats for respawning players
-                    if (needsStatFix.contains(player) && player.isAlive) {
-                        Components.components.forEach { (id, _) ->
-                            softLevelUp(id, player)
-                        }
-                    }
-                    needsStatFix.filterInPlace { it.isAlive }
 
                     // Grant the hidden max level advancement
                     val possible = advancements

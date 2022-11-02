@@ -5,7 +5,7 @@ import io.github.cottonmc.cotton.gui.widget.WGridPanel
 import io.github.cottonmc.cotton.gui.widget.WLabel
 import io.github.cottonmc.cotton.gui.widget.WListPanel
 import io.github.cottonmc.cotton.gui.widget.WPlainPanel
-import io.github.silverandro.rpgstats.LevelUtils.calculateXpNeededToReachLevel
+import io.github.silverandro.rpgstats.LevelUtils.calculateXpNeededForLevel
 import io.github.silverandro.rpgstats.client.RPGStatsClient.currentStats
 import io.github.silverandro.rpgstats.client.RPGStatsClient.nameMap
 import net.minecraft.text.Text
@@ -34,7 +34,7 @@ class RPGStatDisplayGUI : LightweightGuiDescription() {
                 .formatted(Formatting.DARK_AQUA).formatted(Formatting.BOLD)
             entry.level.text = Text.literal("Level: ").formatted(Formatting.DARK_GREEN).append(level.toString())
             entry.xp.text = Text.literal("XP: ").formatted(Formatting.DARK_GREEN)
-                .append(xp.toString() + "/" + calculateXpNeededToReachLevel(level + 1))
+                .append(xp.toString() + "/" + calculateXpNeededForLevel(level + 1))
         }
         val list = WListPanel(data as List<Identifier>, { StatEntry() }, configurator)
         list.setListItemHeight(18)

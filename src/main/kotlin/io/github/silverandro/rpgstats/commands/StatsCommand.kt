@@ -73,13 +73,13 @@ object StatsCommand {
             )
 
             Components.components.keys.forEach { identifier ->
-                source.sendFeedback(LevelUtils.getFormattedLevelData(identifier, target), false)
+                source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target), false)
             }
         } else {
             source.sendFeedback(Text.translatable("rpgstats.stats_for", target.entityName), false)
 
             Components.components.keys.forEach { identifier ->
-                source.sendFeedback(LevelUtils.getNotFormattedLevelData(identifier, target), false)
+                source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target), false)
             }
         }
         return 1

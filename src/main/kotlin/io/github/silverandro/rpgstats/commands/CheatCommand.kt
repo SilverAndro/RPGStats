@@ -4,7 +4,6 @@ import com.mojang.brigadier.CommandDispatcher
 import io.github.silverandro.rpgstats.LevelUtils
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import org.quiltmc.qkl.wrapper.minecraft.brigadier.*
 import org.quiltmc.qkl.wrapper.minecraft.brigadier.argument.*
@@ -95,13 +94,13 @@ object CheatCommand {
             if (type == Type.LEVELS) {
                 players.forEach {
                     val ratio = LevelUtils.getComponentXP(skillId, it).toDouble() /
-                                LevelUtils.calculateXpNeededToReachLevel(
+                                LevelUtils.calculateXpNeededForLevel(
                                     LevelUtils.getComponentLevel(skillId, it) + 1
                                 ).toDouble()
                     val originalLevel = LevelUtils.getComponentLevel(skillId, it)
                     LevelUtils.setComponentLevel(skillId, it, originalLevel - amount)
                     LevelUtils.setComponentXP(skillId, it,
-                        floor(LevelUtils.calculateXpNeededToReachLevel(
+                        floor(LevelUtils.calculateXpNeededForLevel(
                             LevelUtils.getComponentLevel(skillId, it)) * ratio
                         ).toInt()
                     )

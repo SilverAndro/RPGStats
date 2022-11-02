@@ -45,12 +45,13 @@ object RPGStatsMain : ModInitializer {
         Events.registerLevelUpEvents()
         Events.registerBlockBreakListeners()
 
+        // Harvest scythes event
         if (QuiltLoader.isModLoaded("harvest_scythes")) {
             Events.registerHSCompat()
         }
 
         if (QuiltLoader.isDevelopmentEnvironment()) {
-            // Audit mixins for issues
+            // Audit mixins for issues if in dev
             MixinEnvironment.getCurrentEnvironment().audit()
         }
     }

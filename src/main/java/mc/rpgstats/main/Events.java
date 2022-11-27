@@ -375,7 +375,7 @@ public class Events {
                 Random random = new Random();
                 if (random.nextBoolean()) {
                     int amount;
-                    amount = blockMiningXp.getOrDefault(Registry.BLOCK.getId(block), 2);
+                    amount = blockMiningXp.getOrDefault(Registry.BLOCK.getId(block), 0);
                     RPGStats.addXpAndLevelUp(CustomComponents.MINING, (ServerPlayerEntity)playerEntity, amount);
                 }
             }

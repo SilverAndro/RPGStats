@@ -11,14 +11,11 @@ import io.github.silverandro.rpgstats.stats.systems.StatAction
 import io.github.silverandro.rpgstats.stats.systems.StatAttributeAction
 import io.github.silverandro.rpgstats.stats.systems.StatFakeAttributeAction
 import io.github.silverandro.rpgstats.stats.systems.StatSpecialAction
-import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.random.RandomGenerator
-import net.minecraft.util.registry.Registry
-import net.minecraft.util.registry.SimpleRegistry
-import java.util.UUID
+import java.util.*
 
 class Components : EntityComponentInitializer {
     override fun registerEntityComponentFactories(registry: EntityComponentFactoryRegistry) {
@@ -54,16 +51,12 @@ class Components : EntityComponentInitializer {
 
     companion object {
         @JvmField
-        var components = HashMap<Identifier, String>()
-        val actions: SimpleRegistry<Array<StatAction>> = FabricRegistryBuilder.createSimple(
-            Array<StatAction>::class.java,
-            Identifier("rpgstats:actions")
-        ).buildAndRegister()
+        var components = mutableMapOf<Identifier, String>()
+        val actions = mutableMapOf<Identifier, Array<StatAction>>()
 
         private fun registerStat(id: Identifier, vararg action: StatAction): Identifier {
             @Suppress("UNCHECKED_CAST")
-            Registry.register(actions, id, action as Array<StatAction>)
-
+            actions[id] = action as Array<StatAction>
             return id
         }
 

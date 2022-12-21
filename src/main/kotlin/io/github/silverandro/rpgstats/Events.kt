@@ -1,5 +1,6 @@
 package io.github.silverandro.rpgstats
 
+import folk.sisby.switchy.api.modules.CardinalSerializerCompat
 import io.github.silverandro.rpgstats.Constants.LEVELS_MAX
 import io.github.silverandro.rpgstats.Constants.SYNC_NAMES_PACKET_ID
 import io.github.silverandro.rpgstats.Constants.SYNC_STATS_PACKET_ID
@@ -26,13 +27,15 @@ import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
-import org.quiltmc.qkl.wrapper.qsl.networking.allPlayers
+import org.quiltmc.loader.api.QuiltLoader
+import org.quiltmc.qkl.library.networking.allPlayers
 import org.quiltmc.qsl.command.api.CommandRegistrationCallback
+import org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents
 import org.quiltmc.qsl.lifecycle.api.event.ServerTickEvents
 import org.quiltmc.qsl.networking.api.PlayerLookup
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking
-import wraith.harvest_scythes.api.scythe.HSScythesEvents
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
@@ -48,14 +51,18 @@ object Events {
         }
     }
 
-    fun registerHSCompat() {
-        HSScythesEvents.addHarvestListener { harvestEvent ->
-            val user = harvestEvent.user
-            if (user is ServerPlayerEntity) {
-                addXpAndLevelUp(
-                    Components.FARMING,
-                    user,
-                    harvestEvent.totalBlocksHarvested()
+    fun registerServerStart() {
+        ServerLifecycleEvents.READY.register {
+            if (QuiltLoader.isModLoaded("switchy")) {
+                CardinalSerializerCompat.tryRegister(
+                    Identifier("rpgstats:switchy_compat"),
+                    Identifier("rpgstats:stats"),
+                    true
+                )
+                CardinalSerializerCompat.tryRegister(
+                    Identifier("rpgstats:switchy_compat_internal"),
+                    Identifier("rpgstats:internal"),
+                    true
                 )
             }
         }
@@ -147,7 +154,7 @@ object Events {
                 // Get all their stats/components
                 Components.components.keys.forEach { id ->
                     // Map those into actions
-                    Components.actions.get(id)?.forEachIndexed { actionIndex, action ->
+                    Components.actions[id]?.forEachIndexed { actionIndex, action ->
                         // If the action modifies an attribute
                         if (action is StatAttributeAction) {
                             // Compute the total modification

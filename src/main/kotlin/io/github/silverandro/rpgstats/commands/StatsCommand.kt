@@ -6,11 +6,11 @@ import io.github.silverandro.rpgstats.LevelUtils
 import io.github.silverandro.rpgstats.stats.Components
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
+import org.quiltmc.qkl.library.brigadier.*
+import org.quiltmc.qkl.library.brigadier.util.*
+import org.quiltmc.qkl.library.brigadier.argument.*
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.*
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.argument.*
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.util.required
 import org.quiltmc.qsl.networking.api.PacketByteBufs
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking
 

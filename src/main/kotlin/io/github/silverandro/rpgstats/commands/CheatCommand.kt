@@ -5,9 +5,12 @@ import io.github.silverandro.rpgstats.LevelUtils
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.*
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.argument.*
-import org.quiltmc.qkl.wrapper.minecraft.brigadier.util.required
+import org.quiltmc.qkl.library.brigadier.CommandResult
+import org.quiltmc.qkl.library.brigadier.argument.*
+import org.quiltmc.qkl.library.brigadier.executeWithResult
+import org.quiltmc.qkl.library.brigadier.register
+import org.quiltmc.qkl.library.brigadier.required
+import org.quiltmc.qkl.library.brigadier.util.required
 import kotlin.math.floor
 
 object CheatCommand {

@@ -30,8 +30,6 @@
     "TakeDamageMixin",
     "TotemUseMixin",
     "UnbreakingEnchantmentMixin",
-    "accessor.CriteriaAccessor",
-    "compat.artifality.GrantFarmingOnStaffHarvest",
-    "compat.harvest.GrantFarmingOnSimpleHarvest"
+    "accessor.CriteriaAccessor"
   ]
 }

@@ -2,8 +2,6 @@ package io.github.silverandro.rpgstats.client
 
 import com.mojang.blaze3d.platform.InputUtil
 import io.github.silverandro.rpgstats.Constants
-import io.github.silverandro.rpgstats.client.screen.RPGStatDisplayGUI
-import io.github.silverandro.rpgstats.client.screen.RPGStatDisplayScreen
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.network.ClientPlayNetworkHandler
@@ -60,8 +58,7 @@ object RPGStatsClient : ClientModInitializer {
         }
 
         ClientPlayNetworking.registerGlobalReceiver(Constants.OPEN_GUI) { client: MinecraftClient, handler: ClientPlayNetworkHandler?, byteBuf: PacketByteBuf?, packetSender: PacketSender? ->
-            client.send(
-                Runnable { client.setScreen(RPGStatDisplayScreen(RPGStatDisplayGUI())) })
+
         }
 
         openGUIKeybind = KeyBindingHelper.registerKeyBinding(
@@ -76,7 +73,7 @@ object RPGStatsClient : ClientModInitializer {
         ClientTickEvents.END.register(ClientTickEvents.End { client: MinecraftClient ->
             while (openGUIKeybind.wasPressed()) {
                 if (client.currentScreen == null) {
-                    client.setScreen(RPGStatDisplayScreen(RPGStatDisplayGUI()))
+
                 }
             }
         })

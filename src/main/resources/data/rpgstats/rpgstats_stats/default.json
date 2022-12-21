@@ -5,8 +5,8 @@
   "rpgstats:ranged": {
     "translationKey": "rpgstats.stat_name.ranged"
   },
-  "rpgstats:defense": {
-    "translationKey": "rpgstats.stat_name.defense"
+  "rpgstats:defence": {
+    "translationKey": "rpgstats.stat_name.defence"
   },
   "rpgstats:magic": {
     "translationKey": "rpgstats.stat_name.magic"

@@ -6,7 +6,7 @@ import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 import net.minecraft.util.Identifier
 import net.minecraft.util.registry.Registry
-import org.quiltmc.qkl.wrapper.minecraft.serialization.CodecFactory
+import org.quiltmc.qkl.library.serialization.CodecFactory
 import org.quiltmc.qsl.registry.attachment.api.RegistryEntryAttachment
 
 object XpData {

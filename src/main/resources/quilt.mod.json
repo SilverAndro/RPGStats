@@ -56,7 +56,6 @@
   "mixin": "rpgstats.mixins.json",
   "cardinal-components": [
     "rpgstats:internal",
-    "rpgstats:max_health",
     "rpgstats:stats"
   ]
 }

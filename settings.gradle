@@ -6,10 +6,6 @@ pluginManagement {
             url = 'https://maven.quiltmc.org/repository/release'
         }
         maven {
-            name = 'Quilt'
-            url = 'https://maven.quiltmc.org/repository/release'
-        }
-        maven {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
@@ -18,6 +14,7 @@ pluginManagement {
             url = 'https://server.bbkr.space/artifactory/libs-release/'
         }
         gradlePluginPortal()
-        mavenLocal()
     }
 }
+include 'Hooky'
+

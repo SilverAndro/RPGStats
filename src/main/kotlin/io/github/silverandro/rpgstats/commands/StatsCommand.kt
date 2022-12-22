@@ -1,19 +1,20 @@
 package io.github.silverandro.rpgstats.commands
 
 import com.mojang.brigadier.CommandDispatcher
-import io.github.silverandro.rpgstats.Constants.OPEN_GUI
 import io.github.silverandro.rpgstats.LevelUtils
 import io.github.silverandro.rpgstats.stats.Components
+import mc.rpgstats.hooky_gen.api.Command
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
-import org.quiltmc.qkl.library.brigadier.*
-import org.quiltmc.qkl.library.brigadier.util.*
-import org.quiltmc.qkl.library.brigadier.argument.*
 import net.minecraft.text.Text
 import net.minecraft.util.Formatting
-import org.quiltmc.qsl.networking.api.PacketByteBufs
-import org.quiltmc.qsl.networking.api.ServerPlayNetworking
+import org.quiltmc.qkl.library.brigadier.argument.player
+import org.quiltmc.qkl.library.brigadier.argument.value
+import org.quiltmc.qkl.library.brigadier.execute
+import org.quiltmc.qkl.library.brigadier.register
+import org.quiltmc.qkl.library.brigadier.required
 
+@Command
 object StatsCommand {
     fun register(dispatch: CommandDispatcher<ServerCommandSource>) {
         dispatch.register("rpgstats") {
@@ -24,37 +25,10 @@ object StatsCommand {
                 )
             }
             required(
-                literal("for_player"),
                 player("targetPlayer")
-            ) { _, getTargetPlayer ->
+            ) { player ->
                 execute {
-                    displayStats(source, getTargetPlayer().value())
-                }
-            }
-
-            required(literal("gui")) {
-                execute {
-                    if (ServerPlayNetworking.canSend(source.player, OPEN_GUI)) {
-                        ServerPlayNetworking.send(source.player, OPEN_GUI, PacketByteBufs.empty())
-                    } else {
-                        source.sendError(Text.translatable("rpgstats.error.not_on_client"))
-                    }
-                }
-            }
-
-            required(
-                literal("toggleSetting"),
-                literal("spamSneak")
-            ) { _, _ ->
-                execute {
-                    val component = Components.PREFERENCES.get(source.player)
-                    component.isOptedOutOfButtonSpam = !component.isOptedOutOfButtonSpam
-                    source.sendFeedback(
-                        Text.translatable(
-                            "rpgstats.feedback.toggle_sneak",
-                            component.isOptedOutOfButtonSpam
-                        ), false
-                    )
+                    displayStats(source, player().value())
                 }
             }
         }

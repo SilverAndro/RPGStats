@@ -43,13 +43,13 @@
         "versions": ">=1.19"
       },
       {
-        "id": "harvest_scythes",
-        "versions": ">=2.2.2",
-        "optional": true
+        "id": "qkl",
+        "versions": "*"
       },
       {
-        "id": "qkl_core",
-        "versions": "*"
+        "id": "switchy",
+        "versions": ">=1.7.3",
+        "optional": true
       }
     ]
   },

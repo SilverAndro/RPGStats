@@ -2,6 +2,7 @@ package io.github.silverandro.rpgstats.commands
 
 import com.mojang.brigadier.CommandDispatcher
 import io.github.silverandro.rpgstats.LevelUtils
+import mc.rpgstats.hooky_gen.api.Command
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
@@ -13,6 +14,7 @@ import org.quiltmc.qkl.library.brigadier.required
 import org.quiltmc.qkl.library.brigadier.util.required
 import kotlin.math.floor
 
+@Command
 object CheatCommand {
     enum class Operation {
         SET,

@@ -9,6 +9,8 @@
   "rpgstats.levelup_2": " level! you are now level ",
 
   "rpgstats.feedback.toggle_sneak": "Hold sneak instead of spamming: %s",
+  "rpgstats.feedback.xp_bar_location": "XP bar location: %s",
+  "rpgstats.feedback.xp_bar_show": "XP will show: %s",
 
   "rpgstats.error.console_player_required": "A player must be passed when executing that command from the console",
   "rpgstats.error.not_on_client": "You don't have RPGStats installed on your client, unable to open the GUI",
@@ -23,7 +25,7 @@
 
   "rpgstats.special.bloodthirst": "Bloodthirst",
   "rpgstats.special.bloodthirst_2": "Bloodthirst II",
-  "rpgstats.special.bloodthirst.description": "Regain %d heart after killing a monster",
+  "rpgstats.special.bloodthirst.description": "Regain %d health after killing a monster",
 
   "rpgstats.fakestat.mining_speed": "Additional Mining Speed",
   "rpgstats.special.magical_infusion": "Magically infused",
@@ -37,7 +39,7 @@
   "rpgstats.special.nix": "Nix",
   "rpgstats.special.nix.description": "You no longer need arrows",
 
-  "rpgstats.fakestat.drunk_potion_duration": "Dunk potion duration",
+  "rpgstats.fakestat.drunk_potion_duration": "Drunk potion duration",
   "rpgstats.special.vax": "Vax",
   "rpgstats.special.vax.description": "Immunity to poison",
   "rpgstats.special.dead_inside": "Dead Inside",

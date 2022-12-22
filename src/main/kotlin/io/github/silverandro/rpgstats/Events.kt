@@ -10,6 +10,7 @@ import io.github.silverandro.rpgstats.LevelUtils.getComponentLevel
 import io.github.silverandro.rpgstats.LevelUtils.getComponentXP
 import io.github.silverandro.rpgstats.LevelUtils.getLowestLevel
 import io.github.silverandro.rpgstats.commands.CheatCommand
+import io.github.silverandro.rpgstats.commands.PreferencesCommand
 import io.github.silverandro.rpgstats.commands.StatsCommand
 import io.github.silverandro.rpgstats.datadrive.stats.StatsManager
 import io.github.silverandro.rpgstats.datadrive.xp.XpData
@@ -48,6 +49,7 @@ object Events {
         CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
             StatsCommand.register(dispatcher)
             CheatCommand.register(dispatcher)
+            PreferencesCommand.register(dispatcher)
         }
     }
 

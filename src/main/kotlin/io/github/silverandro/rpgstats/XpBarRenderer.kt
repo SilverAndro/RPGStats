@@ -66,13 +66,14 @@ object XpBarRenderer {
         }
 
         val job = activeBarsScope.launch {
-            repeat(8) {
-                when (config.xpBarLocation) {
-                    XpBarLocation.TITLE -> TODO()
-                    XpBarLocation.SUBTITLE -> TODO()
-                    XpBarLocation.HOTBAR -> player.sendMessage(textDisplay, true)
+            when (config.xpBarLocation) {
+                XpBarLocation.CHAT -> player.sendMessage(textDisplay, false)
+                XpBarLocation.HOTBAR -> {
+                    repeat(8) {
+                        player.sendMessage(textDisplay, true)
+                        delay(0.5.seconds)
+                    }
                 }
-                delay(0.5.seconds)
             }
         }
         activeBars[player]?.cancel(CancellationException("Superseded by new xp bar"))
@@ -82,8 +83,7 @@ object XpBarRenderer {
     fun getXpBarLength(player: ServerPlayerEntity): Int {
         val config = Components.PREFERENCES.get(player)
         return when (config.xpBarLocation) {
-            XpBarLocation.TITLE -> 20
-            XpBarLocation.SUBTITLE -> 30
+            XpBarLocation.CHAT -> 50
             XpBarLocation.HOTBAR -> 40
         }
     }

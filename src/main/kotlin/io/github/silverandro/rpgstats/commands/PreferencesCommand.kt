@@ -37,7 +37,7 @@ object PreferencesCommand {
             }
 
             required(literal("xp_bar")) {
-                required(literal("location"), enum("location", XpBarLocation::class)) { _, enum ->
+                required(literal("location"), enum("location_value", XpBarLocation::class)) { _, enum ->
                     execute {
                         val component = Components.PREFERENCES.get(source.player)
                         component.xpBarLocation = enum().value()
@@ -49,7 +49,7 @@ object PreferencesCommand {
                         )
                     }
                 }
-                required(literal("show"), enum("show", XpBarShow::class)) { _, enum ->
+                required(literal("show"), enum("show_value", XpBarShow::class)) { _, enum ->
                     execute {
                         val component = Components.PREFERENCES.get(source.player)
                         component.xpBarShow = enum().value()

@@ -90,7 +90,11 @@ class HookyProcessor(val environment: SymbolProcessorEnvironment, val codeGenera
 
         return buildString {
             if (params.isNotEmpty()) {
-                appendLine("        $fullID.register { ${params.joinToString { "${next()}: ${it.type.resolve().declaration.qualifiedName!!.asString()}" }} ->")
+                if (fullID == "net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents.AFTER") {
+                    appendLine("        $fullID.register { ${params.joinToString { "${next()}: ${it.type.resolve().declaration.qualifiedName!!.asString()}" }}? ->")
+                } else {
+                    appendLine("        $fullID.register { ${params.joinToString { "${next()}: ${it.type.resolve().declaration.qualifiedName!!.asString()}" }} ->")
+                }
             } else {
                 appendLine("        $fullID.register { ")
             }

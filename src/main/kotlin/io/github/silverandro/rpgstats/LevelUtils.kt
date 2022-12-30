@@ -107,7 +107,7 @@ object LevelUtils {
                                 Text.translatable("rpgstats.levelup_1")
                                     .formatted(Formatting.WHITE)
                                     .append(
-                                        Text.literal(Components.components[id])
+                                        Text.translatable(Components.components[id])
                                             .formatted(Formatting.GOLD)
                                             .append(
                                                 Text.translatable("rpgstats.levelup_2")

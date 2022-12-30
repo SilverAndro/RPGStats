@@ -163,6 +163,13 @@ object LevelUtils {
     }
 
     /**
+     * Returns a list of all stat levels
+     */
+    fun getStatXpsForPlayer(player: ServerPlayerEntity): List<Int> {
+        return Components.components.keys.map { getComponentXP(it, player) }
+    }
+
+    /**
      * Gets the highest level on a player, or 0 if they have no stats
      */
     fun getHighestLevel(player: ServerPlayerEntity): Int {
@@ -209,6 +216,34 @@ object LevelUtils {
                 setComponentXP(id, player, 0)
                 break
             }
+        }
+    }
+
+    fun doesMatchLevel(player: ServerPlayerEntity, statId: String, operation: String, value: Int): Boolean {
+        val comparison = when(operation) {
+            ">=" -> { a: Int -> a >= value }
+            "<=" -> { a: Int -> a <= value }
+            "==" -> { a: Int -> a == value }
+            else -> throw IllegalStateException("Unknown stat comparison $operation")
+        }
+        return if (statId == "rpgstats:_any") {
+            getStatLevelsForPlayer(player).any(comparison)
+        } else {
+            comparison(getComponentLevel(Identifier(statId), player))
+        }
+    }
+
+    fun doesMatchXp(player: ServerPlayerEntity, statId: String, operation: String, value: Int): Boolean {
+        val comparison = when(operation) {
+            ">=" -> { a: Int -> a >= value }
+            "<=" -> { a: Int -> a <= value }
+            "==" -> { a: Int -> a == value }
+            else -> throw IllegalStateException("Unknown stat comparison $operation")
+        }
+        return if (statId == "rpgstats:_any") {
+            getStatXpsForPlayer(player).any(comparison)
+        } else {
+            comparison(getComponentXP(Identifier(statId), player))
         }
     }
 }

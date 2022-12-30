@@ -25,11 +25,13 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.network.ServerPlayerEntity
+import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 import org.quiltmc.loader.api.QuiltLoader
 import org.quiltmc.qkl.library.networking.allPlayers
+import org.quiltmc.qsl.command.api.EntitySelectorOptionRegistry
 import org.quiltmc.qsl.networking.api.PlayerLookup
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking
 import java.util.*
@@ -51,6 +53,51 @@ fun registerSwitchyCompat() {
     }
 }
 
+@RegisterOn("org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents.READY")
+fun registerEntitySelectors() {
+    val regex = Regex("([\\w:_]+)\\s*([<>]=|==)\\s*(\\d+)")
+    EntitySelectorOptionRegistry.register(
+        Identifier("rpgstats", "level"),
+        { optionReader ->
+            val reader = optionReader.reader
+            val arg = reader.readQuotedString()
+            val res = regex.matchEntire(arg) ?: return@register
+            val statId = res.groupValues[1]
+            val operation = res.groupValues[2]
+            val value = res.groupValues[3]
+            println("$statId $operation $value")
+            optionReader.setPredicate {
+                return@setPredicate if (it is ServerPlayerEntity) {
+                    LevelUtils.doesMatchLevel(it, statId, operation, value.toInt())
+                } else {
+                    false
+                }
+            }
+        },
+        { optionReader -> optionReader.selectsEntityType() },
+        Text.literal("Selects a player that matches a stat level requirement")
+    )
+    EntitySelectorOptionRegistry.register(
+        Identifier("rpgstats", "xp"),
+        { optionReader ->
+            val reader = optionReader.reader
+            val arg = reader.readQuotedString()
+            val res = regex.matchEntire(arg) ?: return@register
+            val statId = res.groupValues[1]
+            val operation = res.groupValues[2]
+            val value = res.groupValues[3]
+            optionReader.setPredicate {
+                return@setPredicate if (it is ServerPlayerEntity) {
+                    LevelUtils.doesMatchXp(it, statId, operation, value.toInt())
+                } else {
+                    false
+                }
+            }
+        },
+        { optionReader -> optionReader.selectsEntityType() },
+        Text.literal("Selects a player that matches a stat xp requirement")
+    )
+}
 
 private val blacklistedPos = ConcurrentHashMap<BlockPos, Int>()
 @RegisterOn("net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents.AFTER")

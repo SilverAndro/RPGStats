@@ -13,6 +13,7 @@ import io.github.silverandro.rpgstats.mixin_logic.OnSneakLogic
 import io.github.silverandro.rpgstats.stats.Components
 import io.github.silverandro.rpgstats.stats.systems.StatAttributeAction
 import io.github.silverandro.rpgstats.util.filterInPlace
+import io.github.silverandro.rpgstats.util.readSelectorMap
 import io.netty.buffer.Unpooled
 import mc.rpgstats.hooky_gen.api.RegisterOn
 import net.minecraft.advancement.Advancement
@@ -53,49 +54,52 @@ fun registerSwitchyCompat() {
     }
 }
 
+// TODO these should only be avalible if selecting players, will require an accessor mixin
 @RegisterOn("org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents.READY")
 fun registerEntitySelectors() {
-    val regex = Regex("([\\w:_]+)\\s*([<>]=|==)\\s*(\\d+)")
     EntitySelectorOptionRegistry.register(
         Identifier("rpgstats", "level"),
         { optionReader ->
-            val reader = optionReader.reader
-            val arg = reader.readQuotedString()
-            val res = regex.matchEntire(arg) ?: return@register
-            val statId = res.groupValues[1]
-            val operation = res.groupValues[2]
-            val value = res.groupValues[3]
-            println("$statId $operation $value")
+            val arg = optionReader.readSelectorMap()
             optionReader.setPredicate {
-                return@setPredicate if (it is ServerPlayerEntity) {
-                    LevelUtils.doesMatchLevel(it, statId, operation, value.toInt())
+                if (it is ServerPlayerEntity) {
+                    return@setPredicate arg.any { (id, range) ->
+                        if (id == "rpgstats:_any") {
+                            LevelUtils.getStatLevelsForPlayer(it).any { range.test(it) }
+                        } else {
+                            range.test(LevelUtils.getComponentLevel(Identifier(id), it))
+                        }
+                    }
                 } else {
-                    false
+                    return@setPredicate false
                 }
             }
+            optionReader.setFlag("rpgstatsLevels", true)
         },
-        { optionReader -> optionReader.selectsEntityType() },
-        Text.literal("Selects a player that matches a stat level requirement")
+        { optionReader -> optionReader.selectsEntityType() && !optionReader.getFlag("rpgstatsLevels") },
+        Text.translatable("rpgstats.feedback.level_selector")
     )
     EntitySelectorOptionRegistry.register(
         Identifier("rpgstats", "xp"),
         { optionReader ->
-            val reader = optionReader.reader
-            val arg = reader.readQuotedString()
-            val res = regex.matchEntire(arg) ?: return@register
-            val statId = res.groupValues[1]
-            val operation = res.groupValues[2]
-            val value = res.groupValues[3]
+            val arg = optionReader.readSelectorMap()
             optionReader.setPredicate {
-                return@setPredicate if (it is ServerPlayerEntity) {
-                    LevelUtils.doesMatchXp(it, statId, operation, value.toInt())
+                if (it is ServerPlayerEntity) {
+                    return@setPredicate arg.any { (id, range) ->
+                        if (id == "rpgstats:_any") {
+                            LevelUtils.getStatXpsForPlayer(it).any { range.test(it) }
+                        } else {
+                            range.test(LevelUtils.getComponentXP(Identifier(id), it))
+                        }
+                    }
                 } else {
-                    false
+                    return@setPredicate false
                 }
             }
+            optionReader.setFlag("rpgstatsXp", true)
         },
-        { optionReader -> optionReader.selectsEntityType() },
-        Text.literal("Selects a player that matches a stat xp requirement")
+        { optionReader -> optionReader.selectsEntityType() && !optionReader.getFlag("rpgstatsLevels") },
+        Text.translatable("rpgstats.feedback.xp_selector")
     )
 }
 

@@ -11,6 +11,8 @@
   "rpgstats.feedback.toggle_sneak": "Hold sneak instead of spamming: %s",
   "rpgstats.feedback.xp_bar_location": "XP bar location: %s",
   "rpgstats.feedback.xp_bar_show": "XP will show: %s",
+  "rpgstats.feedback.level_selector": "Matches players that match the provided level requirements",
+  "rpgstats.feedback.xp_selector": "Matches players that match the provided xp requirements",
 
   "rpgstats.error.console_player_required": "A player must be passed when executing that command from the console",
   "rpgstats.error.not_on_client": "You don't have RPGStats installed on your client, unable to open the GUI",

@@ -1,8 +1,10 @@
 package io.github.silverandro.rpgstats
 
 import io.github.silverandro.rpgstats.advancemnents.LevelUpCriterion
+import io.github.silverandro.rpgstats.datadrive.stats.StatsManager
+import io.github.silverandro.rpgstats.datadrive.xp.XpData
+import io.github.silverandro.rpgstats.hooky.Hooky
 import io.github.silverandro.rpgstats.mixin.accessor.CriteriaAccessor
-import mc.rpgstats.Hooky
 import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.loader.api.config.QuiltConfig
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer
@@ -39,10 +41,8 @@ object RPGStatsMain : ModInitializer {
 
         // Events
         Hooky.registerAll()
-        Events.registerResourceReloadListeners()
-        Events.registerServerTickEvents()
+        StatsManager.register()
+        XpData.poke()
         Events.registerLevelUpEvents()
-        Events.registerBlockBreakListeners()
-        Events.registerServerStart()
     }
 }

@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id 'io.github.p03w.machete' version '1.+'
+	id 'io.github.p03w.machete' version '2.+'
 	id 'org.quiltmc.loom' version '+'
 	id 'org.jetbrains.kotlin.jvm' version '1.7.22'
 	id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.22'

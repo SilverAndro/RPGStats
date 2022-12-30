@@ -39,7 +39,7 @@ object RPGStatsClient : ClientModInitializer {
             }
         }
 
-        ClientPlayNetworking.registerGlobalReceiver(Constants.SYNC_STATS_PACKET_ID) { client: MinecraftClient?, handler: ClientPlayNetworkHandler?, byteBuf: PacketByteBuf, packetSender: PacketSender? ->
+        ClientPlayNetworking.registerGlobalReceiver(Constants.SYNC_STATS_PACKET_ID) { _, _, byteBuf: PacketByteBuf, _ ->
             // Clear data
             currentStats.clear()
 

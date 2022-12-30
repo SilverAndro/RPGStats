@@ -126,6 +126,10 @@ object LevelUtils {
                 setComponentXP(id, player, nextXP)
                 Components.STATS.sync(player)
             }
+
+            if (XpBarRenderer.shouldShowToPlayer(player, calculateXpNeededForLevel(currentLevel + 1), getComponentXP(id, player))) {
+                XpBarRenderer.renderForPlayer(player, id)
+            }
         }
     }
 

@@ -5,5 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class StatEntry(
     val translationKey: String,
-    val shouldRemove: Boolean = false
+    val shouldRemove: Boolean = false,
+    val shouldShowToUser: Boolean = true
 )

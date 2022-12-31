@@ -186,7 +186,7 @@ fun syncDataAndGrantAdvancements(server: MinecraftServer) {
                     // Write the level and XP
                     statData.writeInt(getComponentLevel(statId, player))
                     statData.writeInt(getComponentXP(statId, player))
-                    nameData.writeString(Components.components[statId])
+                    nameData.writeString(Components.components[statId]!!.translationKey)
                 }
                 ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, statData)
                 ServerPlayNetworking.send(player, SYNC_NAMES_PACKET_ID, nameData)
@@ -261,9 +261,9 @@ object Events {
     fun registerLevelUpEvents() {
         LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
             // Data driven stats have no actions and won't be registered
-            val actions = Components.actions.get(id)
+            val actions = Components.actions[id]
             actions?.forEach {
-                it.onLevelUp(player, newLevel, hideMessages)
+                it.onLevelUp(player, newLevel, hideMessages || !Components.components[id]!!.shouldShowToUser)
             }
         }
     }

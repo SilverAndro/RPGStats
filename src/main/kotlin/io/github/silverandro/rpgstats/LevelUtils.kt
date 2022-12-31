@@ -3,10 +3,9 @@ package io.github.silverandro.rpgstats
 import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.stats.Components
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.text.MutableText
 import net.minecraft.text.Text
-import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
+import org.quiltmc.qkl.library.text.*
 import java.util.*
 import kotlin.math.floor
 import kotlin.math.min
@@ -89,69 +88,71 @@ object LevelUtils {
             Constants.debugLogger.info(player.entityName + " gained " + addedXP + " xp in stat " + id.toString())
             Constants.debugLogger.info("Stat is loaded: " + Components.components.containsKey(id))
         }
-        if (Components.components.containsKey(id)) {
-            var nextXP = getComponentXP(id, player) + addedXP
-            var currentLevel = getComponentLevel(id, player)
-            if (currentLevel < RPGStatsMain.config.scaling.maxLevel) {
-                // Enough to level up
-                var nextXPForLevelUp = calculateXpNeededForLevel(currentLevel + 1)
-                while (nextXP >= nextXPForLevelUp && currentLevel < RPGStatsMain.config.scaling.maxLevel) {
-                    nextXP -= nextXPForLevelUp
-                    currentLevel += 1
-                    setComponentLevel(id, player, currentLevel)
-                    Components.STATS.sync(player)
-                    player.sendMessage(
-                        Text.literal("§aRPGStats >§r ")
-                            .formatted(Formatting.GREEN)
-                            .append(
-                                Text.translatable("rpgstats.levelup_1")
-                                    .formatted(Formatting.WHITE)
-                                    .append(
-                                        Text.translatable(Components.components[id])
-                                            .formatted(Formatting.GOLD)
-                                            .append(
-                                                Text.translatable("rpgstats.levelup_2")
-                                                    .formatted(Formatting.WHITE)
-                                                    .append(
-                                                        Text.literal(getComponentLevel(id, player).toString())
-                                                            .formatted(Formatting.GOLD)
-                                                    )
-                                            )
-                                    )
-                            ), false
-                    )
-                    LevelUpCallback.EVENT.invoker().onLevelUp(player, id, currentLevel, false)
-                    nextXPForLevelUp = calculateXpNeededForLevel(currentLevel + 1)
+        val entry = Components.components[id] ?: return
+
+        var nextXP = getComponentXP(id, player) + addedXP
+        var currentLevel = getComponentLevel(id, player)
+        if (currentLevel < RPGStatsMain.config.scaling.maxLevel) {
+            // Enough to level up
+            var nextXPForLevelUp = calculateXpNeededForLevel(currentLevel + 1)
+            while (nextXP >= nextXPForLevelUp && currentLevel < RPGStatsMain.config.scaling.maxLevel) {
+                nextXP -= nextXPForLevelUp
+                currentLevel += 1
+                setComponentLevel(id, player, currentLevel)
+
+                if (entry.shouldShowToUser) {
+                    player.sendMessage(buildText {
+                        color (Color.GREEN) {
+                            literal("RPGStats > ")
+                        }
+                        translatable("rpgstats.levelup_1")
+                        color(Color.GOLD) { translatable(entry.translationKey) }
+                        translatable("rpgstats.levelup_2")
+                        color(Color.GOLD) { literal(getComponentLevel(id, player).toString()) }
+                    }, false)
                 }
-                setComponentXP(id, player, nextXP)
-                Components.STATS.sync(player)
+
+                LevelUpCallback.EVENT.invoker().onLevelUp(player, id, currentLevel, false)
+                nextXPForLevelUp = calculateXpNeededForLevel(currentLevel + 1)
             }
 
-            if (XpBarRenderer.shouldShowToPlayer(player, calculateXpNeededForLevel(currentLevel + 1), getComponentXP(id, player))) {
-                XpBarRenderer.renderForPlayer(player, id)
-            }
+            setComponentXP(id, player, nextXP)
+            Components.STATS.sync(player)
+        }
+
+        if (XpBarRenderer.shouldShowToPlayer(player, calculateXpNeededForLevel(currentLevel + 1), getComponentXP(id, player)) && entry.shouldShowToUser) {
+            XpBarRenderer.renderForPlayer(player, id)
         }
     }
 
     /**
      * Returns the display text for a level
      */
-    fun getLevelDisplay(id: Identifier, player: ServerPlayerEntity): MutableText {
+    fun getLevelDisplay(id: Identifier, player: ServerPlayerEntity, hidden: Boolean = false): Text {
         val currentLevel = getComponentLevel(id, player)
         val xp = getComponentXP(id, player)
-        val name = Components.components[id]
+        val entry = Components.components[id] ?: return buildText { color(Color.RED) { literal("Failed to lookup info for stat $id!") } }.copy()
         return if (currentLevel < RPGStatsMain.config.scaling.maxLevel) {
             val nextXP = calculateXpNeededForLevel(currentLevel + 1)
-            Text.translatable(name)
-                .formatted(Formatting.GOLD)
-                .append(
-                    Text.translatable("rpgstats.notmaxlevel_trunc", currentLevel, xp, nextXP)
-                        .formatted(Formatting.WHITE)
-                )
+            buildText {
+                if (hidden) {
+                    literal("[HIDDEN] ")
+                }
+                color(Color.GOLD) {
+                    translatable(entry.translationKey)
+                }
+                translatable("rpgstats.notmaxlevel_trunc", currentLevel, xp, nextXP)
+            }
         } else {
-            Text.translatable(name)
-                .formatted(Formatting.GOLD)
-                .append(Text.translatable("rpgstats.maxlevel_trunc", currentLevel).formatted(Formatting.WHITE))
+            buildText {
+                if (hidden) {
+                    literal("[HIDDEN] ")
+                }
+                color(Color.GOLD) {
+                    translatable(entry.translationKey)
+                }
+                translatable("rpgstats.maxlevel_trunc", currentLevel)
+            }
         }
     }
 

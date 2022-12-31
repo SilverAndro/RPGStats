@@ -39,7 +39,7 @@ object StatsManager: IdentifiableResourceReloader {
                         map.forEach { (key, value) ->
                             val statId = Identifier(key)
                             if (!value.shouldRemove) {
-                                Components.components[statId] = value.translationKey
+                                Components.components[statId] = value
                             } else {
                                 Components.components.remove(statId)
                             }

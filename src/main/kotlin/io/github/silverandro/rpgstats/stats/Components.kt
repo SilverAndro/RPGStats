@@ -6,6 +6,7 @@ import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry
 import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer
 import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy
 import io.github.silverandro.rpgstats.RPGStatsMain
+import io.github.silverandro.rpgstats.datadrive.stats.StatEntry
 import io.github.silverandro.rpgstats.stats.internal.PlayerPreferencesComponent
 import io.github.silverandro.rpgstats.stats.systems.StatAction
 import io.github.silverandro.rpgstats.stats.systems.StatAttributeAction
@@ -51,7 +52,7 @@ class Components : EntityComponentInitializer {
 
     companion object {
         @JvmField
-        var components = mutableMapOf<Identifier, String>()
+        var components = mutableMapOf<Identifier, StatEntry>()
         val actions = mutableMapOf<Identifier, Array<StatAction>>()
 
         private fun registerStat(id: Identifier, vararg action: StatAction): Identifier {

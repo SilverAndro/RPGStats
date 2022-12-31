@@ -35,6 +35,7 @@ object StatsCommand {
     }
 
     private fun displayStats(source: ServerCommandSource, target: ServerPlayerEntity): Int {
+        val statsToShow = Components.components.filter { it.value.shouldShowToUser || source.hasPermissionLevel(2) }
         if (source.entity != null) {
             source.sendFeedback(
                 Text.literal("RPGStats > ")
@@ -46,16 +47,18 @@ object StatsCommand {
                 false
             )
 
-            Components.components.keys.forEach { identifier ->
-                source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target), false)
+           statsToShow.forEach { (identifier, entry) ->
+                source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target, !entry.shouldShowToUser), false)
             }
         } else {
             source.sendFeedback(Text.translatable("rpgstats.stats_for", target.entityName), false)
 
-            Components.components.keys.forEach { identifier ->
-                source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target), false)
+            statsToShow.forEach { (identifier, entry) ->
+                source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target, !entry.shouldShowToUser), false)
             }
         }
-        return 1
+
+        // Return the amount of stats shown
+        return statsToShow.size
     }
 }

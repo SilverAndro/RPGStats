@@ -11,6 +11,10 @@ import net.minecraft.util.Identifier
 import net.minecraft.util.Pair
 import org.lwjgl.glfw.GLFW
 import org.quiltmc.loader.api.ModContainer
+import org.quiltmc.qkl.library.text.Color
+import org.quiltmc.qkl.library.text.buildText
+import org.quiltmc.qkl.library.text.color
+import org.quiltmc.qkl.library.text.literal
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents
 import org.quiltmc.qsl.networking.api.PacketSender
@@ -73,7 +77,7 @@ object RPGStatsClient : ClientModInitializer {
         ClientTickEvents.END.register(ClientTickEvents.End { client: MinecraftClient ->
             while (openGUIKeybind.wasPressed()) {
                 if (client.currentScreen == null) {
-
+                    client.player?.sendMessage(buildText { color(Color.RED) { literal("Sorry, RPGStats GUI is still in development for this version") } }, false)
                 }
             }
         })

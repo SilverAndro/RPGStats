@@ -59,7 +59,7 @@ object XpBarRenderer {
         val textDisplay = buildText {
             color(Color.GOLD) {
                 val name = Components.components[id] ?: return
-                translatable(name)
+                translatable(name.translationKey)
             }
             literal(" ")
             val stat = components.entries[id] ?: return

@@ -3,26 +3,27 @@ package io.github.silverandro.rpgstats
 import io.github.silverandro.rpgstats.stats.Components
 import io.github.silverandro.rpgstats.stats.internal.XpBarLocation
 import io.github.silverandro.rpgstats.stats.internal.XpBarShow
+import io.github.silverandro.rpgstats.util.filterInPlace
 import kotlinx.coroutines.*
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import org.quiltmc.qkl.library.text.*
+import java.util.*
 import kotlin.math.floor
 import kotlin.math.min
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 object XpBarRenderer {
     val activeBarsScope = CoroutineScope(Dispatchers.Default)
-    val activeBars = mutableMapOf<ServerPlayerEntity, Job>()
+    val activeBars = mutableMapOf<UUID, Job>()
 
     init {
         activeBarsScope.launch {
             while (isActive) {
-                delay(0.1.seconds)
-                val toRemove = mutableListOf<ServerPlayerEntity>()
-                activeBars.forEach { player, job -> if (job.isActive.not()) toRemove.add(player) }
-                toRemove.forEach { activeBars.remove(it) }
+                delay(50.milliseconds)
+                activeBars.filterInPlace { uuid, job -> !job.isActive }
             }
         }
     }
@@ -70,15 +71,16 @@ object XpBarRenderer {
             when (config.xpBarLocation) {
                 XpBarLocation.CHAT -> player.sendMessage(textDisplay, false)
                 XpBarLocation.HOTBAR -> {
-                    repeat(8) {
+                    repeat(20) {
+                        if (player.isDisconnected) cancel(CancellationException("Player disconnected"))
                         player.sendMessage(textDisplay, true)
-                        delay(0.5.seconds)
+                        delay(0.2.seconds)
                     }
                 }
             }
         }
-        activeBars[player]?.cancel(CancellationException("Superseded by new xp bar"))
-        activeBars[player] = job
+        activeBars[player.uuid]?.cancel(CancellationException("Superseded by new xp bar"))
+        activeBars[player.uuid] = job
     }
 
     fun getXpBarLength(player: ServerPlayerEntity): Int {

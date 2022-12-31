@@ -70,7 +70,6 @@ object CheatCommand {
             if (type == Type.XP) {
                 players.forEach {
                     LevelUtils.setComponentXP(skillId, it, amount)
-                    // TODO: Replace with a proper method for checking if someone should level up, this is kind of a hack
                     LevelUtils.addXpAndLevelUp(skillId, it, 0)
                 }
             }

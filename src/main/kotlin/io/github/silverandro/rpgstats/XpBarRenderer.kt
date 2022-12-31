@@ -47,6 +47,7 @@ object XpBarRenderer {
             XpBarShow.NEVER -> false
             XpBarShow.ALWAYS -> true
             XpBarShow.SMART -> {
+                // TODO Improve this
                 (total.toDouble() / current) % 1 == 0.0
             }
         }

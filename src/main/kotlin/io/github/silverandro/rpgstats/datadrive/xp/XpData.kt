@@ -20,7 +20,6 @@ object XpData {
     }.create()
 
     val BLOCK_XP = makeREA(Registry.BLOCK, "block")
-    val ENTITY_XP = makeREA(Registry.ENTITY_TYPE, "entity")
 
     private fun <T> makeREA(registry: Registry<T>, name: String): RegistryEntryAttachment<T, Either<XpEntry, MutableList<XpEntry>>> {
         @Suppress("UNCHECKED_CAST")

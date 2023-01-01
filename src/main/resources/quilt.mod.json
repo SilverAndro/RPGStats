@@ -6,7 +6,7 @@
     "version": "${version}",
     "metadata": {
       "name": "RPGStats",
-      "description": "A mod that adds simple and easy to understand stats to your game",
+      "description": "A mod that adds simple and easy to understand stats to your game in a data drivable manner",
       "license": "MPL-2.0",
       "contributors": {
         "Silver": "Owner"
@@ -44,7 +44,7 @@
       },
       {
         "id": "qkl",
-        "versions": "*"
+        "versions": ">=1.0.1"
       },
       {
         "id": "switchy",

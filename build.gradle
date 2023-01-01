@@ -68,7 +68,7 @@ dependencies {
 	}
 
 	// QKL
-	modImplementation("org.quiltmc.quilt-kotlin-libraries:quilt-kotlin-libraries:+") {
+	modImplementation("org.quiltmc.quilt-kotlin-libraries:quilt-kotlin-libraries:1.0.1+kt.1.7.22+flk.1.8.6") {
 		exclude(group: "org.quiltmc.qsl")
 	}
 

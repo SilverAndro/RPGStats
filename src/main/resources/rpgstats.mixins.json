@@ -1,8 +1,8 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "mc.rpgstats.mixin",
-  "plugin": "mc.rpgstats.mixin.compat.MixinCompatPlugin",
+  "package": "io.github.silverandro.rpgstats.mixin",
+  "plugin": "io.github.silverandro.rpgstats.mixin.compat.MixinCompatPlugin",
   "compatibilityLevel": "JAVA_16",
   "injectors": {
     "defaultRequire": 1
@@ -15,7 +15,6 @@
     "BowAccuracyMixin",
     "BowArrowMixin",
     "BowCanUseMixin",
-    "DataFixerMixin",
     "FishingBobberMixin",
     "ImpalingMixin",
     "ItemEatMixin",
@@ -30,8 +29,6 @@
     "TakeDamageMixin",
     "TotemUseMixin",
     "UnbreakingEnchantmentMixin",
-    "accessor.CriteriaAccessor",
-    "compat.artifality.GrantFarmingOnStaffHarvest",
-    "compat.harvest.GrantFarmingOnSimpleHarvest"
+    "accessor.CriteriaAccessor"
   ]
 }

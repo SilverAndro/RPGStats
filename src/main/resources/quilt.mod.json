@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "quilt_loader": {
+    "group": "io.github.silverandro",
+    "id": "rpgstats",
+    "version": "${version}",
+    "metadata": {
+      "name": "RPGStats",
+      "description": "A mod that adds simple and easy to understand stats to your game in a data drivable manner",
+      "license": "MPL-2.0",
+      "contributors": {
+        "Silver": "Owner"
+      },
+      "contact": {
+        "sources": "https://github.com/SilverAndro/RPGStats",
+        "issues": "https://github.com/SilverAndro/RPGStats/issues"
+      },
+      "icon": "assets/rpgstats/icon.png"
+    },
+    "intermediate_mappings": "net.fabricmc:intermediary",
+    "entrypoints": {
+      "init": {
+        "adapter": "kotlin",
+        "value": "io.github.silverandro.rpgstats.RPGStatsMain"
+      },
+      "client_init": {
+        "adapter": "kotlin",
+        "value": "io.github.silverandro.rpgstats.client.RPGStatsClient"
+      },
+      "cardinal-components": "io.github.silverandro.rpgstats.stats.Components"
+    },
+    "depends": [
+      {
+        "id": "quilt_loader",
+        "versions": ">=0.17.0-"
+      },
+      {
+        "id": "quilted_fabric_api",
+        "versions": ">=2.0.0-"
+      },
+      {
+        "id": "minecraft",
+        "versions": ">=1.19"
+      },
+      {
+        "id": "qkl",
+        "versions": ">=1.0.1"
+      },
+      {
+        "id": "switchy",
+        "versions": ">=1.7.3",
+        "optional": true
+      }
+    ]
+  },
+  "mixin": "rpgstats.mixins.json",
+  "cardinal-components": [
+    "rpgstats:internal",
+    "rpgstats:stats"
+  ]
+}

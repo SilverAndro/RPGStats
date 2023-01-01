@@ -1,0 +1,6 @@
+{
+  "values": {
+    "minecraft:wither": { "id": "rpgstats:_killmethod", "amount": 130 },
+    "minecraft:ender_dragon": { "id": "rpgstats:_killmethod", "amount": 130 }
+  }
+}

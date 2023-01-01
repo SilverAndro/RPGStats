@@ -1,7 +1,9 @@
 package io.github.silverandro.rpgstats
 
+import io.github.silverandro.rpgstats.datadrive.xp.XpData
 import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.stats.Components
+import net.minecraft.entity.damage.DamageSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
@@ -197,6 +199,22 @@ object LevelUtils {
             LevelUpCallback.EVENT.invoker().onLevelUp(player, id, i, false)
         }
         Components.STATS.sync(player)
+    }
+
+    fun applyReaEntry(entry: XpData.XpEntry, player: ServerPlayerEntity, damageSource: DamageSource? = null) {
+        if (player.random.nextDouble() <= entry.chance) {
+            if (damageSource != null && entry.id == Identifier("rpgstats:_killmethod")) {
+                if (damageSource.isProjectile) {
+                    addXpAndLevelUp(Components.RANGED, player, entry.amount)
+                } else if (damageSource.isMagic) {
+                    addXpAndLevelUp(Components.RANGED, player, entry.amount)
+                } else {
+                    addXpAndLevelUp(Components.MELEE, player, entry.amount)
+                }
+            } else {
+                addXpAndLevelUp(entry.id, player, entry.amount)
+            }
+        }
     }
 
     /**

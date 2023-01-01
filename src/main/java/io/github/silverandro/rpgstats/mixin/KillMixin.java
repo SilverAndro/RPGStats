@@ -1,7 +1,9 @@
 package io.github.silverandro.rpgstats.mixin;
 
+import com.mojang.datafixers.util.Either;
 import io.github.silverandro.rpgstats.LevelUtils;
 import io.github.silverandro.rpgstats.RPGStatsMain;
+import io.github.silverandro.rpgstats.datadrive.xp.XpData;
 import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -17,6 +19,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.List;
+
 @SuppressWarnings("ConstantConditions")
 @Mixin(LivingEntity.class)
 public abstract class KillMixin {
@@ -25,7 +29,16 @@ public abstract class KillMixin {
         LivingEntity le = (LivingEntity) (Object) this;
         if (!le.world.isClient && !le.isRemoved()) {
             Entity entity = source.getAttacker();
+
             if (entity instanceof ServerPlayerEntity serverPlayer) {
+                Either<XpData.XpEntry, List<XpData.XpEntry>> reaOverride = XpData.INSTANCE.getENTITY_XP_OVERRIDE().get(le.getType()).orElse(null);
+                if (reaOverride != null) {
+                    reaOverride.ifLeft(xpEntry -> LevelUtils.INSTANCE.applyReaEntry(xpEntry, serverPlayer, source));
+                    reaOverride.ifRight(xpEntries -> xpEntries.forEach(xpEntry -> LevelUtils.INSTANCE.applyReaEntry(xpEntry, serverPlayer, source)));
+                    return;
+                }
+
+
                 if (source.isProjectile()) {
                     if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
                         LevelUtils.INSTANCE.addXpAndLevelUp(Components.RANGED, serverPlayer, 130);
@@ -51,11 +64,7 @@ public abstract class KillMixin {
                             ((ServerPlayerEntity) entity).addStatusEffect(new StatusEffectInstance(StatusEffects.REGENERATION, duration));
                         }
 
-                        if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
-                            LevelUtils.INSTANCE.addXpAndLevelUp(Components.MELEE, serverPlayer, 130);
-                        } else {
-                            LevelUtils.INSTANCE.addXpAndLevelUp(Components.MELEE, serverPlayer, 1);
-                        }
+                        LevelUtils.INSTANCE.addXpAndLevelUp(Components.MELEE, serverPlayer, 1);
                     }
                 }
             }

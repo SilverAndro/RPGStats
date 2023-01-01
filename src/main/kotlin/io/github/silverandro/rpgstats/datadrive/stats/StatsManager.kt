@@ -38,6 +38,11 @@ object StatsManager: IdentifiableResourceReloader {
                         val map: Map<String, StatEntry> = Constants.json.decodeFromStream(it)
                         map.forEach { (key, value) ->
                             val statId = Identifier(key)
+
+                            if (statId.path.startsWith("_")) {
+                                throw IllegalArgumentException("Attempt to register a stat ID starting with an underscore! $statId")
+                            }
+
                             if (!value.shouldRemove) {
                                 Components.components[statId] = value
                             } else {

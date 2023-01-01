@@ -124,16 +124,14 @@ fun grantBlockBreakXP(world: World, playerEntity: PlayerEntity, blockPos: BlockP
         }
 
         val player = playerEntity as ServerPlayerEntity
-        if (Random().nextBoolean()) {
-            if (block is CropBlock && !block.isMature(blockState)) return
+        if (block is CropBlock && !block.isMature(blockState)) return
 
-            val amount = XpData.BLOCK_XP.get(block).orElse(null) ?: return
-            amount.ifLeft {
-                LevelUtils.addXpAndLevelUp(it.id, player, it.amount)
-            }.ifRight {
-                it.forEach {
-                    LevelUtils.addXpAndLevelUp(it.id, player, it.amount)
-                }
+        val amount = XpData.BLOCK_XP.get(block).orElse(null) ?: return
+        amount.ifLeft {
+            LevelUtils.applyReaEntry(it, player)
+        }.ifRight {
+            it.forEach {
+                LevelUtils.applyReaEntry(it, player)
             }
         }
     }

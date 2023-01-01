@@ -11,7 +11,7 @@ import org.quiltmc.qsl.registry.attachment.api.RegistryEntryAttachment
 
 object XpData {
     @Serializable
-    data class XpEntry(val id: @Contextual Identifier, val amount: Int)
+    data class XpEntry(val id: @Contextual Identifier, val amount: Int, val chance: Double = 1.0)
 
     private val xpEntryCodec: Codec<XpEntry> = CodecFactory {
         codecs {
@@ -20,6 +20,7 @@ object XpData {
     }.create()
 
     val BLOCK_XP = makeREA(Registry.BLOCK, "block")
+    val ENTITY_XP_OVERRIDE = makeREA(Registry.ENTITY_TYPE, "entity")
 
     private fun <T> makeREA(registry: Registry<T>, name: String): RegistryEntryAttachment<T, Either<XpEntry, MutableList<XpEntry>>> {
         @Suppress("UNCHECKED_CAST")

@@ -54,7 +54,6 @@ fun registerSwitchyCompat() {
     }
 }
 
-// TODO these should only be avalible if selecting players, will require an accessor mixin
 @RegisterOn("org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents.READY")
 fun registerEntitySelectors() {
     EntitySelectorOptionRegistry.register(

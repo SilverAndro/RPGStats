@@ -5,13 +5,11 @@ import io.github.silverandro.rpgstats.RPGStatsMain
 import net.minecraft.nbt.NbtCompound
 import net.minecraft.util.Identifier
 
-class StatEntry(
+class StatComponentEntry(
     val id: Identifier,
     level: Int = 0,
     xp: Int = 0
 ) {
-    val translationKey = "${id.namespace}.stat.${id.path.replace("/", "_")}"
-
     var level: Int = 0
         set(value) {
             if (RPGStatsMain.config.debug.logRawWrite) {
@@ -45,7 +43,7 @@ class StatEntry(
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
 
-        other as StatEntry
+        other as StatComponentEntry
 
         if (id != other.id) return false
         if (level != other.level) return false

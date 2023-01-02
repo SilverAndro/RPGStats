@@ -237,4 +237,8 @@ object LevelUtils {
             }
         }
     }
+
+    fun getCumulativeXp(id: Identifier, player: ServerPlayerEntity): Int {
+        return calculateXpNeededForLevel(getComponentLevel(id, player)) + getComponentXP(id, player)
+    }
 }

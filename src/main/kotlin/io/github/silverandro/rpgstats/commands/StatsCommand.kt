@@ -7,9 +7,10 @@ import mc.rpgstats.hooky_gen.api.Command
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
+import org.quiltmc.qkl.library.brigadier.CommandResult
 import org.quiltmc.qkl.library.brigadier.argument.player
 import org.quiltmc.qkl.library.brigadier.argument.value
-import org.quiltmc.qkl.library.brigadier.execute
+import org.quiltmc.qkl.library.brigadier.executeWithResult
 import org.quiltmc.qkl.library.brigadier.register
 import org.quiltmc.qkl.library.brigadier.required
 import org.quiltmc.qkl.library.text.*
@@ -27,8 +28,8 @@ object StatsCommand {
             required(
                 player("targetPlayer")
             ) { player ->
-                execute {
-                    displayStats(source, player().value())
+                executeWithResult {
+                    CommandResult.success(displayStats(source, player().value()))
                 }
             }
         }

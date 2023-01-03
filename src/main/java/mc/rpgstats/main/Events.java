@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.netty.buffer.Unpooled;
 import mc.rpgstats.command.CheatCommand;
+import mc.rpgstats.command.LookupCommand;
 import mc.rpgstats.command.StatsCommand;
 import mc.rpgstats.component.internal.PlayerPreferencesComponent;
 import mc.rpgstats.event.LevelUpCallback;
@@ -53,6 +54,7 @@ public class Events {
             (dispatcher, registryAccess, environment) -> {
                 StatsCommand.register(dispatcher);
                 CheatCommand.register(dispatcher);
+                LookupCommand.register(dispatcher);
             }
         );
     }

@@ -124,6 +124,10 @@ public class RPGStats implements ModInitializer {
             return (int)Math.floor(Math.pow(level, config.scaling.power) * config.scaling.scale) + config.scaling.base;
         }
     }
+
+    public static int getTotalXp(Identifier id, ServerPlayerEntity player) {
+        return getComponentLevel(id, player) + getComponentXP(id, player);
+    }
     
     public static void addXpAndLevelUp(Identifier id, ServerPlayerEntity player, int addedXP) {
         if (getConfig().debug.logXpGain) {

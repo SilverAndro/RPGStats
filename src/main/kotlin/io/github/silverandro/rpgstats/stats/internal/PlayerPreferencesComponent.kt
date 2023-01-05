@@ -14,7 +14,7 @@ import net.minecraft.nbt.NbtCompound
 class PlayerPreferencesComponent(var playerEntity: PlayerEntity) : PlayerComponent<Component> {
     var isOptedOutOfButtonSpam = false
     var xpBarLocation = XpBarLocation.HOTBAR
-    var xpBarShow = XpBarShow.SMART
+    var xpBarShow = XpBarShow.ALWAYS
 
     override fun readFromNbt(compoundTag: NbtCompound) {
         isOptedOutOfButtonSpam = compoundTag.getBoolean("optedOutSpam")

@@ -128,7 +128,7 @@ fun grantBlockBreakXP(world: World, playerEntity: PlayerEntity, blockPos: BlockP
             Constants.debugLogger.info(playerEntity.entityName + " broke " + block.translationKey + " at " + blockPos)
         }
 
-        val player = playerEntity as ServerPlayerEntity
+        val player = playerEntity as? ServerPlayerEntity ?: return
         if (block is CropBlock && !block.isMature(blockState)) return
 
         val amount = XpData.BLOCK_XP.get(block).orElse(null) ?: return

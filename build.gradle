@@ -51,6 +51,10 @@ repositories {
 		}
 	}
 	maven {
+		name = "Fuzs Mod Resources"
+		url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+	}
+	maven {
 		name = "JitPack"
 		url = "https://jitpack.io"
 	}
@@ -94,6 +98,11 @@ dependencies {
 	// Dependency for Switchy
 	modImplementation "com.unascribed:lib39-core:1.4.0"
 	modImplementation "com.unascribed:lib39-dessicant:1.4.0"
+
+	// Harvest with ease
+	modImplementation "curse.maven:harvestwithease-602171:4132276"
+	// Forge Config API Port
+	modImplementation "net.minecraftforge:forgeconfigapiport-fabric:4.2.6"
 }
 
 processResources {

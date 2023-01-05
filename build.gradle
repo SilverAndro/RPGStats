@@ -6,6 +6,7 @@ plugins {
 	id 'org.jetbrains.kotlin.jvm' version '1.7.22'
 	id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.22'
 	id("com.google.devtools.ksp") version "1.7.22-1.0.8"
+	id 'org.cadixdev.licenser' version '0.6.1'
 }
 
 sourceCompatibility = JavaVersion.VERSION_16
@@ -135,4 +136,18 @@ kotlin {
 		main.kotlin.srcDirs += 'build/generated/ksp/main/kotlin'
 		test.kotlin.srcDirs += 'build/generated/ksp/test/kotlin'
 	}
+}
+
+license {
+	header = project.file('LICENSE_FILE_HEADER')
+}
+
+assemble.dependsOn(updateLicenses)
+
+subprojects {
+	plugins.apply("org.cadixdev.licenser")
+	license {
+		header = rootProject.file('LICENSE_FILE_HEADER')
+	}
+	assemble.dependsOn(updateLicenses)
 }

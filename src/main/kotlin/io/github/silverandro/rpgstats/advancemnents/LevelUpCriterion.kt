@@ -64,7 +64,7 @@ class LevelUpCriterion : AbstractCriterion<LevelCriteria>() {
     }
 
     companion object {
-        val ID = Identifier(Constants.MOD_ID, "player_level")
+        private val ID = Identifier(Constants.MOD_ID, "player_level")
         private val ANY_ID = Identifier(Constants.MOD_ID, "_any")
     }
 }

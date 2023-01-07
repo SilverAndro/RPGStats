@@ -10,7 +10,7 @@ import io.github.silverandro.rpgstats.advancemnents.LevelUpCriterion
 import io.github.silverandro.rpgstats.datadrive.stats.StatsManager
 import io.github.silverandro.rpgstats.datadrive.xp.XpData
 import io.github.silverandro.rpgstats.hooky.Hooky
-import io.github.silverandro.rpgstats.mixin.accessor.CriteriaAccessor
+import net.minecraft.advancement.criterion.Criteria
 import org.quiltmc.loader.api.ModContainer
 import org.quiltmc.loader.api.config.QuiltConfig
 import org.quiltmc.qsl.base.api.entrypoint.ModInitializer
@@ -43,7 +43,7 @@ object RPGStatsMain : ModInitializer {
     override fun onInitialize(mod: ModContainer) {
         Constants.LOG.info("Hello from ${mod.metadata().name()}")
         // Criterion
-        CriteriaAccessor.getValues()[LevelUpCriterion.ID] = levelUpCriterion
+        Criteria.register(levelUpCriterion)
 
         // Events
         Hooky.registerAll()

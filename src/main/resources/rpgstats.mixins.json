@@ -29,7 +29,6 @@
     "TakeDamageMixin",
     "TotemUseMixin",
     "UnbreakingEnchantmentMixin",
-    "accessor.CriteriaAccessor",
     "compat.harvestwithease.GrantFarmingOnEasyFarmCompat"
   ]
 }

@@ -25,10 +25,10 @@ fun interface LevelUpCallback {
         @JvmField
         val EVENT: Event<LevelUpCallback> = Event.create(LevelUpCallback::class.java) { listeners ->
             return@create LevelUpCallback { player, id, newLevel, hideMessages ->
-                RPGStatsMain.levelUpCriterion.trigger(player as ServerPlayerEntity)
                 for (listener in listeners) {
                     listener.onLevelUp(player, id, newLevel, hideMessages)
                 }
+                RPGStatsMain.levelUpCriterion.trigger(player as ServerPlayerEntity)
             }
         }
     }

@@ -8,6 +8,7 @@ package io.github.silverandro.rpgstats.advancemnents
 
 import com.google.gson.JsonObject
 import io.github.silverandro.rpgstats.Constants
+import io.github.silverandro.rpgstats.Constants.ANY_ID
 import io.github.silverandro.rpgstats.LevelUtils.getHighestLevel
 import io.github.silverandro.rpgstats.advancemnents.LevelUpCriterion.LevelCriteria
 import io.github.silverandro.rpgstats.stats.Components
@@ -65,6 +66,5 @@ class LevelUpCriterion : AbstractCriterion<LevelCriteria>() {
 
     companion object {
         private val ID = Identifier(Constants.MOD_ID, "player_level")
-        private val ANY_ID = Identifier(Constants.MOD_ID, "_any")
     }
 }

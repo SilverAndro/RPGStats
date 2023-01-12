@@ -23,10 +23,10 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 object XpBarRenderer {
-    val activeBarsScope = CoroutineScope(Dispatchers.Default)
-    val activeBars = mutableMapOf<UUID, Job>()
+    private val activeBarsScope = CoroutineScope(Dispatchers.Default)
+    private val activeBars = mutableMapOf<UUID, Job>()
 
-    val smartIndices = DoubleArray(30) { it/30.0 }.filter { it.isFinite() }.map { round(it * 1000) / 1000 }.toSet()
+    private val smartIndices = DoubleArray(30) { it/30.0 }.filter { it.isFinite() }.map { round(it * 1000) / 1000 }.toSet()
 
     init {
         println(smartIndices.toList())

@@ -98,7 +98,8 @@ object LevelUtils {
         }
         val entry = Components.components[id] ?: return
 
-        var nextXP = getComponentXP(id, player) + addedXP
+        val originalXp = getComponentXP(id, player)
+        var nextXP = originalXp + addedXP
         var currentLevel = getComponentLevel(id, player)
         if (currentLevel < RPGStatsMain.config.scaling.maxLevel) {
             // Enough to level up
@@ -128,7 +129,7 @@ object LevelUtils {
             Components.STATS.sync(player)
         }
 
-        if (XpBarRenderer.shouldShowToPlayer(player, calculateXpNeededForLevel(currentLevel + 1), getComponentXP(id, player)) && entry.shouldShowToUser) {
+        if (XpBarRenderer.shouldShowToPlayer(player, calculateXpNeededForLevel(currentLevel + 1), getComponentXP(id, player), originalXp) && entry.shouldShowToUser) {
             XpBarRenderer.renderForPlayer(player, id)
         }
     }

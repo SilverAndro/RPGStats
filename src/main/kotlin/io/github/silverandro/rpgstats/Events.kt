@@ -35,12 +35,10 @@ import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import org.quiltmc.loader.api.QuiltLoader
 import org.quiltmc.qkl.library.networking.allPlayers
 import org.quiltmc.qsl.command.api.EntitySelectorOptionRegistry
 import org.quiltmc.qsl.networking.api.PlayerLookup
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking
-import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 @RegisterOn("org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents.READY")

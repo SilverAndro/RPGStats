@@ -6,7 +6,6 @@
 
 package io.github.silverandro.rpgstats
 
-import folk.sisby.switchy.api.modules.CardinalSerializerCompat
 import io.github.silverandro.rpgstats.Constants.LEVELS_MAX
 import io.github.silverandro.rpgstats.Constants.SYNC_NAMES_PACKET_ID
 import io.github.silverandro.rpgstats.Constants.SYNC_STATS_PACKET_ID
@@ -43,22 +42,6 @@ import org.quiltmc.qsl.networking.api.PlayerLookup
 import org.quiltmc.qsl.networking.api.ServerPlayNetworking
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
-
-@RegisterOn("org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents.READY")
-fun registerSwitchyCompat() {
-    if (QuiltLoader.isModLoaded("switchy")) {
-        CardinalSerializerCompat.tryRegister(
-            Identifier("rpgstats:switchy_compat"),
-            Identifier("rpgstats:stats"),
-            true
-        )
-        CardinalSerializerCompat.tryRegister(
-            Identifier("rpgstats:switchy_compat_internal"),
-            Identifier("rpgstats:internal"),
-            true
-        )
-    }
-}
 
 @RegisterOn("org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents.READY")
 fun registerEntitySelectors() {

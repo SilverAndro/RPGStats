@@ -1,0 +1,10 @@
+{
+  "rpgstats:stats": {
+    "default": true,
+    "importable": "OPERATOR"
+  },
+  "rpgstats:internal": {
+    "default": true,
+    "importable": "OPERATOR"
+  }
+}

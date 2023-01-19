@@ -131,6 +131,7 @@ jar {
 tasks.withType(KotlinCompile).configureEach {
 	kotlinOptions {
 		jvmTarget = '17'
+		freeCompilerArgs += "-Xlambdas=indy"
 	}
 }
 

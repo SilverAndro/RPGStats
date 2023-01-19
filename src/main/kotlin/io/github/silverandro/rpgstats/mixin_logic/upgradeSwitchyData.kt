@@ -1,3 +1,9 @@
+/*
+ *   This Source Code Form is subject to the terms of the Mozilla Public
+ *   License, v. 2.0. If a copy of the MPL was not distributed with this
+ *   file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
 package io.github.silverandro.rpgstats.mixin_logic
 
 import net.minecraft.nbt.NbtCompound
@@ -22,14 +28,13 @@ fun upgradeSwitchyData(profileList: NbtCompound) {
     // Restore
     toUpgrade.forEach {  (profileName, entry) ->
         val (stats, internal) = entry
-        profileList.getCompound(profileName).put("rpgstats:stats", NbtCompound().apply {
-            if (stats != null) {
+        if (stats != null && internal != null)
+        profileList.getCompound(profileName).apply {
+            put("rpgstats:stats", NbtCompound().apply {
                 put("rpgstats:stats", stats)
-            }
-
-            if (internal != null) {
                 put("rpgstats:internal", internal)
-            }
-        })
+            })
+            remove("rpgstats:internal")
+        }
     }
 }

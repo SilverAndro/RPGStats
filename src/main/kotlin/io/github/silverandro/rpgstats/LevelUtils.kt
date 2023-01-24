@@ -7,6 +7,7 @@
 package io.github.silverandro.rpgstats
 
 import io.github.silverandro.rpgstats.datadrive.xp.XpData
+import io.github.silverandro.rpgstats.display.XpBarRenderer
 import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.stats.Components
 import net.minecraft.entity.damage.DamageSource

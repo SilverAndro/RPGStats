@@ -4,8 +4,9 @@
  *   file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package io.github.silverandro.rpgstats
+package io.github.silverandro.rpgstats.display
 
+import io.github.silverandro.rpgstats.LevelUtils
 import io.github.silverandro.rpgstats.stats.Components
 import io.github.silverandro.rpgstats.stats.internal.XpBarLocation
 import io.github.silverandro.rpgstats.stats.internal.XpBarShow
@@ -24,7 +25,7 @@ import kotlin.time.Duration.Companion.seconds
 
 object XpBarRenderer {
     private val activeBarsScope = CoroutineScope(Dispatchers.Default)
-    private val activeBars = mutableMapOf<UUID, Job>()
+    val activeBars = mutableMapOf<UUID, Job>()
 
     private val smartIndices = DoubleArray(30) { it/30.0 }.filter { it.isFinite() }.map { round(it * 1000) / 1000 }.toSet()
 
@@ -83,10 +84,9 @@ object XpBarRenderer {
             when (config.xpBarLocation) {
                 XpBarLocation.CHAT -> player.sendMessage(textDisplay, false)
                 XpBarLocation.HOTBAR -> {
-                    repeat(40) {
-                        if (player.isDisconnected) cancel(CancellationException("Player disconnected"))
+                    repeat(20) {
                         player.sendMessage(textDisplay, true)
-                        delay(0.1.seconds)
+                        delay(0.2.seconds)
                     }
                 }
             }

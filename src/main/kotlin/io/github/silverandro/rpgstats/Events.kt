@@ -13,6 +13,8 @@ import io.github.silverandro.rpgstats.LevelUtils.getComponentLevel
 import io.github.silverandro.rpgstats.LevelUtils.getComponentXP
 import io.github.silverandro.rpgstats.LevelUtils.getLowestLevel
 import io.github.silverandro.rpgstats.datadrive.xp.XpData
+import io.github.silverandro.rpgstats.display.LevelUpDisplays
+import io.github.silverandro.rpgstats.display.XpBarRenderer
 import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.mixin_logic.OnSneakLogic
 import io.github.silverandro.rpgstats.stats.Components
@@ -20,6 +22,7 @@ import io.github.silverandro.rpgstats.stats.systems.StatAttributeAction
 import io.github.silverandro.rpgstats.util.filterInPlace
 import io.github.silverandro.rpgstats.util.readSelectorMap
 import io.netty.buffer.Unpooled
+import kotlinx.coroutines.CancellationException
 import mc.rpgstats.hooky_gen.api.RegisterOn
 import net.minecraft.advancement.Advancement
 import net.minecraft.block.BlockState
@@ -30,6 +33,7 @@ import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.MinecraftServer
+import net.minecraft.server.network.ServerPlayNetworkHandler
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
@@ -241,6 +245,11 @@ fun updateStatModifiers(server: MinecraftServer) {
     }
 }
 
+@RegisterOn("org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents.DISCONNECT")
+fun cleanupPlayerTasks(handler: ServerPlayNetworkHandler) {
+    XpBarRenderer.activeBars[handler.player.uuid]?.cancel(CancellationException("Player disconnected from server"))
+}
+
 object Events {
     fun registerLevelUpEvents() {
         LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
@@ -248,6 +257,15 @@ object Events {
             val actions = Components.actions[id]
             actions?.forEach {
                 it.onLevelUp(player, newLevel, hideMessages || !Components.components[id]!!.shouldShowToUser)
+            }
+        }
+
+        LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
+            if (hideMessages || player !is ServerPlayerEntity) return@register;
+            if (newLevel % 25 == 0) {
+                LevelUpDisplays.fancyLevelUpDisplay(player)
+            } else {
+                LevelUpDisplays.standardLevelUpDisplay(player)
             }
         }
     }

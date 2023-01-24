@@ -248,6 +248,7 @@ fun updateStatModifiers(server: MinecraftServer) {
 @RegisterOn("org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents.DISCONNECT")
 fun cleanupPlayerTasks(handler: ServerPlayNetworkHandler) {
     XpBarRenderer.activeBars[handler.player.uuid]?.cancel(CancellationException("Player disconnected from server"))
+    LevelUpDisplays.activeDisplays[handler.player.uuid]?.cancel(CancellationException("Player disconnected from server"))
 }
 
 object Events {

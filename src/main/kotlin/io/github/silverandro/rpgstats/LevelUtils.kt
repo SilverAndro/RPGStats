@@ -202,7 +202,7 @@ object LevelUtils {
     fun levelUp(id: Identifier, player: ServerPlayerEntity, amount: Int = 1) {
         val currentLevel = getComponentLevel(id, player)
         val newLevel = min(currentLevel + amount, RPGStatsMain.config.scaling.maxLevel)
-        for (i in currentLevel..newLevel) {
+        for (i in currentLevel+1..newLevel) {
             setComponentLevel(id, player, i)
             LevelUpCallback.EVENT.invoker().onLevelUp(player, id, i, false)
         }

@@ -30,7 +30,7 @@ object LevelUpDisplays {
             var currentDistance = 1.3
             var count = 0
             while (isActive && count < 50) {
-                val points = generatePointsAroundCircle(player.pos.add(0.0, count.toDouble() / 25, 0.0), 8, currentDistance, currentOffset)
+                val points = generatePointsAroundCircle(player.pos.add(0.0, count.toDouble() / 35, 0.0), 8, currentDistance, currentOffset)
                 val connection = player.networkHandler
                 for (point in points) {
                     connection.sendPacket(
@@ -57,7 +57,7 @@ object LevelUpDisplays {
     }
 
     fun standardLevelUpDisplay(player: ServerPlayerEntity) {
-        val points = generatePointsAroundCircle(player.pos, 16, 1.1)
+        val points = generatePointsAroundCircle(player.pos.add(0.0, 0.5, 0.0), 16, 1.1)
         val connection = player.networkHandler
         for (point in points) {
             connection.sendPacket(

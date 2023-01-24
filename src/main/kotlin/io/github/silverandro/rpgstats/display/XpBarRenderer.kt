@@ -30,11 +30,10 @@ object XpBarRenderer {
     private val smartIndices = DoubleArray(30) { it/30.0 }.filter { it.isFinite() }.map { round(it * 1000) / 1000 }.toSet()
 
     init {
-        println(smartIndices.toList())
         activeBarsScope.launch {
             while (isActive) {
                 delay(20.milliseconds)
-                activeBars.filterInPlace { uuid, job -> !job.isActive }
+                activeBars.filterInPlace { _, job -> !job.isActive }
             }
         }
     }

@@ -90,20 +90,26 @@ class HookyProcessor(val environment: SymbolProcessorEnvironment, val codeGenera
         functions.forEach {
             verifyParams(params, it.parameters)
         }
+        val most = functions.maxOf { it.parameters.size }
+        val last = params.lastIndex
 
         var currentParam = 'a'.dec()
         fun next(): Char { currentParam = currentParam.inc(); return currentParam }
 
         return buildString {
-            if (params.isNotEmpty()) {
-                if (fullID == "net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents.AFTER") {
-                    appendLine("        $fullID.register { ${params.joinToString { "${next()}: ${it.type.resolve().declaration.qualifiedName!!.asString()}" }}? ->")
-                } else {
-                    appendLine("        $fullID.register { ${params.joinToString { "${next()}: ${it.type.resolve().declaration.qualifiedName!!.asString()}" }} ->")
+            appendLine(buildString {
+                append("        $fullID.register { ")
+                repeat(most) {
+                    val param = params[it]
+                    append("${next()}: ${param.type.resolve().declaration.qualifiedName!!.asString()}${if (it != last) ", " else ""}")
                 }
-            } else {
-                appendLine("        $fullID.register { ")
-            }
+                repeat(params.size - most) {
+                    next()
+                    append("_${if (it + most != last) ", " else ""}")
+                }
+                append(" ->")
+            })
+
             functions.forEach {
                 var passParam = 'a'.dec()
                 fun new(): Char { passParam = passParam.inc(); return passParam }

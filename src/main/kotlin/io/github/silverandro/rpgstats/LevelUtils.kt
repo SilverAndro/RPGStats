@@ -7,6 +7,7 @@
 package io.github.silverandro.rpgstats
 
 import io.github.silverandro.rpgstats.datadrive.xp.XpData
+import io.github.silverandro.rpgstats.display.XpBarRenderer
 import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.stats.Components
 import net.minecraft.entity.damage.DamageSource
@@ -98,7 +99,8 @@ object LevelUtils {
         }
         val entry = Components.components[id] ?: return
 
-        var nextXP = getComponentXP(id, player) + addedXP
+        val originalXp = getComponentXP(id, player)
+        var nextXP = originalXp + addedXP
         var currentLevel = getComponentLevel(id, player)
         if (currentLevel < RPGStatsMain.config.scaling.maxLevel) {
             // Enough to level up
@@ -128,7 +130,7 @@ object LevelUtils {
             Components.STATS.sync(player)
         }
 
-        if (XpBarRenderer.shouldShowToPlayer(player, calculateXpNeededForLevel(currentLevel + 1), getComponentXP(id, player)) && entry.shouldShowToUser) {
+        if (XpBarRenderer.shouldShowToPlayer(player, calculateXpNeededForLevel(currentLevel + 1), getComponentXP(id, player), originalXp) && entry.shouldShowToUser) {
             XpBarRenderer.renderForPlayer(player, id)
         }
     }
@@ -200,7 +202,7 @@ object LevelUtils {
     fun levelUp(id: Identifier, player: ServerPlayerEntity, amount: Int = 1) {
         val currentLevel = getComponentLevel(id, player)
         val newLevel = min(currentLevel + amount, RPGStatsMain.config.scaling.maxLevel)
-        for (i in currentLevel..newLevel) {
+        for (i in currentLevel+1..newLevel) {
             setComponentLevel(id, player, i)
             LevelUpCallback.EVENT.invoker().onLevelUp(player, id, i, false)
         }

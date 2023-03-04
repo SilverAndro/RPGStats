@@ -4,8 +4,9 @@
  *   file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-package io.github.silverandro.rpgstats
+package io.github.silverandro.rpgstats.display
 
+import io.github.silverandro.rpgstats.LevelUtils
 import io.github.silverandro.rpgstats.stats.Components
 import io.github.silverandro.rpgstats.stats.internal.XpBarLocation
 import io.github.silverandro.rpgstats.stats.internal.XpBarShow
@@ -18,18 +19,21 @@ import org.quiltmc.qkl.library.text.*
 import java.util.*
 import kotlin.math.floor
 import kotlin.math.min
+import kotlin.math.round
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds
 
 object XpBarRenderer {
-    val activeBarsScope = CoroutineScope(Dispatchers.Default)
+    private val activeBarsScope = CoroutineScope(Dispatchers.Default)
     val activeBars = mutableMapOf<UUID, Job>()
+
+    private val smartIndices = DoubleArray(30) { it/30.0 }.filter { it.isFinite() }.map { round(it * 1000) / 1000 }.toSet()
 
     init {
         activeBarsScope.launch {
             while (isActive) {
-                delay(50.milliseconds)
-                activeBars.filterInPlace { uuid, job -> !job.isActive }
+                delay(20.milliseconds)
+                activeBars.filterInPlace { _, job -> !job.isActive }
             }
         }
     }
@@ -48,14 +52,16 @@ object XpBarRenderer {
         }
     }
 
-    fun shouldShowToPlayer(player: ServerPlayerEntity, total: Int, current: Int): Boolean {
+    fun shouldShowToPlayer(player: ServerPlayerEntity, total: Int, current: Int, previous: Int): Boolean {
         val config = Components.PREFERENCES.get(player)
         return when(config.xpBarShow) {
             XpBarShow.NEVER -> false
             XpBarShow.ALWAYS -> true
             XpBarShow.SMART -> {
-                // TODO Improve this
-                (total.toDouble() / current) % 1 == 0.0
+                val amounts = smartIndices.map { round(total * it).toInt() }
+                val previousIndex = amounts.indexOfFirst { it > previous } - 1
+                val currentIndex = amounts.indexOfFirst { it > current } - 1
+                currentIndex != previousIndex
             }
         }
     }
@@ -78,7 +84,6 @@ object XpBarRenderer {
                 XpBarLocation.CHAT -> player.sendMessage(textDisplay, false)
                 XpBarLocation.HOTBAR -> {
                     repeat(20) {
-                        if (player.isDisconnected) cancel(CancellationException("Player disconnected"))
                         player.sendMessage(textDisplay, true)
                         delay(0.2.seconds)
                     }

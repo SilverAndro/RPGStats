@@ -41,14 +41,14 @@ object RPGStatsMain : ModInitializer {
     val levelUpCriterion = LevelUpCriterion()
 
     override fun onInitialize(mod: ModContainer) {
-        Constants.LOG.info("Hello from ${mod.metadata().name()}")
+        Constants.LOG.info("Hello from ${mod.metadata().name()}!")
         // Criterion
         Criteria.register(levelUpCriterion)
 
         // Events
+        XpData.poke()
         Hooky.registerAll()
         StatsManager.register()
-        XpData.poke()
         Events.registerLevelUpEvents()
     }
 }

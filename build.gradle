@@ -93,12 +93,6 @@ dependencies {
 	modImplementation "fr.catcore:server-translations-api:1.4.18+1.19.2"
 	include "fr.catcore:server-translations-api:1.4.18+1.19.2"
 
-	// Switchy
-	modImplementation "maven.modrinth:switchy:1.7.3+1.19"
-	// Dependency for Switchy
-	modImplementation "com.unascribed:lib39-core:1.4.0"
-	modImplementation "com.unascribed:lib39-dessicant:1.4.0"
-
 	// Harvest with ease
 	modImplementation "curse.maven:harvestwithease-602171:4132276"
 	// Forge Config API Port
@@ -108,7 +102,7 @@ dependencies {
 processResources {
 	inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
+	filesMatching("quilt.mod.json") {
 		expand "version": project.version
 	}
 }
@@ -137,6 +131,7 @@ jar {
 tasks.withType(KotlinCompile).configureEach {
 	kotlinOptions {
 		jvmTarget = '17'
+		freeCompilerArgs += "-Xlambdas=indy"
 	}
 }
 

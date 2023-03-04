@@ -22,6 +22,7 @@ object Constants {
     val debugLogger: Logger = LogManager.getLogger("RPGStats Debug")
 
     val LEVELS_MAX = Identifier(MOD_ID, "levels_max")
+    val ANY_ID = Identifier(Constants.MOD_ID, "_any")
 
     val json = Json {
         if (QuiltLoader.isDevelopmentEnvironment().not()) {

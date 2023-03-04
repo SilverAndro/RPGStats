@@ -1,0 +1,5 @@
+{
+  "default": true,
+  "importable": "OPERATOR",
+  "components": ["rpgstats:stats", "rpgstats:internal"]
+}

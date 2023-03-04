@@ -1,0 +1,53 @@
+{
+    "rpgstats.stats_for": "Estatísticas para %s",
+    "rpgstats.maxlevel": "%s - Nível: %d",
+    "rpgstats.notmaxlevel": "%s - Nível: %d EXP: %d/%d",
+    "rpgstats.maxlevel_trunc": " - Nível: %d",
+    "rpgstats.notmaxlevel_trunc": " - Nível: %d EXP: %d/%d",
+  
+    "rpgstats.levelup_1": "Você ganhou um ",
+    "rpgstats.levelup_2": " nível! agora você está nivelado ",
+  
+    "rpgstats.feedback.toggle_sneak": "Segure furtivo em vez de spam: %s",
+    "rpgstats.feedback.xp_bar_location": "Localização da barra de EXP: %s",
+    "rpgstats.feedback.xp_bar_show": "EXP vai mostrar: %s",
+    "rpgstats.feedback.level_selector": "Corresponde a jogadores que atendem aos requisitos de nível fornecidos",
+    "rpgstats.feedback.xp_selector": "Corresponde a jogadores que atendem aos requisitos de exp fornecidos",
+  
+    "rpgstats.error.console_player_required": "Um jogador deve ser passado ao executar esse comando do console",
+    "rpgstats.error.not_on_client": "Você não tem o RPGStats instalado em seu cliente, não é possível abrir a GUI",
+  
+    "rpgstats.stat_name.melee": "Corpo a Corpo",
+    "rpgstats.stat_name.ranged": "À distância",
+    "rpgstats.stat_name.defence": "Defesa",
+    "rpgstats.stat_name.magic": "Magia",
+    "rpgstats.stat_name.farming": "Agricultura",
+    "rpgstats.stat_name.mining": "Mineração",
+    "rpgstats.stat_name.fishing": "Pescaria",
+  
+    "rpgstats.special.bloodthirst": "Sede De Sangue",
+    "rpgstats.special.bloodthirst_2": "Sede De Sangue II",
+    "rpgstats.special.bloodthirst.description": "Recupere %d saúde após matar um monstro",
+  
+    "rpgstats.fakestat.mining_speed": "Velocidade de Mineração Adicional",
+    "rpgstats.special.magical_infusion": "Infundido magicamente",
+    "rpgstats.special.magical_infusion.description": "5% de chance extra de não consumir durabilidade com inquebrável",
+    "rpgstats.special.miner_sight": "Visão do mineiro",
+    "rpgstats.special.miner_sight.description": "Visão noturna abaixo y%d",
+  
+    "rpgstats.fakestat.bow_accuracy": "Precisão do arco",
+    "rpgstats.special.aqueus": "Aquoso",
+    "rpgstats.special.aqueus.description": "Penetração se aplica a todos os mobs, não apenas os baseados em água",
+    "rpgstats.special.nix": "Nix",
+    "rpgstats.special.nix.description": "Você não precisa mais de flechas",
+  
+    "rpgstats.fakestat.drunk_potion_duration": "Duração da poção bêbada",
+    "rpgstats.special.vax": "Vax",
+    "rpgstats.special.vax.description": "Imunidade a Veneno",
+    "rpgstats.special.dead_inside": "Morto por dentro",
+    "rpgstats.special.dead_inside.description": "Imunidade a wither",
+  
+    "rpgstats.fakestat.potion_drink_speed": "Velocidade de bebida da poção",
+  
+    "rpgstats.fakestat.bonemeal_efficiency": "Eficiência da farinha de osso"
+}  

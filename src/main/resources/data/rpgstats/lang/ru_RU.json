@@ -1,0 +1,53 @@
+{
+  "rpgstats.stats_for": "Статистика для%s",
+  "rpgstats.maxlevel": "%s - Уровень: %d",
+  "rpgstats.notmaxlevel": "%s - Уровень: %d XP: %d/%d",
+  "rpgstats.maxlevel_trunc": " - Уровень: %d",
+  "rpgstats.notmaxlevel_trunc": " - Уровень: %d XP: %d/%d",
+
+  "rpgstats.levelup_1": "Ты повысился до ",
+  "rpgstats.levelup_2": " уровня! Теперь твой уровень ",
+
+  "rpgstats.feedback.toggle_sneak": "Зажми клавишу приседания вместо быстрых нажатий: %s",
+  "rpgstats.feedback.xp_bar_location": "Место шкалы опыта: %s",
+  "rpgstats.feedback.xp_bar_show": "Опыт будет показываться: %s",
+  "rpgstats.feedback.level_selector": "Соответствует игрокам, которые соответствуют указанным требованиям уровня",
+  "rpgstats.feedback.xp_selector": "Соответствует игрокам, которые соответствуют указанным требованиям к опыту.",
+
+  "rpgstats.error.console_player_required": "A player must be passed when executing that command from the console",
+  "rpgstats.error.not_on_client": "You don't have RPGStats installed on your client, unable to open the GUI",
+
+  "rpgstats.stat_name.melee": "Ближний бой",
+  "rpgstats.stat_name.ranged": "Дальний бой",
+  "rpgstats.stat_name.defence": "Защита",
+  "rpgstats.stat_name.magic": "Магия",
+  "rpgstats.stat_name.farming": "Фермерство",
+  "rpgstats.stat_name.mining": "Шахтёрство",
+  "rpgstats.stat_name.fishing": "Рыбалка",
+
+  "rpgstats.special.bloodthirst": "Жажда Крови",
+  "rpgstats.special.bloodthirst_2": "Жажда Крови II",
+  "rpgstats.special.bloodthirst.description": "Пополни %d здоровья после убийства моба",
+
+  "rpgstats.fakestat.mining_speed": "Доп.Скорость копания",
+  "rpgstats.special.magical_infusion": "Магически наполненный",
+  "rpgstats.special.magical_infusion.description": "Дополнительные 5% не потратить прочность предмета при использовании",
+  "rpgstats.special.miner_sight": "Зрение Шахтёра",
+  "rpgstats.special.miner_sight.description": "Получи эффект ночного виденья ниже y%d",
+
+  "rpgstats.fakestat.bow_accuracy": "Точность лука",
+  "rpgstats.special.aqueus": "Аква",
+  "rpgstats.special.aqueus.description": "Пронзание применяется ко всем мобам, а не только к водным.",
+  "rpgstats.special.nix": "Никс",
+  "rpgstats.special.nix.description": "Тебе больше не нужны стрелы",
+
+  "rpgstats.fakestat.drunk_potion_duration": "Время действия зелья",
+  "rpgstats.special.vax": "Вакс",
+  "rpgstats.special.vax.description": "Иммунитет к отравлению",
+  "rpgstats.special.dead_inside": "Дед Инсайд",
+  "rpgstats.special.dead_inside.description": "Иммунитет к Иссушению",
+
+  "rpgstats.fakestat.potion_drink_speed": "Скорость питья зелья",
+
+  "rpgstats.fakestat.bonemeal_efficiency": "Эффективность костн.муки"
+}

@@ -48,7 +48,7 @@
       },
       {
         "id": "switchy",
-        "versions": ">=2.0.0",
+        "versions": ">=2.0.3",
         "optional": true
       }
     ]

@@ -206,7 +206,7 @@ class Components : EntityComponentInitializer {
         private val modifierIDs = mutableMapOf<String, UUID>()
         fun modifierIDFor(name: String, index: Int): UUID {
             return modifierIDs.computeIfAbsent("$name$index") {
-                MathHelper.m_vkfnsave(RandomGenerator.createThreaded())
+                MathHelper.randomUuid(RandomGenerator.createThreaded())
             }
         }
     }

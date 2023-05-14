@@ -10,8 +10,9 @@ import com.mojang.datafixers.util.Either
 import com.mojang.serialization.Codec
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import net.minecraft.registry.Registries
+import net.minecraft.registry.Registry
 import net.minecraft.util.Identifier
-import net.minecraft.util.registry.Registry
 import org.quiltmc.qkl.library.serialization.CodecFactory
 import org.quiltmc.qsl.registry.attachment.api.RegistryEntryAttachment
 
@@ -25,8 +26,8 @@ object XpData {
         }
     }.create()
 
-    val BLOCK_XP = makeREA(Registry.BLOCK, "block")
-    val ENTITY_XP_OVERRIDE = makeREA(Registry.ENTITY_TYPE, "entity")
+    val BLOCK_XP = makeREA(Registries.BLOCK, "block")
+    val ENTITY_XP_OVERRIDE = makeREA(Registries.ENTITY_TYPE, "entity")
 
     private fun <T> makeREA(registry: Registry<T>, name: String): RegistryEntryAttachment<T, Either<XpEntry, MutableList<XpEntry>>> {
         @Suppress("UNCHECKED_CAST")

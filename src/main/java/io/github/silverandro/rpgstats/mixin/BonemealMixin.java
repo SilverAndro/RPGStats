@@ -11,17 +11,17 @@ import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.block.*;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Holder;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.util.Holder;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.random.RandomGenerator;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeKeys;
+import net.minecraft.world.biome.Biomes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -52,9 +52,9 @@ public class BonemealMixin {
                     }
 
                     Holder<Biome> j = world.getBiome(blockPos2);
-                    if (j.isRegistryKey(BiomeKeys.WARM_OCEAN)) {
+                    if (j.isRegistryKey(Biomes.WARM_OCEAN)) {
                         if (i == 0 && facing != null && facing.getAxis().isHorizontal()) {
-                            blockState = Registry.BLOCK
+                            blockState = Registries.BLOCK
                                     .getTag(BlockTags.WALL_CORALS)
                                     .flatMap(blocks -> blocks.getRandomElement(world.random))
                                     .map(blockEntry -> blockEntry.value().getDefaultState())
@@ -63,7 +63,7 @@ public class BonemealMixin {
                                 blockState = blockState.with(DeadCoralWallFanBlock.FACING, facing);
                             }
                         } else if (random.nextInt(4) == 0) {
-                            blockState = Registry.BLOCK
+                            blockState = Registries.BLOCK
                                     .getTag(BlockTags.UNDERWATER_BONEMEALS)
                                     .flatMap(blocks -> blocks.getRandomElement(world.random))
                                     .map(blockEntry -> blockEntry.value().getDefaultState())

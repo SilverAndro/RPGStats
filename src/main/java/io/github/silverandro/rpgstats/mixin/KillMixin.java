@@ -16,6 +16,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.PassiveEntity;
@@ -44,16 +45,15 @@ public abstract class KillMixin {
                     return;
                 }
 
-
-                if (source.isProjectile()) {
+                if (source.isType(DamageTypes.MAGIC)) {
+                    LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, serverPlayer, 1);
+                } else if (source.isIndirect()) {
                     if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
                         LevelUtils.INSTANCE.addXpAndLevelUp(Components.RANGED, serverPlayer, 130);
                     } else {
                         LevelUtils.INSTANCE.addXpAndLevelUp(Components.RANGED, serverPlayer, 1);
                     }
-                } else if (source.isMagic()) {
-                    LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, serverPlayer, 1);
-                } else if (!source.isExplosive() && !source.isFire()) {
+                } else if (!source.isType(DamageTypes.EXPLOSION) && !source.isType(DamageTypes.ON_FIRE) && !source.isType(DamageTypes.IN_FIRE)) {
                     if (le instanceof PassiveEntity) {
                         LevelUtils.INSTANCE.addXpAndLevelUp(Components.FARMING, serverPlayer, 1);
                     } else {

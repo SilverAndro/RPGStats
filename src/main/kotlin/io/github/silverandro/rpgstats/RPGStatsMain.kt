@@ -25,13 +25,6 @@ object RPGStatsMain : ModInitializer {
     )
 
     @JvmField
-    val damageBlacklist = QuiltConfig.create(
-        "rpgstats",
-        "damage_blacklist",
-        RPGStatsDamageBlacklist::class.java
-    )
-
-    @JvmField
     val levelConfig = QuiltConfig.create(
         "rpgstats",
         "level_abilities",
@@ -50,5 +43,7 @@ object RPGStatsMain : ModInitializer {
         Hooky.registerAll()
         StatsManager.register()
         Events.registerLevelUpEvents()
+
+
     }
 }

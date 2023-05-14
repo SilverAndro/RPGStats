@@ -28,7 +28,7 @@ object StatsCommand {
             executes {
                 displayStats(
                     it.source,
-                    it.source.player
+                    it.source.playerOrThrow
                 )
             }
             required(

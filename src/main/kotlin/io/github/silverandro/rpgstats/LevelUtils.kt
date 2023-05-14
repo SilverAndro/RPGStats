@@ -11,6 +11,7 @@ import io.github.silverandro.rpgstats.display.XpBarRenderer
 import io.github.silverandro.rpgstats.event.LevelUpCallback
 import io.github.silverandro.rpgstats.stats.Components
 import net.minecraft.entity.damage.DamageSource
+import net.minecraft.entity.damage.DamageTypes
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
 import net.minecraft.util.Identifier
@@ -212,9 +213,9 @@ object LevelUtils {
     fun applyReaEntry(entry: XpData.XpEntry, player: ServerPlayerEntity, damageSource: DamageSource? = null) {
         if (player.random.nextDouble() <= entry.chance) {
             if (damageSource != null && entry.id == Identifier("rpgstats:_killmethod")) {
-                if (damageSource.isProjectile) {
-                    addXpAndLevelUp(Components.RANGED, player, entry.amount)
-                } else if (damageSource.isMagic) {
+                if (damageSource.isType(DamageTypes.MAGIC)) {
+                    addXpAndLevelUp(Components.MAGIC, player, entry.amount)
+                } else if (damageSource.isIndirect) {
                     addXpAndLevelUp(Components.RANGED, player, entry.amount)
                 } else {
                     addXpAndLevelUp(Components.MELEE, player, entry.amount)

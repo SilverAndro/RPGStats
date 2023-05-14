@@ -7,12 +7,14 @@
 package io.github.silverandro.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
-import io.github.silverandro.rpgstats.RPGStatsDamageBlacklist;
-import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.RegistryKeys;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,6 +22,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
 public class ApplyDamageMixin {
+    private static final TagKey<DamageType> DAMAGE_XP_BLACKLIST = TagKey.of(
+            RegistryKeys.DAMAGE_TYPE,
+            new Identifier("rpgstats", "damage_blacklist"
+            )
+    );
     private static float originalDamage = 0f;
 
     @Inject(method = "applyDamage", at = @At("HEAD"))
@@ -43,30 +50,6 @@ public class ApplyDamageMixin {
     }
 
     public boolean sourceCanGrantXp(DamageSource source) {
-        RPGStatsDamageBlacklist blacklist = RPGStatsMain.damageBlacklist;
-        if (source == DamageSource.IN_FIRE) return blacklist.inFire;
-        if (source == DamageSource.LIGHTNING_BOLT) return blacklist.lightning;
-        if (source == DamageSource.ON_FIRE) return blacklist.onFire;
-        if (source == DamageSource.LAVA) return blacklist.lava;
-        if (source == DamageSource.HOT_FLOOR) return blacklist.hotFloor;
-        if (source == DamageSource.IN_WALL) return blacklist.inWall;
-        if (source == DamageSource.CRAMMING) return blacklist.cramming;
-        if (source == DamageSource.DROWN) return blacklist.drown;
-        if (source == DamageSource.STARVE) return blacklist.starve;
-        if (source == DamageSource.CACTUS) return blacklist.cactus;
-        if (source == DamageSource.FALL) return blacklist.fall;
-        if (source == DamageSource.FLY_INTO_WALL) return blacklist.flyIntoWall;
-        if (source == DamageSource.OUT_OF_WORLD) return blacklist.outOfWorld;
-        if (source == DamageSource.GENERIC) return blacklist.generic;
-        if (source == DamageSource.MAGIC) return blacklist.magic;
-        if (source == DamageSource.WITHER) return blacklist.wither;
-        if (source == DamageSource.ANVIL) return blacklist.anvil;
-        if (source == DamageSource.FALLING_BLOCK) return blacklist.fallingBlock;
-        if (source == DamageSource.DRYOUT) return blacklist.dryOut;
-        if (source == DamageSource.SWEET_BERRY_BUSH) return blacklist.berryBush;
-        if (source == DamageSource.FREEZE) return blacklist.freeze;
-        if (source == DamageSource.STALAGMITE) return blacklist.stalactite;
-        if (source == DamageSource.FALLING_STALACTITE) return blacklist.fallingStalactite;
-        return true;
+        return source.isTypeIn(DAMAGE_XP_BLACKLIST);
     }
 }

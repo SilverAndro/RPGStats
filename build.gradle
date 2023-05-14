@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
 	id 'io.github.p03w.machete' version '2.+'
-	id 'org.quiltmc.loom' version '+'
+	id 'org.quiltmc.loom' version '1.+'
 	id 'org.jetbrains.kotlin.jvm' version '1.7.22'
 	id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.22'
 	id("com.google.devtools.ksp") version "1.7.22-1.0.8"
@@ -68,12 +68,12 @@ dependencies {
 
 	// QSL
 	modImplementation "org.quiltmc:qsl:${qsl_version}+${minecraft_version}"
-	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${qfapi_version}") {
+	modImplementation("org.quiltmc.quilted-fabric-api:quilted-fabric-api:${qfapi_version}-${minecraft_version}") {
 		exclude(group: "org.quiltmc.qsl")
 	}
 
 	// QKL
-	modImplementation("org.quiltmc.quilt-kotlin-libraries:quilt-kotlin-libraries:1.0.1+kt.1.7.22+flk.1.8.6") {
+	modImplementation("org.quiltmc.quilt-kotlin-libraries:quilt-kotlin-libraries:2.0.2+kt.1.8.20+flk.1.9.3") {
 		exclude(group: "org.quiltmc.qsl")
 	}
 

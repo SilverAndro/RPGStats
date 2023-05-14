@@ -23,9 +23,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerEntity.class)
 public class ApplyDamageMixin {
     private static final TagKey<DamageType> DAMAGE_XP_BLACKLIST = TagKey.of(
-            RegistryKeys.DAMAGE_TYPE,
-            new Identifier("rpgstats", "damage_blacklist"
-            )
+        RegistryKeys.DAMAGE_TYPE,
+        new Identifier("rpgstats", "damage_blacklist")
     );
     private static float originalDamage = 0f;
 
@@ -50,6 +49,6 @@ public class ApplyDamageMixin {
     }
 
     public boolean sourceCanGrantXp(DamageSource source) {
-        return source.isTypeIn(DAMAGE_XP_BLACKLIST);
+        return !source.isTypeIn(DAMAGE_XP_BLACKLIST);
     }
 }

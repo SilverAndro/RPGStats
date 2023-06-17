@@ -34,7 +34,7 @@ public abstract class KillMixin {
     @Inject(at = @At("HEAD"), method = "onDeath")
     private void rpgstats$onKilledXPTracker(DamageSource source, CallbackInfo info) {
         LivingEntity le = (LivingEntity) (Object) this;
-        if (!le.world.isClient && !le.isRemoved()) {
+        if (!le.getWorld().isClient && !le.isRemoved()) {
             Entity entity = source.getAttacker();
 
             if (entity instanceof ServerPlayerEntity serverPlayer) {

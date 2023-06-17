@@ -9,6 +9,7 @@ package io.github.silverandro.rpgstats.commands
 import com.mojang.brigadier.CommandDispatcher
 import com.mojang.datafixers.util.Either
 import io.github.silverandro.rpgstats.datadrive.xp.XpData
+import io.github.silverandro.rpgstats.util.supplier
 import mc.rpgstats.hooky_gen.api.Command
 import net.minecraft.server.command.ServerCommandSource
 import org.quiltmc.qkl.library.brigadier.argument.blockPos
@@ -55,7 +56,7 @@ object DebugCommand {
                     literal(it.id.toString() + "\n")
                     literal(" - Amount: ${it.amount}\n")
                     literal(" - Chance: ${it.chance}")
-                }, false)
+                }.supplier(), false)
             }.ifRight {
                 source.sendFeedback(buildText {
                     it.forEach {
@@ -63,10 +64,10 @@ object DebugCommand {
                         literal(" - Amount: ${it.amount}\n")
                         literal(" - Chance: ${it.chance}")
                     }
-                }, false)
+                }.supplier(), false)
             }
         } else {
-            source.sendFeedback(buildText { color(Color.RED) { literal("No REA registered!") } }, false)
+            source.sendFeedback(buildText { color(Color.RED) { literal("No REA registered!") } }.supplier(), false)
         }
     }
 }

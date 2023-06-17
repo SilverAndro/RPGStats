@@ -29,7 +29,7 @@
     "TakeDamageMixin",
     "TotemUseMixin",
     "UnbreakingEnchantmentMixin",
-    "compat.harvestwithease.GrantFarmingOnEasyFarmCompat",
+    "compat.harvestwithease_disabled.GrantFarmingOnEasyFarmCompat",
     "compat.switchy.UpgradeSwitchyData"
   ]
 }

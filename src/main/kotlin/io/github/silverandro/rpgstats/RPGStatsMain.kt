@@ -43,7 +43,5 @@ object RPGStatsMain : ModInitializer {
         Hooky.registerAll()
         StatsManager.register()
         Events.registerLevelUpEvents()
-
-
     }
 }

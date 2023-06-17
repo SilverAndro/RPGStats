@@ -64,7 +64,7 @@ public class BonemealMixin {
                             }
                         } else if (random.nextInt(4) == 0) {
                             blockState = Registries.BLOCK
-                                    .getTag(BlockTags.UNDERWATER_BONEMEALS)
+                                    .getTag(BlockTags.UNDERWATER_BONE_MEALS)
                                     .flatMap(blocks -> blocks.getRandomElement(world.random))
                                     .map(blockEntry -> blockEntry.value().getDefaultState())
                                     .orElse(blockState);

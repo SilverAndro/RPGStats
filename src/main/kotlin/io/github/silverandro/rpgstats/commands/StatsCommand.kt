@@ -9,6 +9,7 @@ package io.github.silverandro.rpgstats.commands
 import com.mojang.brigadier.CommandDispatcher
 import io.github.silverandro.rpgstats.LevelUtils
 import io.github.silverandro.rpgstats.stats.Components
+import io.github.silverandro.rpgstats.util.supplier
 import mc.rpgstats.hooky_gen.api.Command
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
@@ -50,17 +51,17 @@ object StatsCommand {
                         literal("RPGStats > ")
                     }
                     translatable("rpgstats.stats_for", target.entityName)
-                }, false
+                }.supplier(), false
             )
 
            statsToShow.forEach { (identifier, entry) ->
-                source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target, !entry.shouldShowToUser), false)
+                source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target, !entry.shouldShowToUser).supplier(), false)
             }
         } else {
-            source.sendFeedback(Text.translatable("rpgstats.stats_for", target.entityName), false)
+            source.sendFeedback(Text.translatable("rpgstats.stats_for", target.entityName).supplier(), false)
 
             statsToShow.forEach { (identifier, entry) ->
-                source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target, !entry.shouldShowToUser), false)
+                source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target, !entry.shouldShowToUser).supplier(), false)
             }
         }
 

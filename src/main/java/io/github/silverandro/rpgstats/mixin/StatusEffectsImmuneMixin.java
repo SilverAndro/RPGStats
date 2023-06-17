@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class StatusEffectsImmuneMixin {
     @Redirect(method = "applyUpdateEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", ordinal = 0))
     public boolean rpgstats$negatePoison(LivingEntity livingEntity, DamageSource source, float amount) {
-        if (!livingEntity.world.isClient) {
+        if (!livingEntity.getWorld().isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
                 int level = LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, (ServerPlayerEntity) livingEntity);
                 if (level < 25 || !RPGStatsMain.levelConfig.magic.enableLv25Buff) {
@@ -36,7 +36,7 @@ public class StatusEffectsImmuneMixin {
 
     @Redirect(method = "applyUpdateEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;damage(Lnet/minecraft/entity/damage/DamageSource;F)Z", ordinal = 1))
     public boolean rpgstats$negateWither(LivingEntity livingEntity, DamageSource source, float amount) {
-        if (!livingEntity.world.isClient) {
+        if (!livingEntity.getWorld().isClient) {
             if (livingEntity instanceof ServerPlayerEntity) {
                 int level = LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, (ServerPlayerEntity) livingEntity);
                 if (level < 50 || !RPGStatsMain.levelConfig.magic.enableLv50Buff) {

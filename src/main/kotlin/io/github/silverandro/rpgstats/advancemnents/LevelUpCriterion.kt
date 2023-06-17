@@ -14,16 +14,16 @@ import io.github.silverandro.rpgstats.advancemnents.LevelUpCriterion.LevelCriter
 import io.github.silverandro.rpgstats.stats.Components
 import net.minecraft.advancement.criterion.AbstractCriterion
 import net.minecraft.advancement.criterion.AbstractCriterionConditions
+import net.minecraft.class_5258
 import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer
 import net.minecraft.predicate.entity.AdvancementEntityPredicateSerializer
-import net.minecraft.predicate.entity.EntityPredicate.Extended
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
 
 class LevelUpCriterion : AbstractCriterion<LevelCriteria>() {
     override fun conditionsFromJson(
         obj: JsonObject,
-        pred: Extended,
+        pred: class_5258,
         predicateDeserializer: AdvancementEntityPredicateDeserializer
     ): LevelCriteria {
         return LevelCriteria(pred, obj["level"].asInt, obj["stat"].asString)
@@ -38,7 +38,7 @@ class LevelUpCriterion : AbstractCriterion<LevelCriteria>() {
     }
 
     class LevelCriteria(
-        playerPredicate: Extended,
+        playerPredicate: class_5258,
         private val level: Int,
         id: String
     ) : AbstractCriterionConditions(

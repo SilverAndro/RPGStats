@@ -37,7 +37,7 @@ public class OnSneakLogic {
             // If we should do stuff
             // In a 3x3 or 5x5 area, there is a 90% chance to grow any Fertilizable blocks
             if (amount > 0) {
-                World world = playerEntity.world;
+                World world = playerEntity.getWorld();
                 BlockPos blockPos = playerEntity.getBlockPos();
                 for (int y = -1; y <= 1; y++) {
                     for (int x = -amount; x <= amount; x++) {

@@ -10,6 +10,7 @@ import com.mojang.brigadier.CommandDispatcher
 import io.github.silverandro.rpgstats.stats.Components
 import io.github.silverandro.rpgstats.stats.internal.XpBarLocation
 import io.github.silverandro.rpgstats.stats.internal.XpBarShow
+import io.github.silverandro.rpgstats.util.supplier
 import mc.rpgstats.hooky_gen.api.Command
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.Text
@@ -31,13 +32,13 @@ object PreferencesCommand {
         dispatch.register("rpgconfig") {
             required(literal("disable_spam"), boolean("disable_button_spam")) { _, boolean ->
                 execute {
-                    val component = Components.PREFERENCES.get(source.player)
+                    val component = Components.PREFERENCES.get(source.playerOrThrow)
                     component.isOptedOutOfButtonSpam = boolean().value()
                     source.sendFeedback(
                         Text.translatable(
                             "rpgstats.feedback.toggle_sneak",
                             component.isOptedOutOfButtonSpam
-                        ), false
+                        ).supplier(), false
                     )
                 }
             }
@@ -45,13 +46,13 @@ object PreferencesCommand {
             required(literal("xp_bar")) {
                 required(literal("location"), enum("location_value", XpBarLocation::class)) { _, enum ->
                     execute {
-                        val component = Components.PREFERENCES.get(source.player)
+                        val component = Components.PREFERENCES.get(source.playerOrThrow)
                         component.xpBarLocation = enum().value()
                         source.sendFeedback(
                             Text.translatable(
                                 "rpgstats.feedback.xp_bar_location",
                                 component.xpBarLocation.name
-                            ), false
+                            ).supplier(), false
                         )
                     }
                 }
@@ -63,7 +64,7 @@ object PreferencesCommand {
                             Text.translatable(
                                 "rpgstats.feedback.xp_bar_show",
                                 component.xpBarShow.name
-                            ), false
+                            ).supplier(), false
                         )
                     }
                 }
@@ -78,7 +79,7 @@ object PreferencesCommand {
                     literal("\n")
                     translatable("rpgstats.feedback.xp_bar_show", component.xpBarShow.name)
                 }
-                source.sendFeedback(feedback, false)
+                source.sendFeedback(feedback.supplier(), false)
             }
         }
     }

@@ -1,0 +1,53 @@
+{
+  "rpgstats.stats_for": "%s için istatistikler”,
+  "rpgstats.maxlevel": "%s - Seviye: %d",
+  "rpgstats.notmaxlevel": "%s - Seviye: %d EXP: %d/%d",
+  "rpgstats.maxlevel_trunc": " - Seviye: %d",
+  "rpgstats.notmaxlevel_trunc": " - Seviye: %d EXP: %d/%d",
+
+  "rpgstats.levelup_1": “Seviyen”,
+  "rpgstats.levelup_2": " artmış! Şimdi seviyen ",
+
+  "rpgstats.feedback.toggle_sneak": “Lütfen eğilme tuşu spam etmeyin: %s",
+  "rpgstats.feedback.xp_bar_location": “EXP çubuğun konumu: %s",
+  "rpgstats.feedback.xp_bar_show": “EXP gösterilecek: %s",
+  "rpgstats.feedback.level_selector": "Sağlanan seviye gereksinimlerini karşılayan oyuncularla eşleşir",
+  "rpgstats.feedback.xp_selector": "Sağlanan EXP gereksinimlerini karşılayan oyuncularla eşleşir",
+
+  "rpgstats.error.console_player_required": "Bu konsol komutu çalıştırılırken bir oyuncu geçirilmelidir",
+  "rpgstats.error.not_on_client": "İstemcinizde RPGStats yüklü değil, GKA açılamiyor”, 
+
+  "rpgstats.stat_name.melee": "Yakın Dövüş",
+  "rpgstats.stat_name.ranged": "Menzil",
+  "rpgstats.stat_name.defence": "Defans",
+  "rpgstats.stat_name.magic": "Büyü",
+  "rpgstats.stat_name.farming": “Çiftçilik”,
+  "rpgstats.stat_name.mining": “Madencilik”,
+  "rpgstats.stat_name.fishing": “Balıkçılık”,
+
+  "rpgstats.special.bloodthirst": "Kana susamak",
+  "rpgstats.special.bloodthirst_2": "Kana susamak II",
+  "rpgstats.special.bloodthirst.description": "Bir canavarı öldürdükten sonra %d sağlık kazan",
+
+  "rpgstats.fakestat.mining_speed": "Ek Madencilik Hızı",
+  "rpgstats.special.magical_infusion": "Büyü ile aşılanmış",
+  "rpgstats.special.magical_infusion.description": "Kırılmaz ile dayanıklılığı tüketmemek için %5 ekstra şans",
+  "rpgstats.special.miner_sight": "Madenci görüş",
+  "rpgstats.special.miner_sight.description": "Gece görüşü y%d'nin altında",
+
+  "rpgstats.fakestat.bow_accuracy": "Yay doğruluğu",
+  "rpgstats.special.aqueus": “Sulu”,
+  "rpgstats.special.aqueus.description": "Penetrasyon tüm çeteler için geçerlidir, sadece su bazlı olanlar için değil",
+  "rpgstats.special.nix": "Nix",
+  "rpgstats.special.nix.description": “Artık oklar lazım değil”,
+
+  "rpgstats.fakestat.drunk_potion_duration": “Sarhoş iksir süresi”,
+  "rpgstats.special.vax": "Vax",
+  "rpgstats.special.vax.description": "Zehir bağışıklığı”,
+  "rpgstats.special.dead_inside": “’İçim ölü”,
+  "rpgstats.special.dead_inside.description": “Solmaya bağışıklığı”,
+
+  "rpgstats.fakestat.potion_drink_speed": “İksir içme hızı”,
+
+  "rpgstats.fakestat.bonemeal_efficiency": “Kemik tozu verimliliği"
+}

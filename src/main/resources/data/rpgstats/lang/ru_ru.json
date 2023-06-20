@@ -1,5 +1,5 @@
 {
-  "rpgstats.stats_for": "Статистика для%s",
+  "rpgstats.stats_for": "Статистика для %s",
   "rpgstats.maxlevel": "%s - Уровень: %d",
   "rpgstats.notmaxlevel": "%s - Уровень: %d XP: %d/%d",
   "rpgstats.maxlevel_trunc": " - Уровень: %d",

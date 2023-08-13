@@ -14,6 +14,7 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
@@ -30,11 +31,18 @@ import java.util.List;
 public class ItemEatMixin {
     @SuppressWarnings("ConstantConditions")
     @Inject(method = "applyFoodEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item;isFood()Z"))
-    public void rpgstats$grantFishEffects(ItemStack stack, World world, LivingEntity targetEntity, CallbackInfo ci) {
+    public void rpgstats$grantFishAndGoldenAppleEffects(ItemStack stack, World world, LivingEntity targetEntity, CallbackInfo ci) {
         LivingEntity le = (LivingEntity) (Object) this;
-        if (le instanceof ServerPlayerEntity) {
-            int level = LevelUtils.INSTANCE.getComponentLevel(Components.FISHING, (ServerPlayerEntity) le);
-            if (level >= 25 && stack.isIn(ItemTags.FISHES) && RPGStatsMain.levelConfig.fishing.enableLv25Buff) {
+        if (le instanceof ServerPlayerEntity spe) {
+            if (stack.getItem() == Items.GOLDEN_APPLE) {
+                LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, spe, 25);
+            }
+            if (stack.getItem() == Items.ENCHANTED_GOLDEN_APPLE) {
+                LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, spe, 400);
+            }
+
+            int fishingLevel = LevelUtils.INSTANCE.getComponentLevel(Components.FISHING, spe);
+            if (fishingLevel >= 25 && stack.isIn(ItemTags.FISHES) && RPGStatsMain.levelConfig.fishing.enableLv25Buff) {
                 List<StatusEffect> goodEffects = Arrays.asList(
                         StatusEffects.ABSORPTION,
                         StatusEffects.CONDUIT_POWER,
@@ -57,11 +65,11 @@ public class ItemEatMixin {
                 // im lazy
                 Collections.shuffle(goodEffects);
 
-                le.addStatusEffect(new StatusEffectInstance(goodEffects.get(0), 30 * 20, 0));
+                spe.addStatusEffect(new StatusEffectInstance(goodEffects.get(0), 30 * 20, 0));
             }
 
-            if (level >= 50 && RPGStatsMain.levelConfig.fishing.enableLv50Buff) {
-                le.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 1, 0));
+            if (fishingLevel >= 50 && RPGStatsMain.levelConfig.fishing.enableLv50Buff) {
+                spe.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 1, 0));
             }
         }
     }

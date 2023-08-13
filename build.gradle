@@ -1,15 +1,12 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-	id 'io.github.p03w.machete' version '2.+'
-	id 'org.quiltmc.loom' version '1.+'
-	id 'org.jetbrains.kotlin.jvm' version '1.7.22'
-	id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.22'
-	id("com.google.devtools.ksp") version "1.7.22-1.0.8"
+	id 'org.quiltmc.loom' version '1.3.+'
+	id 'org.jetbrains.kotlin.jvm' version '1.8.20'
+	id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.20'
+	id("com.google.devtools.ksp") version "1.8.20-1.0.11"
 }
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
 
 archivesBaseName = project.archives_base_name
 version = "${project.mod_version}+${project.minecraft_version}"
@@ -18,7 +15,7 @@ group = project.maven_group
 repositories {
 	maven {
 		name = 'Ladysnake Mods'
-		url = 'https://ladysnake.jfrog.io/artifactory/mods'
+		url = 'https://maven.ladysnake.org/releases'
 	}
 	maven {
 		name = "Curseforge"
@@ -78,16 +75,34 @@ dependencies {
 	ksp(project("Hooky"))
 
 	// Cardinal components base
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
-	include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}"
+	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cca_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 
 	// Cardinal components entity
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
-	include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}"
+	modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cca_version}") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 
 	// Translations
-	modImplementation "xyz.nucleoid:server-translations-api:2.0.0+1.20"
-	include "xyz.nucleoid:server-translations-api:2.0.0+1.20"
+	modImplementation("xyz.nucleoid:server-translations-api:2.0.0+1.20") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
+	include("xyz.nucleoid:server-translations-api:2.0.0+1.20") {
+		exclude(group: "net.fabricmc")
+		exclude(group: "net.fabricmc.fabric-api")
+	}
 
 	// Harvest with ease
 	//modImplementation "maven.modrinth:harvest-with-ease:7.0.0.0"
@@ -103,27 +118,20 @@ processResources {
 	}
 }
 
-// ensure that the encoding is set to UTF-8, no matter what the system default is
-// this fixes some edge cases with special characters not displaying correctly
-// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-tasks.withType(JavaCompile).configureEach {
-	options.encoding = "UTF-8"
-
-	it.options.release.set(17)
-}
-
 jar {
 	from "LICENSE"
 }
 
-tasks.withType(KotlinCompile).configureEach {
-	kotlinOptions {
-		jvmTarget = '17'
-		freeCompilerArgs += "-Xlambdas=indy"
+allprojects {
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding = "UTF-8"
+
+		it.options.release.set(17)
 	}
 }
 
 kotlin {
+	jvmToolchain(17)
 	sourceSets {
 		main.kotlin.srcDirs += 'build/generated/ksp/main/kotlin'
 		test.kotlin.srcDirs += 'build/generated/ksp/test/kotlin'

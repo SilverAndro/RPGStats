@@ -29,7 +29,7 @@ public class RPGStatsConfig extends WrappedConfig {
         @Comment("Prevent duplicate XP from breaking blocks in the same location")
         public final boolean blockBreakPos = true;
         @Comment("How many ticks before you gain XP from breaking a block from a location again")
-        @IntegerRange(min = -1, max = Integer.MAX_VALUE)
+        @IntegerRange(min = 0, max = Integer.MAX_VALUE)
         public final int blockBreakDelay = 5000;
     }
 

@@ -20,6 +20,7 @@
     "ItemEatMixin",
     "ItemStackHolderMixin",
     "KillMixin",
+    "OnEnchantMixin",
     "PotionDrinkMixin",
     "PotionSplashMixin",
     "ShearSheepMixin",

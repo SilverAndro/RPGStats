@@ -1,0 +1,14 @@
+{
+	"icon": {
+		"id": "minecraft:iron_sword"
+	},
+	"values": [
+		"rpgstats:stats.rpgstats:mining.level",
+		"rpgstats:stats.rpgstats:magic.level",
+		"rpgstats:stats.rpgstats:ranged.level",
+		"rpgstats:stats.rpgstats:defence.level",
+		"rpgstats:stats.rpgstats:farming.level",
+		"rpgstats:stats.rpgstats:melee.level",
+		"rpgstats:stats.rpgstats:fishing.level"
+	]
+}

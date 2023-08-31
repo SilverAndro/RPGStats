@@ -49,5 +49,10 @@
 
   "rpgstats.fakestat.potion_drink_speed": "Potion drink speed",
 
-  "rpgstats.fakestat.bonemeal_efficiency": "Bonemeal efficiency"
+  "rpgstats.fakestat.bonemeal_efficiency": "Bonemeal efficiency",
+
+  "switchy.modules.rpgstats.stats.description": "A module that switches stat levels from SilverAndro's RPGStats.",
+  "switchy.modules.rpgstats.stats.enabled": "You will share stats between all presets.",
+  "switchy.modules.rpgstats.stats.disabled": "You will have separate stat progression between presets.",
+  "switchy.modules.rpgstats.stats.warning": "All other stat levels will be cleared!"
 }

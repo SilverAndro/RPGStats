@@ -1,4 +1,5 @@
 {
   "key.rpgstats.open_gui": "Open GUI",
-  "category.rpgstats.keybinds": "RPGStats Keybinds"
+  "category.rpgstats.keybinds": "RPGStats Keybinds",
+  "switchy.modules.rpgstats.stats.preview.tooltip": "Mining: %s | Magic: %s | Ranged: %s | Defence: %s | Farming %s | Fishing: %s"
 }

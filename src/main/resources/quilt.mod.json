@@ -48,15 +48,8 @@
       },
       {
         "id": "switchy",
-        "versions": ">=1.8.1",
+        "versions": ">=2.0.4",
         "optional": true
-      }
-    ],
-    "breaks": [
-      {
-        "id": "switchy",
-        "versions": ">=2.0.0 <2.0.3",
-        "reason": "Switchy bug prevents loading RPGStats compatibility on this version range, resulting in data loss"
       }
     ]
   },

@@ -1,6 +1,5 @@
 {
   "default": false,
-  "description": "A module that switches stat levels and XP from SilverAndro's RPGStats",
   "editable": "OPERATOR",
   "components": ["rpgstats:stats", "rpgstats:internal"]
 }

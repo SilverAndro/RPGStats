@@ -24,7 +24,6 @@ import io.github.silverandro.rpgstats.util.readSelectorMap
 import io.netty.buffer.Unpooled
 import kotlinx.coroutines.CancellationException
 import mc.rpgstats.hooky_gen.api.RegisterOn
-import net.minecraft.advancement.Advancement
 import net.minecraft.block.BlockState
 import net.minecraft.block.CropBlock
 import net.minecraft.entity.attribute.EntityAttributeModifier
@@ -57,7 +56,7 @@ fun registerEntitySelectors() {
                         if (id == "rpgstats:_any") {
                             LevelUtils.getStatLevelsForPlayer(it).any { range.test(it) }
                         } else {
-                            range.test(LevelUtils.getComponentLevel(Identifier(id), it))
+                            range.test(getComponentLevel(Identifier(id), it))
                         }
                     }
                 } else {
@@ -79,7 +78,7 @@ fun registerEntitySelectors() {
                         if (id == "rpgstats:_any") {
                             LevelUtils.getStatXpsForPlayer(it).any { range.test(it) }
                         } else {
-                            range.test(LevelUtils.getComponentXP(Identifier(id), it))
+                            range.test(getComponentXP(Identifier(id), it))
                         }
                     }
                 } else {
@@ -147,7 +146,7 @@ fun syncDataAndGrantAdvancements(server: MinecraftServer) {
             // Grant the hidden max level advancement
             val possible = advancements
                 .stream()
-                .filter { advancement: Advancement -> advancement.id == LEVELS_MAX }
+                .filter { advancement -> advancement.comp_1919 == LEVELS_MAX }
                 .findFirst()
             if (possible.isPresent) {
                 if (!player.advancementTracker.getProgress(possible.get()).isDone) {
@@ -234,7 +233,7 @@ fun updateStatModifiers(server: MinecraftServer) {
                     with (player.getAttributeInstance(action.stat) ?: return@forEachIndexed) {
                         // Remove it if we already applied this action
                         if (hasModifier(modifier)) {
-                            removeModifier(modifier)
+                            removeModifier(modifier.id)
                         }
                         // Apply modifier in a way that won't save
                         addTemporaryModifier(modifier)
@@ -262,7 +261,7 @@ object Events {
         }
 
         LevelUpCallback.EVENT.register { player, id, newLevel, hideMessages ->
-            if (hideMessages || player !is ServerPlayerEntity) return@register;
+            if (hideMessages || player !is ServerPlayerEntity) return@register
             if (newLevel % 25 == 0) {
                 LevelUpDisplays.fancyLevelUpDisplay(player)
             } else {

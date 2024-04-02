@@ -15,6 +15,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -22,6 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BowItem.class)
 public class BowArrowMixin {
+    @Unique
     private ServerPlayerEntity itemUser = null;
 
     @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerAbilities;creativeMode:Z", ordinal = 0, shift = At.Shift.BY, by = -2), method = "onStoppedUsing")
@@ -37,7 +39,7 @@ public class BowArrowMixin {
         if (
                 itemUser != null
                         && LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, itemUser) >= 50
-                        && RPGStatsMain.levelConfig.ranged.enableLv50Buff
+                        && RPGStatsMain.levelConfig.getRanged().getEnableLv50Buff()
         ) {
             itemUser = null;
             return true;

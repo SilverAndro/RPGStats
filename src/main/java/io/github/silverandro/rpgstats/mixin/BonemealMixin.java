@@ -23,12 +23,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.biome.Biomes;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BoneMealItem.class)
 public class BonemealMixin {
+    @Unique
     private static final java.util.Random RANDOM = new java.util.Random();
 
     // TODO: Generalize this! Breaks often and not ideal
@@ -82,7 +84,7 @@ public class BonemealMixin {
                         if (k.isOf(Blocks.WATER) && world.getFluidState(blockPos2).getLevel() == 8) {
                             world.setBlockState(blockPos2, blockState, Block.NOTIFY_ALL);
                         } else if (k.isOf(Blocks.SEAGRASS) && random.nextInt(10) == 0) {
-                            ((Fertilizable) Blocks.SEAGRASS).grow((ServerWorld) world, random, blockPos2, k);
+                            ((Fertilizable) Blocks.SEAGRASS).fertilize((ServerWorld) world, random, blockPos2, k);
                         }
                     }
                 }
@@ -96,11 +98,11 @@ public class BonemealMixin {
             int level = LevelUtils.INSTANCE.getComponentLevel(Components.FARMING, (ServerPlayerEntity) stack.getHolder());
             BlockState blockState = world.getBlockState(pos);
             if (blockState.getBlock() instanceof Fertilizable fertilizable) {
-                if (fertilizable.isFertilizable(world, pos, blockState, false)) {
+                if (fertilizable.isFertilizable(world, pos, blockState)) {
                     if (world instanceof ServerWorld) {
-                        if (fertilizable.canGrow(world, world.random, pos, blockState)) {
+                        if (fertilizable.canFertilize(world, world.random, pos, blockState)) {
                             if (RANDOM.nextDouble() < level * 0.03) {
-                                fertilizable.grow((ServerWorld) world, world.random, pos, blockState);
+                                fertilizable.fertilize((ServerWorld) world, world.random, pos, blockState);
                             }
                         }
                     }

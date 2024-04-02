@@ -36,7 +36,7 @@ public class ImpalingMixin {
             if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
                 if (
                         LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, (ServerPlayerEntity) stack.getHolder()) >= 25
-                                && RPGStatsMain.levelConfig.ranged.enableLv25Buff
+                                && RPGStatsMain.levelConfig.getRanged().getEnableLv25Buff()
                 ) {
                     int level = EnchantmentHelper.get(stack).get(Enchantments.IMPALING);
                     mutableFloat.add(level * 2.5F);

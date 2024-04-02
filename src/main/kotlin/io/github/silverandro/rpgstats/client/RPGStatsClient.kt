@@ -23,12 +23,11 @@ import org.quiltmc.qkl.library.text.color
 import org.quiltmc.qkl.library.text.literal
 import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer
 import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents
-import org.quiltmc.qsl.networking.api.PacketSender
 import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking
 
 object RPGStatsClient : ClientModInitializer {
-    var nameMap = HashMap<Identifier, String>()
-    var currentStats = HashMap<Identifier, Pair<Int, Int>>()
+    private val nameMap = HashMap<Identifier, String>()
+    private val currentStats = HashMap<Identifier, Pair<Int, Int>>()
     private lateinit var openGUIKeybind: KeyBind
 
     override fun onInitializeClient(mod: ModContainer) {
@@ -67,7 +66,7 @@ object RPGStatsClient : ClientModInitializer {
             }
         }
 
-        ClientPlayNetworking.registerGlobalReceiver(Constants.OPEN_GUI) { client: MinecraftClient, handler: ClientPlayNetworkHandler?, byteBuf: PacketByteBuf?, packetSender: PacketSender? ->
+        ClientPlayNetworking.registerGlobalReceiver(Constants.OPEN_GUI) { client: MinecraftClient, handler: ClientPlayNetworkHandler?, byteBuf: PacketByteBuf?, _ ->
 
         }
 

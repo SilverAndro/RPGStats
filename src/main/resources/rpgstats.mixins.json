@@ -21,15 +21,16 @@
     "ItemStackHolderMixin",
     "KillMixin",
     "OnEnchantMixin",
+    "PoisonImmuneMixin",
     "PotionDrinkMixin",
     "PotionSplashMixin",
     "ShearSheepMixin",
     "ShieldMixin",
-    "StatusEffectsImmuneMixin",
     "SweetBerryHarvestMixin",
     "TakeDamageMixin",
     "TotemUseMixin",
     "UnbreakingEnchantmentMixin",
+    "WitherImmuneMixin",
     "compat.harvestwithease_disabled.GrantFarmingOnEasyFarmCompat",
     "compat.switchy.UpgradeSwitchyData"
   ]

@@ -42,7 +42,7 @@ public class ItemEatMixin {
             }
 
             int fishingLevel = LevelUtils.INSTANCE.getComponentLevel(Components.FISHING, spe);
-            if (fishingLevel >= 25 && stack.isIn(ItemTags.FISHES) && RPGStatsMain.levelConfig.fishing.enableLv25Buff) {
+            if (fishingLevel >= 25 && stack.isIn(ItemTags.FISHES) && RPGStatsMain.levelConfig.getFishing().getEnableLv25Buff()) {
                 List<StatusEffect> goodEffects = Arrays.asList(
                         StatusEffects.ABSORPTION,
                         StatusEffects.CONDUIT_POWER,
@@ -68,7 +68,7 @@ public class ItemEatMixin {
                 spe.addStatusEffect(new StatusEffectInstance(goodEffects.get(0), 30 * 20, 0));
             }
 
-            if (fishingLevel >= 50 && RPGStatsMain.levelConfig.fishing.enableLv50Buff) {
+            if (fishingLevel >= 50 && RPGStatsMain.levelConfig.getFishing().getEnableLv50Buff()) {
                 spe.addStatusEffect(new StatusEffectInstance(StatusEffects.SATURATION, 1, 0));
             }
         }

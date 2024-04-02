@@ -43,7 +43,7 @@ public class PotionDrinkMixin {
 
             int newDuration;
             if (LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, playerEntity) > 0) {
-                newDuration = effect.getDuration() + (effect.getDuration() / ((RPGStatsMain.config.scaling.maxLevel * 5) / LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, playerEntity)));
+                newDuration = effect.getDuration() + (effect.getDuration() / ((RPGStatsMain.config.getScaling().getMaxLevel() * 5) / LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, playerEntity)));
             } else {
                 newDuration = effect.getDuration();
             }

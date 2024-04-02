@@ -28,9 +28,9 @@ public class OnSneakLogic {
             int level = LevelUtils.INSTANCE.getComponentLevel(Components.FARMING, playerEntity);
             int amount = 0;
 
-            if (level >= 50 && RPGStatsMain.levelConfig.farming.enableLv50Buff) {
+            if (level >= 50 && RPGStatsMain.levelConfig.getFarming().getEnableLv50Buff()) {
                 amount = 5;
-            } else if (level >= 25 && RPGStatsMain.levelConfig.farming.enableLv25Buff) {
+            } else if (level >= 25 && RPGStatsMain.levelConfig.getFarming().getEnableLv25Buff()) {
                 amount = 3;
             }
 
@@ -46,7 +46,7 @@ public class OnSneakLogic {
                             BlockState bs = world.getBlockState(nextPos);
                             if (bs.getBlock() instanceof Fertilizable) {
                                 if (random.nextDouble() > 0.9) {
-                                    ((Fertilizable) bs.getBlock()).grow((ServerWorld) world, world.random, nextPos, bs);
+                                    ((Fertilizable) bs.getBlock()).fertilize((ServerWorld) world, world.random, nextPos, bs);
                                 }
                             }
                         }

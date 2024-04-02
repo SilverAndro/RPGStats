@@ -60,9 +60,9 @@ public abstract class KillMixin {
                         int level = LevelUtils.INSTANCE.getComponentLevel(Components.MELEE, serverPlayer);
 
                         int duration = 0;
-                        if (level >= 50 && RPGStatsMain.levelConfig.melee.enableLv50Buff) {
+                        if (level >= 50 && RPGStatsMain.levelConfig.getMelee().getEnableLv50Buff()) {
                             duration = 200;
-                        } else if (level >= 25 && RPGStatsMain.levelConfig.melee.enableLv25Buff) {
+                        } else if (level >= 25 && RPGStatsMain.levelConfig.getMelee().getEnableLv25Buff()) {
                             duration = 100;
                         }
 

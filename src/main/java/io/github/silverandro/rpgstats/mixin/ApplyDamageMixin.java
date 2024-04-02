@@ -16,16 +16,19 @@ import net.minecraft.registry.tag.TagKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
 public class ApplyDamageMixin {
+    @Unique
     private static final TagKey<DamageType> DAMAGE_XP_BLACKLIST = TagKey.of(
         RegistryKeys.DAMAGE_TYPE,
         new Identifier("rpgstats", "damage_blacklist")
     );
+    @Unique
     private static float originalDamage = 0f;
 
     @Inject(method = "applyDamage", at = @At("HEAD"))
@@ -48,6 +51,7 @@ public class ApplyDamageMixin {
         }
     }
 
+    @Unique
     public boolean sourceCanGrantXp(DamageSource source) {
         return !source.isTypeIn(DAMAGE_XP_BLACKLIST);
     }

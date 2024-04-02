@@ -39,7 +39,7 @@ object LevelUpDisplays {
                 val points = generatePointsAroundCircle(player.pos.add(0.0, count.toDouble() / 35, 0.0), 8, currentDistance, currentOffset)
                 val connection = player.networkHandler
                 for (point in points) {
-                    connection.sendPacket(
+                    connection.send(
                         ParticleS2CPacket(
                             ParticleTypes.FIREWORK,
                             true,
@@ -66,7 +66,7 @@ object LevelUpDisplays {
         val points = generatePointsAroundCircle(player.pos.add(0.0, 0.5, 0.0), 16, 1.1)
         val connection = player.networkHandler
         for (point in points) {
-            connection.sendPacket(
+            connection.send(
                 ParticleS2CPacket(
                     ParticleTypes.HAPPY_VILLAGER,
                     true,

@@ -8,56 +8,38 @@ package io.github.silverandro.rpgstats.mixin;
 
 import io.github.silverandro.rpgstats.LevelUtils;
 import io.github.silverandro.rpgstats.stats.Components;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.item.ArrowItem;
-import net.minecraft.item.BowItem;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(BowItem.class)
+@Mixin(EnchantmentHelper.class)
 class BowAccuracyMixin {
-    @Inject(
-            method = "onStoppedUsing(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Lnet/minecraft/entity/LivingEntity;I)V",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/entity/projectile/PersistentProjectileEntity;setProperties(Lnet/minecraft/entity/Entity;FFFFF)V",
-                    shift = At.Shift.AFTER
-            ),
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    public void rpgstats$changeAccuracy(
-            ItemStack stack,
-            World world,
-            LivingEntity user,
-            int remainingUseTicks,
-            CallbackInfo ci,
-            PlayerEntity playerEntity,
-            boolean bl,
-            ItemStack itemStack,
-            int i,
-            float f,
-            boolean bl2,
-            ArrowItem arrowItem,
-            PersistentProjectileEntity persistentProjectileEntity
-    ) {
-        if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
-            float newDistort = 1.0f - LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, (ServerPlayerEntity) playerEntity) / 50f;
-            persistentProjectileEntity.setProperties(
-                    playerEntity,
-                    playerEntity.getPitch(),
-                    playerEntity.getYaw(),
-                    0.0F,
-                    f * 3.0F,
-                    Math.max(newDistort, 0.0f)
-            );
+    @Unique
+    private static Entity spreadUser;
+
+    @Inject(method = "getProjectileSpread", at = @At("HEAD"))
+    private static void captureSpreadUser(ServerWorld world, ItemStack stack, Entity user, float baseProjectileSpread, CallbackInfoReturnable<Float> cir) {
+        spreadUser = user;
+    }
+
+    @ModifyVariable(method = "getProjectileSpread", at = @At(value = "INVOKE", target = "Lorg/apache/commons/lang3/mutable/MutableFloat;<init>(F)V"), argsOnly = true)
+    private static float modifySpread(float baseSpread) {
+        if (spreadUser instanceof ServerPlayerEntity player) {
+            spreadUser = null;
+
+            float mult = Math.max(1.0f - LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, player) / 60f, 0);
+            return baseSpread * mult;
         }
+
+        spreadUser = null;
+        return baseSpread;
     }
 }

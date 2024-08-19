@@ -46,7 +46,7 @@ public class OnSneakLogic {
                             BlockState bs = world.getBlockState(nextPos);
                             if (bs.getBlock() instanceof Fertilizable) {
                                 if (random.nextDouble() > 0.9) {
-                                    ((Fertilizable) bs.getBlock()).fertilize((ServerWorld) world, world.random, nextPos, bs);
+                                    ((Fertilizable) bs.getBlock()).grow((ServerWorld) world, world.random, nextPos, bs);
                                 }
                             }
                         }

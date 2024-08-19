@@ -6,25 +6,24 @@
 
 package io.github.silverandro.rpgstats.stats.internal
 
-import dev.onyxstudios.cca.api.v3.component.Component
-import dev.onyxstudios.cca.api.v3.entity.PlayerComponent
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.nbt.NbtCompound
+import net.minecraft.registry.RegistryWrapper
+import org.ladysnake.cca.api.v3.component.Component
 
-class PlayerPreferencesComponent(var playerEntity: PlayerEntity) : PlayerComponent<Component> {
+class PlayerPreferencesComponent : Component {
     var isOptedOutOfButtonSpam = false
     var xpBarLocation = XpBarLocation.HOTBAR
     var xpBarShow = XpBarShow.ALWAYS
 
-    override fun readFromNbt(compoundTag: NbtCompound) {
-        isOptedOutOfButtonSpam = compoundTag.getBoolean("optedOutSpam")
-        xpBarLocation = XpBarLocation.valueOf(compoundTag.getString("xpBarLocation").takeUnless { it.isNullOrEmpty() } ?: "HOTBAR")
-        xpBarShow = XpBarShow.valueOf(compoundTag.getString("xpBarShow").takeUnless { it.isNullOrEmpty() } ?: "SMART")
+    override fun readFromNbt(tag: NbtCompound, registryLookup: RegistryWrapper.WrapperLookup) {
+        isOptedOutOfButtonSpam = tag.getBoolean("optedOutSpam")
+        xpBarLocation = XpBarLocation.valueOf(tag.getString("xpBarLocation").takeUnless { it.isNullOrEmpty() } ?: "HOTBAR")
+        xpBarShow = XpBarShow.valueOf(tag.getString("xpBarShow").takeUnless { it.isNullOrEmpty() } ?: "SMART")
     }
 
-    override fun writeToNbt(compoundTag: NbtCompound) {
-        compoundTag.putBoolean("optedOutSpam", isOptedOutOfButtonSpam)
-        compoundTag.putString("xpBarLocation", xpBarLocation.name)
-        compoundTag.putString("xpBarShow", xpBarShow.name)
+    override fun writeToNbt(tag: NbtCompound, registryLookup: RegistryWrapper.WrapperLookup) {
+        tag.putBoolean("optedOutSpam", isOptedOutOfButtonSpam)
+        tag.putString("xpBarLocation", xpBarLocation.name)
+        tag.putString("xpBarShow", xpBarShow.name)
     }
 }

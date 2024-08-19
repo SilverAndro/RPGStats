@@ -6,7 +6,16 @@
 
 package io.github.silverandro.rpgstats.stats.internal
 
-enum class XpBarLocation {
+import com.mojang.serialization.Codec
+import net.minecraft.util.StringIdentifiable
+
+enum class XpBarLocation : StringIdentifiable {
     HOTBAR,
-    CHAT
+    CHAT;
+
+    override fun asString() = this.name
+
+    companion object {
+        val CODEC: Codec<XpBarLocation> = StringIdentifiable.createCodec { entries.toTypedArray() }
+    }
 }

@@ -9,19 +9,21 @@ package io.github.silverandro.rpgstats.mixin;
 import io.github.silverandro.rpgstats.LevelUtils;
 import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.stats.Components;
+import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,8 +32,8 @@ import java.util.List;
 @Mixin(LivingEntity.class)
 public class ItemEatMixin {
     @SuppressWarnings("ConstantConditions")
-    @Inject(method = "applyFoodEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/item/Item;isFood()Z"))
-    public void rpgstats$grantFishAndGoldenAppleEffects(ItemStack stack, World world, LivingEntity targetEntity, CallbackInfo ci) {
+    @Inject(method = "eatFood", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/LivingEntity;applyFoodEffects(Lnet/minecraft/component/type/FoodComponent;)V"))
+    public void rpgstats$grantFishAndGoldenAppleEffects(World world, ItemStack stack, FoodComponent foodComponent, CallbackInfoReturnable<ItemStack> cir) {
         LivingEntity le = (LivingEntity) (Object) this;
         if (le instanceof ServerPlayerEntity spe) {
             if (stack.getItem() == Items.GOLDEN_APPLE) {
@@ -43,7 +45,7 @@ public class ItemEatMixin {
 
             int fishingLevel = LevelUtils.INSTANCE.getComponentLevel(Components.FISHING, spe);
             if (fishingLevel >= 25 && stack.isIn(ItemTags.FISHES) && RPGStatsMain.levelConfig.getFishing().getEnableLv25Buff()) {
-                List<StatusEffect> goodEffects = Arrays.asList(
+                List<RegistryEntry<StatusEffect>> goodEffects = Arrays.asList(
                         StatusEffects.ABSORPTION,
                         StatusEffects.CONDUIT_POWER,
                         StatusEffects.DOLPHINS_GRACE,

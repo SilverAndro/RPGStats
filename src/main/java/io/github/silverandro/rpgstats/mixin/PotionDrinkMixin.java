@@ -28,17 +28,21 @@ public class PotionDrinkMixin {
     // What is this bruh. None of the capturing is documented, and it's a core feature of the annotation
     // Also it literally says Redirect is better :rolling_eyes:
     @ModifyArgs(
-            method = "finishUsing",
+            method = "method_57389(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/entity/effect/StatusEffectInstance;)V",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/entity/LivingEntity;addStatusEffect(Lnet/minecraft/entity/effect/StatusEffectInstance;)Z"
             )
     )
-    private void rpgstats$OnFinishDrinkingPotion(Args args, ItemStack stack, World world, LivingEntity entity) {
+    private static void rpgstats$OnFinishDrinkingPotion(Args args) {
+        for (int i = 0; i < args.size(); i++) {
+            System.out.println(String.valueOf(args.get(i)));
+        }
+
         // Yay! no type safety
         StatusEffectInstance effect = args.get(0);
 
-        if (entity instanceof ServerPlayerEntity playerEntity) {
+        if (null instanceof ServerPlayerEntity playerEntity) {
             LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, playerEntity, 10);
 
             int newDuration;
@@ -66,7 +70,7 @@ public class PotionDrinkMixin {
             method = "finishUsing",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/entity/effect/StatusEffect;applyInstantEffect(Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/Entity;Lnet/minecraft/entity/LivingEntity;ID)V"
+                    target = "Lnet/minecraft/entity/player/PlayerEntity;incrementStat(Lnet/minecraft/stat/Stat;)V"
             )
     )
     private void rpgstats$OnFinishDrinkingHealthPotion(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
@@ -77,8 +81,8 @@ public class PotionDrinkMixin {
     }
 
     @Inject(at = @At("HEAD"), method = "getMaxUseTime", cancellable = true)
-    private void rpgstats$getPotionUseTime(ItemStack stack, CallbackInfoReturnable<Integer> cir) {
-        if (stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity holder) {
+    private void rpgstats$getPotionUseTime(ItemStack stack, LivingEntity user, CallbackInfoReturnable<Integer> cir) {
+        if (user instanceof ServerPlayerEntity holder) {
             cir.setReturnValue((int) (32 - Math.floor(LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, holder) / 3.0f)));
         }
     }

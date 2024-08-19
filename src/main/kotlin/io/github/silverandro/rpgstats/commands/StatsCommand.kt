@@ -11,54 +11,47 @@ import io.github.silverandro.rpgstats.LevelUtils
 import io.github.silverandro.rpgstats.stats.Components
 import io.github.silverandro.rpgstats.util.supplier
 import mc.rpgstats.hooky_gen.api.Command
+import net.minecraft.command.argument.EntityArgumentType
+import net.minecraft.server.command.CommandManager.argument
+import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
-import org.quiltmc.qkl.library.brigadier.CommandResult
-import org.quiltmc.qkl.library.brigadier.argument.player
-import org.quiltmc.qkl.library.brigadier.argument.value
-import org.quiltmc.qkl.library.brigadier.executeWithResult
-import org.quiltmc.qkl.library.brigadier.register
-import org.quiltmc.qkl.library.brigadier.required
-import org.quiltmc.qkl.library.text.*
+import net.minecraft.util.Formatting
 
 @Command
 object StatsCommand {
     fun register(dispatch: CommandDispatcher<ServerCommandSource>) {
-        dispatch.register("rpgstats") {
-            executes {
-                displayStats(
+        dispatch.register(literal("rpgstats")
+            .then(argument("targetPlayer", EntityArgumentType.player())
+                .executes {
+                    return@executes displayStats(
+                        it.source,
+                        EntityArgumentType.getPlayer(it, "targetPlayer")
+                    )
+                })
+            .executes {
+                return@executes displayStats(
                     it.source,
                     it.source.playerOrThrow
                 )
-            }
-            required(
-                player("targetPlayer")
-            ) { player ->
-                executeWithResult {
-                    CommandResult.success(displayStats(source, player().value()))
-                }
-            }
-        }
+            })
     }
 
     private fun displayStats(source: ServerCommandSource, target: ServerPlayerEntity): Int {
         val statsToShow = Components.components.filter { it.value.shouldShowToUser || source.hasPermissionLevel(2) }
         if (source.entity != null) {
             source.sendFeedback(
-                buildText {
-                    color(Color.GREEN) {
-                        literal("RPGStats > ")
-                    }
-                    translatable("rpgstats.stats_for", target.entityName)
-                }.supplier(), false
+                Text.literal("RPGStats > ").styled { it.withFormatting(Formatting.GREEN) }
+                    .append(Text.translatable("rpgstats.stats_for", target.gameProfile.name)).supplier(),
+                false
             )
 
            statsToShow.forEach { (identifier, entry) ->
                 source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target, !entry.shouldShowToUser).supplier(), false)
             }
         } else {
-            source.sendFeedback(Text.translatable("rpgstats.stats_for", target.entityName).supplier(), false)
+            source.sendFeedback(Text.translatable("rpgstats.stats_for", target.gameProfile.name).supplier(), false)
 
             statsToShow.forEach { (identifier, entry) ->
                 source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target, !entry.shouldShowToUser).supplier(), false)

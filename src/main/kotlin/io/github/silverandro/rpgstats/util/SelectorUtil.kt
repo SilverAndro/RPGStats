@@ -31,7 +31,5 @@ fun EntitySelectorReader.readSelectorMap(): Map<String, NumberRange.IntRange> {
     }
     stringReader.expect('}')
 
-    setFlag("rpgstatsLevels", true)
-
     return map
 }

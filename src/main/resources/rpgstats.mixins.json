@@ -14,9 +14,7 @@
     "BonemealMixin",
     "BowAccuracyMixin",
     "BowArrowMixin",
-    "BowCanUseMixin",
     "FishingBobberMixin",
-    "ImpalingMixin",
     "ItemEatMixin",
     "ItemStackHolderMixin",
     "KillMixin",
@@ -29,7 +27,7 @@
     "SweetBerryHarvestMixin",
     "TakeDamageMixin",
     "TotemUseMixin",
-    "UnbreakingEnchantmentMixin",
+    "UnbreakingMixin",
     "WitherImmuneMixin",
     "compat.harvestwithease_disabled.GrantFarmingOnEasyFarmCompat",
     "compat.switchy.UpgradeSwitchyData"

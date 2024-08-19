@@ -14,8 +14,8 @@ import io.github.silverandro.rpgstats.util.filterInPlace
 import kotlinx.coroutines.*
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.text.Text
+import net.minecraft.util.Formatting
 import net.minecraft.util.Identifier
-import org.quiltmc.qkl.library.text.*
 import java.util.*
 import kotlin.math.floor
 import kotlin.math.min
@@ -40,16 +40,9 @@ object XpBarRenderer {
 
     fun generateBar(total: Int, current: Int, length: Int): Text {
         val filledSlices = min(floor((current.toDouble() / total)*length), length.toDouble()).toInt()
-        return buildText {
-            color(Color.GREEN) {
-                literal("[")
-                literal(buildString { repeat(filledSlices) { append("|") } })
-            }
-            literal(buildString { repeat(length-filledSlices) { append("|") } })
-            color(Color.GREEN) {
-                literal("]")
-            }
-        }
+        return Text.literal(buildString { append("["); repeat(filledSlices) { append("|") } }).styled { it.withColor(Formatting.GREEN) }
+            .append(Text.literal(buildString { repeat(length-filledSlices) { append("|") } }))
+            .append(Text.literal("]").styled { it.withColor(Formatting.GREEN) })
     }
 
     fun shouldShowToPlayer(player: ServerPlayerEntity, total: Int, current: Int, previous: Int): Boolean {
@@ -69,15 +62,10 @@ object XpBarRenderer {
     fun renderForPlayer(player: ServerPlayerEntity, id: Identifier) {
         val components = Components.STATS.get(player)
         val config = Components.PREFERENCES.get(player)
-        val textDisplay = buildText {
-            color(Color.GOLD) {
-                val name = Components.components[id] ?: return
-                translatable(name.translationKey)
-            }
-            literal(" ")
-            val stat = components.entries[id] ?: return
-            styleAndAppend(generateBar(LevelUtils.calculateXpNeededForLevel(stat.level + 1), stat.xp, getXpBarLength(player)).copy())
-        }
+        val stat = components.entries[id] ?: return
+        val textDisplay = Text.translatable((Components.components[id] ?: return).translationKey).styled { it.withColor(Formatting.GOLD) }
+            .append(" ")
+            .append(generateBar(LevelUtils.calculateXpNeededForLevel(stat.level + 1), stat.xp, getXpBarLength(player)))
 
         val job = activeBarsScope.launch {
             when (config.xpBarLocation) {

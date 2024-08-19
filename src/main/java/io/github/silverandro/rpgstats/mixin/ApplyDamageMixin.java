@@ -26,7 +26,7 @@ public class ApplyDamageMixin {
     @Unique
     private static final TagKey<DamageType> DAMAGE_XP_BLACKLIST = TagKey.of(
         RegistryKeys.DAMAGE_TYPE,
-        new Identifier("rpgstats", "damage_blacklist")
+        Identifier.of("rpgstats", "damage_blacklist")
     );
     @Unique
     private static float originalDamage = 0f;
@@ -36,7 +36,7 @@ public class ApplyDamageMixin {
         originalDamage = amount;
     }
 
-    @Inject(method = "applyDamage", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/player/PlayerEntity;applyEnchantmentsToDamage(Lnet/minecraft/entity/damage/DamageSource;F)F", shift = At.Shift.AFTER))
+    @Inject(method = "applyDamage", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/entity/player/PlayerEntity;modifyAppliedDamage(Lnet/minecraft/entity/damage/DamageSource;F)F", shift = At.Shift.AFTER))
     public void rpgstats$grantXpFromDamageAbsorbedThroughArmorOrEnchants(DamageSource source, float amount, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Object) this instanceof ServerPlayerEntity && sourceCanGrantXp(source)) {
@@ -53,6 +53,6 @@ public class ApplyDamageMixin {
 
     @Unique
     public boolean sourceCanGrantXp(DamageSource source) {
-        return !source.isTypeIn(DAMAGE_XP_BLACKLIST);
+        return !source.isIn(DAMAGE_XP_BLACKLIST);
     }
 }

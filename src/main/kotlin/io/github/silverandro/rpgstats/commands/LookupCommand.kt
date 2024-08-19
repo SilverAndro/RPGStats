@@ -7,50 +7,69 @@
 package io.github.silverandro.rpgstats.commands
 
 import com.mojang.brigadier.CommandDispatcher
+import com.mojang.serialization.Codec
 import io.github.silverandro.rpgstats.LevelUtils
 import io.github.silverandro.rpgstats.stats.Components
 import mc.rpgstats.hooky_gen.api.Command
+import net.minecraft.command.argument.EntityArgumentType
+import net.minecraft.command.argument.EnumArgumentType
+import net.minecraft.command.argument.IdentifierArgumentType
+import net.minecraft.server.command.CommandManager.argument
+import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
-import org.quiltmc.qkl.library.brigadier.CommandResult
-import org.quiltmc.qkl.library.brigadier.argument.enum
-import org.quiltmc.qkl.library.brigadier.argument.identifier
-import org.quiltmc.qkl.library.brigadier.argument.player
-import org.quiltmc.qkl.library.brigadier.argument.value
-import org.quiltmc.qkl.library.brigadier.executeWithResult
-import org.quiltmc.qkl.library.brigadier.register
-import org.quiltmc.qkl.library.brigadier.required
-import org.quiltmc.qkl.library.brigadier.util.required
+import net.minecraft.util.StringIdentifiable
 
 @Command
 object LookupCommand {
-    enum class LookupType {
+    enum class LookupType : StringIdentifiable {
         LEVEL,
         XP,
-        TOTAL_XP,
+        TOTAL_XP;
+
+        override fun asString() = this.name
+
+        companion object {
+            val CODEC: Codec<LookupType> = StringIdentifiable.createCodec { entries.toTypedArray() }
+        }
     }
 
-    enum class LookupTypeNoSkill {
+    enum class LookupTypeNoSkill : StringIdentifiable {
         HIGHEST_LEVEL,
         LOWEST_LEVEL,
         HIGHEST_TOTAL_XP,
-        LOWEST_TOTAL_XP
+        LOWEST_TOTAL_XP;
+
+        override fun asString() = this.name
+
+        companion object {
+            val CODEC: Codec<LookupTypeNoSkill> = StringIdentifiable.createCodec { entries.toTypedArray() }
+        }
     }
 
+    private val lookupTypeArg = object : EnumArgumentType<LookupType>(LookupType.CODEC, { LookupType.entries.toTypedArray() }) {}
+    private val lookupTypeNoSkillArg = object : EnumArgumentType<LookupTypeNoSkill>(LookupTypeNoSkill.CODEC, { LookupTypeNoSkill.entries.toTypedArray() }) {}
+
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
-        dispatcher.register("rpglookup") {
-            requires { it.hasPermissionLevel(2) }
-            required(player("targetPlayer")) {targetPlayer ->
-                required(enum("skillLookup", LookupType::class), identifier("skillId")) {lookupType, skillId ->
-                    suggests(SkillSuggestionProvider())
-                    executeWithResult { CommandResult.success(preformLookup(targetPlayer().value(), lookupType().value(), skillId().value())) }
-                }
-                required(enum("generalLookup", LookupTypeNoSkill::class)) {lookupType ->
-                    executeWithResult { CommandResult.success(preformLookup(targetPlayer().value(), lookupType().value())) }
-                }
-            }
-        }
+        dispatcher.register(literal("rpglookup")
+            .requires { it.hasPermissionLevel(2) }
+            .then(argument("targetPlayer", EntityArgumentType.player())
+                .then(argument("skillLookup", lookupTypeArg).then(argument("skillId", IdentifierArgumentType.identifier())
+                    .suggests(SkillSuggestionProvider())
+                    .executes {
+                        val player = EntityArgumentType.getPlayer(it, "targetPlayer")
+                        val lookup = it.getArgument("skillLookup", LookupType::class.java)
+                        val skillId = IdentifierArgumentType.getIdentifier(it, "skillId")
+                        return@executes preformLookup(player, lookup, skillId)
+                    }
+                ))
+                .then(argument("generalLookup", lookupTypeNoSkillArg).executes {
+                    val player = EntityArgumentType.getPlayer(it, "targetPlayer")
+                    val lookup = it.getArgument("generalLookup", LookupTypeNoSkill::class.java)
+                    return@executes preformLookup(player, lookup)
+                }))
+        )
     }
 
     private fun preformLookup(player: ServerPlayerEntity, lookup: LookupTypeNoSkill): Int {

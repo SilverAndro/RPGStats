@@ -52,7 +52,7 @@ class HookyProcessor(val environment: SymbolProcessorEnvironment, val codeGenera
             appendLine("    fun registerAll() {")
 
             if (commands.isNotEmpty()) {
-            appendLine("        org.quiltmc.qsl.command.api.CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->")
+            appendLine("        net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->")
             commands.forEach {
             appendLine("            ${it.qualifiedName!!.asString()}.register(dispatcher)")
             }
@@ -77,6 +77,7 @@ class HookyProcessor(val environment: SymbolProcessorEnvironment, val codeGenera
         val eventClassName = fullID.substring(0, split)
         val eventName = fullID.substring(split+1)
 
+        logger.warn(resolver.getKSNameFromString(eventClassName).run { getQualifier()  + "." + getShortName() })
         val eventClass = resolver.getClassDeclarationByName(resolver.getKSNameFromString(eventClassName))!!
         val eventParam = eventClass.getDeclaredProperties().find { it.simpleName.asString() == eventName }!!
         val specialMethod = (eventParam.type.resolve().arguments[0].type!!.resolve().declaration as KSClassDeclaration)

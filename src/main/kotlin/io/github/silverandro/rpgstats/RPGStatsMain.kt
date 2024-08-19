@@ -10,44 +10,32 @@ import io.github.silverandro.rpgstats.advancemnents.LevelUpCriterion
 import io.github.silverandro.rpgstats.config.RPGStatsConfig
 import io.github.silverandro.rpgstats.config.RPGStatsLevelConfig
 import io.github.silverandro.rpgstats.datadrive.stats.StatsManager
-import io.github.silverandro.rpgstats.datadrive.xp.XpData
+import io.github.silverandro.rpgstats.datadrive.xp.XPLoader
 import io.github.silverandro.rpgstats.hooky.Hooky
+import me.fzzyhmstrs.fzzy_config.api.ConfigApi
+import me.fzzyhmstrs.fzzy_config.api.RegisterType
+import net.fabricmc.api.ModInitializer
 import net.minecraft.advancement.criterion.Criteria
-import org.quiltmc.loader.api.ModContainer
-import org.quiltmc.loader.api.config.v2.QuiltConfig
-import org.quiltmc.qsl.base.api.entrypoint.ModInitializer
 
 
 object RPGStatsMain : ModInitializer {
     @JvmField
-    val config = RPGStatsConfig().also {
-        QuiltConfig.create(
-            "rpgstats",
-            "main",
-            it
-        )
-    }
+    val config = ConfigApi.registerAndLoadConfig({ RPGStatsConfig() }, RegisterType.SERVER)
 
     @JvmField
-    val levelConfig = RPGStatsLevelConfig().also {
-        QuiltConfig.create(
-            "rpgstats",
-            "level_abilities",
-            it
-        )
-    }
+    val levelConfig = ConfigApi.registerAndLoadConfig({ RPGStatsLevelConfig() }, RegisterType.SERVER)
 
     val levelUpCriterion = LevelUpCriterion()
 
-    override fun onInitialize(mod: ModContainer) {
-        Constants.LOG.info("Hello from ${mod.metadata().name()}!")
+    override fun onInitialize() {
+        Constants.LOG.info("Hello from RPGStats!")
         // Criterion
         Criteria.register("${Constants.MOD_ID}:player_level", levelUpCriterion)
 
         // Events
-        XpData.poke()
         Hooky.registerAll()
         StatsManager.register()
+        XPLoader.register()
         Events.registerLevelUpEvents()
     }
 }

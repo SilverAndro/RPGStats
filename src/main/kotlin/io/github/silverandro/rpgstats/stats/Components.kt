@@ -6,11 +6,6 @@
 
 package io.github.silverandro.rpgstats.stats
 
-import dev.onyxstudios.cca.api.v3.component.ComponentKey
-import dev.onyxstudios.cca.api.v3.component.ComponentRegistry
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentFactoryRegistry
-import dev.onyxstudios.cca.api.v3.entity.EntityComponentInitializer
-import dev.onyxstudios.cca.api.v3.entity.RespawnCopyStrategy
 import io.github.silverandro.rpgstats.RPGStatsMain
 import io.github.silverandro.rpgstats.datadrive.stats.StatEntry
 import io.github.silverandro.rpgstats.stats.internal.PlayerPreferencesComponent
@@ -20,25 +15,27 @@ import io.github.silverandro.rpgstats.stats.systems.StatFakeAttributeAction
 import io.github.silverandro.rpgstats.stats.systems.StatSpecialAction
 import net.minecraft.entity.attribute.EntityAttributes
 import net.minecraft.util.Identifier
-import net.minecraft.util.math.MathHelper
-import net.minecraft.util.random.RandomGenerator
-import java.util.*
+import org.ladysnake.cca.api.v3.component.ComponentKey
+import org.ladysnake.cca.api.v3.component.ComponentRegistry
+import org.ladysnake.cca.api.v3.entity.EntityComponentFactoryRegistry
+import org.ladysnake.cca.api.v3.entity.EntityComponentInitializer
+import org.ladysnake.cca.api.v3.entity.RespawnCopyStrategy
 
 class Components : EntityComponentInitializer {
     override fun registerEntityComponentFactories(registry: EntityComponentFactoryRegistry) {
         PREFERENCES = ComponentRegistry
             .getOrCreate(
-                Identifier("rpgstats:internal"),
+                Identifier.of("rpgstats:internal"),
                 PlayerPreferencesComponent::class.java
             )
         registry.registerForPlayers(
             PREFERENCES,
-            { playerEntity -> PlayerPreferencesComponent(playerEntity) },
+            { playerEntity -> PlayerPreferencesComponent() },
             RespawnCopyStrategy.ALWAYS_COPY
         )
 
         STATS = ComponentRegistry.getOrCreate(
-            Identifier("rpgstats:stats"),
+            Identifier.of("rpgstats:stats"),
             StatsComponent::class.java
         )
         if (RPGStatsMain.config.hardcoreMode) {
@@ -69,7 +66,7 @@ class Components : EntityComponentInitializer {
 
         @JvmField
         val MELEE = registerStat(
-            Identifier("rpgstats:melee"),
+            Identifier.of("rpgstats:melee"),
             StatAttributeAction(
                 EntityAttributes.GENERIC_ATTACK_DAMAGE,
                 RPGStatsMain.levelConfig.melee.attackDamagePerLevel
@@ -88,7 +85,7 @@ class Components : EntityComponentInitializer {
 
         @JvmField
         val MINING = registerStat(
-            Identifier("rpgstats:mining"),
+            Identifier.of("rpgstats:mining"),
             StatFakeAttributeAction(
                 "rpgstats.fakestat.mining_speed",
                 0.1
@@ -106,7 +103,7 @@ class Components : EntityComponentInitializer {
 
         @JvmField
         val RANGED = registerStat(
-            Identifier("rpgstats:ranged"),
+            Identifier.of("rpgstats:ranged"),
             StatFakeAttributeAction(
                 "rpgstats.fakestat.bow_accuracy",
                 1.0
@@ -123,7 +120,7 @@ class Components : EntityComponentInitializer {
 
         @JvmField
         val MAGIC = registerStat(
-            Identifier("rpgstats:magic"),
+            Identifier.of("rpgstats:magic"),
             StatFakeAttributeAction(
                 "rpgstats.fakestat.drunk_potion_duration",
                 1.0
@@ -144,7 +141,7 @@ class Components : EntityComponentInitializer {
 
         @JvmField
         val FARMING = registerStat(
-            Identifier("rpgstats:farming"),
+            Identifier.of("rpgstats:farming"),
             StatFakeAttributeAction(
                 "rpgstats.fakestat.bonemeal_efficiency",
                 1.0
@@ -161,7 +158,7 @@ class Components : EntityComponentInitializer {
 
         @JvmField
         val DEFENCE = registerStat(
-            Identifier("rpgstats:defence"),
+            Identifier.of("rpgstats:defence"),
             StatAttributeAction(
                 EntityAttributes.GENERIC_KNOCKBACK_RESISTANCE,
                 0.01
@@ -182,7 +179,7 @@ class Components : EntityComponentInitializer {
 
         @JvmField
         val FISHING = registerStat(
-            Identifier("rpgstats:fishing"),
+            Identifier.of("rpgstats:fishing"),
             StatAttributeAction(
                 EntityAttributes.GENERIC_LUCK,
                 0.05
@@ -202,12 +199,5 @@ class Components : EntityComponentInitializer {
 
         @JvmStatic
         lateinit var PREFERENCES: ComponentKey<PlayerPreferencesComponent>
-
-        private val modifierIDs = mutableMapOf<String, UUID>()
-        fun modifierIDFor(name: String, index: Int): UUID {
-            return modifierIDs.computeIfAbsent("$name$index") {
-                MathHelper.randomUuid(RandomGenerator.createThreaded())
-            }
-        }
     }
 }

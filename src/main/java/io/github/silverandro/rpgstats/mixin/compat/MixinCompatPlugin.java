@@ -6,8 +6,8 @@
 
 package io.github.silverandro.rpgstats.mixin.compat;
 
+import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
-import org.quiltmc.loader.api.QuiltLoader;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
@@ -32,7 +32,7 @@ public class MixinCompatPlugin implements IMixinConfigPlugin {
             int startModID = mixinClassName.indexOf(".compat.") + ".compat.".length();
             int endModID = mixinClassName.indexOf('.', startModID);
             String modID = mixinClassName.substring(startModID, endModID);
-            return QuiltLoader.isModLoaded(modID);
+            return FabricLoader.getInstance().isModLoaded(modID);
         }
         return true;
     }

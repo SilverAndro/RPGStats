@@ -6,8 +6,17 @@
 
 package io.github.silverandro.rpgstats.stats.internal
 
-enum class XpBarShow {
+import com.mojang.serialization.Codec
+import net.minecraft.util.StringIdentifiable
+
+enum class XpBarShow : StringIdentifiable {
     NEVER,
     SMART,
-    ALWAYS
+    ALWAYS;
+
+    override fun asString() = this.name
+
+    companion object {
+        val CODEC: Codec<XpBarShow> = StringIdentifiable.createCodec { XpBarShow.entries.toTypedArray() }
+    }
 }

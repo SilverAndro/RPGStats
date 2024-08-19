@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "rpgstats",
+  "version": "${version}",
+  "name": "RPGStats",
+  "description": "A mod that adds simple and easy to understand stats to your game in a data drivable manner",
+  "authors": [
+    "Silver"
+  ],
+  "contact": {
+    "sources": "https://github.com/SilverAndro/RPGStats",
+    "issues": "https://github.com/SilverAndro/RPGStats/issues"
+  },
+  "license": "MPL-2.0",
+  "icon": "assets/rpgstats/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "io.github.silverandro.rpgstats.RPGStatsMain"
+      }
+    ],
+    "client": [
+      {
+        "adapter": "kotlin",
+        "value": "io.github.silverandro.rpgstats.client.RPGStatsClient"
+      }
+    ],
+    "cardinal-components": ["io.github.silverandro.rpgstats.stats.Components"]
+  },
+  "mixins": [
+    "rpgstats.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "minecraft": "~1.21",
+    "java": ">=21",
+    "fabric-api": "*",
+    "fzzy_config": "0.3.5+1.21"
+  },
+  "custom": {
+    "cardinal-components": [
+      "rpgstats:internal",
+      "rpgstats:stats"
+    ]
+  }
+}

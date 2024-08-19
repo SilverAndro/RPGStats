@@ -7,54 +7,39 @@
 package io.github.silverandro.rpgstats.datadrive.stats
 
 import io.github.silverandro.rpgstats.Constants
-import io.github.silverandro.rpgstats.datadrive.findAllResources
 import io.github.silverandro.rpgstats.stats.Components
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.decodeFromStream
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener
 import net.minecraft.resource.ResourceManager
-import net.minecraft.resource.ResourceReloader
 import net.minecraft.resource.ResourceType
 import net.minecraft.util.Identifier
-import net.minecraft.util.profiler.Profiler
-import org.quiltmc.qsl.resource.loader.api.ResourceLoader
-import org.quiltmc.qsl.resource.loader.api.reloader.IdentifiableResourceReloader
-import java.util.concurrent.CompletableFuture
-import java.util.concurrent.Executor
 
-object StatsManager: IdentifiableResourceReloader {
-    override fun getQuiltId(): Identifier {
-        return Identifier("rpgstats", "stat_loader")
+
+object StatsManager : SimpleSynchronousResourceReloadListener {
+    override fun getFabricId(): Identifier {
+        return Identifier.of(Constants.MOD_ID, "stat_loader")
     }
 
     @OptIn(ExperimentalSerializationApi::class)
-    override fun reload(
-        synchronizer: ResourceReloader.Synchronizer,
-        manager: ResourceManager,
-        prepareProfiler: Profiler,
-        applyProfiler: Profiler,
-        prepareExecutor: Executor,
-        applyExecutor: Executor
-    ): CompletableFuture<Void> {
-        return synchronizer.whenPrepared(Unit).thenRun {
-            Components.components.clear()
-            manager.findAllResources("rpgstats_stats").forEach { (id, list) ->
-                Constants.LOG.info("Loading stats file $id")
-                list.forEach {
-                    it.open().use {
-                        val map: Map<String, StatEntry> = Constants.json.decodeFromStream(it)
-                        map.forEach { (key, value) ->
-                            val statId = Identifier(key)
+    override fun reload(manager: ResourceManager) {
+        Components.components.clear()
 
-                            if (statId.path.startsWith("_")) {
-                                throw IllegalArgumentException("Attempt to register a stat ID starting with an underscore! $statId")
-                            }
+        manager.findResources("rpgstats_stats") { it.path.endsWith(".json") }.forEach { (_, resource) ->
+            resource.inputStream.use {
+                val map: Map<String, StatEntry> = Constants.json.decodeFromStream(it)
+                map.forEach { (key, value) ->
+                    val statId = Identifier.of(key)
 
-                            if (!value.shouldRemove) {
-                                Components.components[statId] = value
-                            } else {
-                                Components.components.remove(statId)
-                            }
-                        }
+                    if (statId.path.startsWith("_")) {
+                        throw IllegalArgumentException("Attempt to register a stat ID starting with an underscore! $statId")
+                    }
+
+                    if (!value.shouldRemove) {
+                        Components.components[statId] = value
+                    } else {
+                        Components.components.remove(statId)
                     }
                 }
             }
@@ -62,6 +47,6 @@ object StatsManager: IdentifiableResourceReloader {
     }
 
     fun register() {
-        ResourceLoader.get(ResourceType.SERVER_DATA).registerReloader(this)
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(this)
     }
 }

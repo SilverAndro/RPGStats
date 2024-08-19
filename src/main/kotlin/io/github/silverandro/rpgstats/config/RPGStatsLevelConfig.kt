@@ -1,40 +1,43 @@
 package io.github.silverandro.rpgstats.config
 
-import io.github.silverandro.rpgstats.util.KotlinConfig
-import org.quiltmc.config.api.annotations.Comment
+import io.github.silverandro.rpgstats.Constants
+import me.fzzyhmstrs.fzzy_config.annotations.Comment
+import me.fzzyhmstrs.fzzy_config.config.Config
+import me.fzzyhmstrs.fzzy_config.util.Walkable
+import net.minecraft.util.Identifier
 
-class RPGStatsLevelConfig : KotlinConfig() {
-    val magic by section(LevelBuffToggles())
-    val melee by section(MeleeBuffToggles())
-    val fishing by section(LevelBuffToggles())
-    val ranged by section(LevelBuffToggles())
-    val defense by section(DefenseBuffToggles())
-    val mining by section(MiningBuffToggles())
-    val farming by section(LevelBuffToggles())
+class RPGStatsLevelConfig : Config(Identifier.of(Constants.MOD_ID, "level_abilities")) {
+    val magic = LevelBuffToggles()
+    val melee = MeleeBuffToggles()
+    val fishing = LevelBuffToggles()
+    val ranged = LevelBuffToggles()
+    val defense = DefenseBuffToggles()
+    val mining = MiningBuffToggles()
+    val farming = LevelBuffToggles()
 
-    open class LevelBuffToggles : Section() {
-        val enableLv25Buff by value(true)
-        val enableLv50Buff by value(true)
+    open class LevelBuffToggles : Walkable {
+        val enableLv25Buff = true
+        val enableLv50Buff = true
     }
 
     class MiningBuffToggles : LevelBuffToggles() {
-        @delegate:Comment("At what Y level does the lv50 effect trigger?")
-        val effectLevelTrigger by value(20)
+        @Comment("At what Y level does the lv50 effect trigger?")
+        val effectLevelTrigger = 20
     }
 
     class MeleeBuffToggles : LevelBuffToggles() {
-        @delegate:Comment("How much attack damage is gained per level")
-        val attackDamagePerLevel by value(0.08)
+        @Comment("How much attack damage is gained per level")
+        val attackDamagePerLevel = 0.08
     }
 
     class DefenseBuffToggles : LevelBuffToggles() {
-        @delegate:Comment("Will only grant HP every X levels")
-        val everyXLevels by value(2)
+        @Comment("Will only grant HP every X levels")
+        val everyXLevels = 2
 
-        @delegate:Comment("How much HP to grant on trigger")
-        val addAmount by value(1)
+        @Comment("How much HP to grant on trigger")
+        val addAmount = 1
 
-        @delegate:Comment("Minimum level before you start getting HP (Exclusive)")
-        val afterLevel by value(10)
+        @Comment("Minimum level before you start getting HP (Exclusive)")
+        val afterLevel = 10
     }
 }

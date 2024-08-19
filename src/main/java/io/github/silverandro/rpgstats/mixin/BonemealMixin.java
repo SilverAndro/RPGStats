@@ -11,17 +11,17 @@ import io.github.silverandro.rpgstats.stats.Components;
 import net.minecraft.block.*;
 import net.minecraft.item.BoneMealItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Holder;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.registry.tag.BiomeTags;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.random.RandomGenerator;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,7 +38,7 @@ public class BonemealMixin {
     private static void rpgstats$groundEffectiveness(ItemStack stack, World world, BlockPos blockPos, Direction facing, CallbackInfoReturnable<Boolean> cir) {
         if (world.getBlockState(blockPos).isOf(Blocks.WATER) && world.getFluidState(blockPos).getLevel() == 8) {
             if (world instanceof ServerWorld && stack.getHolder() != null) {
-                RandomGenerator random = world.getRandom();
+                Random random = world.getRandom();
                 int level = LevelUtils.INSTANCE.getComponentLevel(Components.FARMING, (ServerPlayerEntity) stack.getHolder());
 
                 loop:
@@ -53,12 +53,11 @@ public class BonemealMixin {
                         }
                     }
 
-                    Holder<Biome> j = world.getBiome(blockPos2);
-                    if (j.isRegistryKey(Biomes.WARM_OCEAN)) {
+                    RegistryEntry<Biome> j = world.getBiome(blockPos2);
+                    if (j.isIn(BiomeTags.PRODUCES_CORALS_FROM_BONEMEAL)) {
                         if (i == 0 && facing != null && facing.getAxis().isHorizontal()) {
                             blockState = Registries.BLOCK
-                                    .getTag(BlockTags.WALL_CORALS)
-                                    .flatMap(blocks -> blocks.getRandomElement(world.random))
+                                    .getRandomEntry(BlockTags.WALL_CORALS, world.random)
                                     .map(blockEntry -> blockEntry.value().getDefaultState())
                                     .orElse(blockState);
                             if (blockState.contains(DeadCoralWallFanBlock.FACING)) {
@@ -66,25 +65,24 @@ public class BonemealMixin {
                             }
                         } else if (random.nextInt(4) == 0) {
                             blockState = Registries.BLOCK
-                                    .getTag(BlockTags.UNDERWATER_BONE_MEALS)
-                                    .flatMap(blocks -> blocks.getRandomElement(world.random))
+                                    .getRandomEntry(BlockTags.UNDERWATER_BONEMEALS, world.random)
                                     .map(blockEntry -> blockEntry.value().getDefaultState())
                                     .orElse(blockState);
                         }
                     }
 
-                    if (blockState.isInAndMatches(BlockTags.WALL_CORALS, state -> state.contains(DeadCoralWallFanBlock.FACING))) {
-                        for (int k = 0; !blockState.canPlaceAt(world, blockPos2) && k < 4; ++k) {
+                    if (blockState.isIn(BlockTags.WALL_CORALS, state -> state.contains(DeadCoralWallFanBlock.FACING))) {
+                        for (int k = 0; !blockState.canPlaceAt(world, blockPos2) && k < 4; k++) {
                             blockState = blockState.with(DeadCoralWallFanBlock.FACING, Direction.Type.HORIZONTAL.random(random));
                         }
                     }
 
                     if (blockState.canPlaceAt(world, blockPos2)) {
-                        BlockState k = world.getBlockState(blockPos2);
-                        if (k.isOf(Blocks.WATER) && world.getFluidState(blockPos2).getLevel() == 8) {
+                        BlockState blockState2 = world.getBlockState(blockPos2);
+                        if (blockState2.isOf(Blocks.WATER) && world.getFluidState(blockPos2).getLevel() == 8) {
                             world.setBlockState(blockPos2, blockState, Block.NOTIFY_ALL);
-                        } else if (k.isOf(Blocks.SEAGRASS) && random.nextInt(10) == 0) {
-                            ((Fertilizable) Blocks.SEAGRASS).fertilize((ServerWorld) world, random, blockPos2, k);
+                        } else if (blockState2.isOf(Blocks.SEAGRASS) && random.nextInt(10) == 0) {
+                            ((Fertilizable)Blocks.SEAGRASS).grow((ServerWorld)world, random, blockPos2, blockState2);
                         }
                     }
                 }
@@ -100,9 +98,9 @@ public class BonemealMixin {
             if (blockState.getBlock() instanceof Fertilizable fertilizable) {
                 if (fertilizable.isFertilizable(world, pos, blockState)) {
                     if (world instanceof ServerWorld) {
-                        if (fertilizable.canFertilize(world, world.random, pos, blockState)) {
+                        if (fertilizable.canGrow(world, world.random, pos, blockState)) {
                             if (RANDOM.nextDouble() < level * 0.03) {
-                                fertilizable.fertilize((ServerWorld) world, world.random, pos, blockState);
+                                fertilizable.grow((ServerWorld) world, world.random, pos, blockState);
                             }
                         }
                     }

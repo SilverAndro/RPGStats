@@ -6,44 +6,26 @@
 
 package io.github.silverandro.rpgstats.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import io.github.silverandro.rpgstats.LevelUtils;
-import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.stats.Components;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.BowItem;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(BowItem.class)
+@Mixin(PlayerEntity.class)
 public class BowArrowMixin {
-    @Unique
-    private ServerPlayerEntity itemUser = null;
-
-    @Inject(at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerAbilities;creativeMode:Z", ordinal = 0, shift = At.Shift.BY, by = -2), method = "onStoppedUsing")
-    public void rpgstats$capturePlayerUsingBow(ItemStack stack, World world, LivingEntity user, int remainingUseTicks, CallbackInfo ci) {
-        if (user instanceof ServerPlayerEntity) {
-            itemUser = (ServerPlayerEntity) user;
+    @ModifyReturnValue(method = "getProjectileType", at = @At(value = "RETURN", ordinal = 3))
+    public ItemStack rpgstats$modifyGetArrow(ItemStack original) {
+        //noinspection ConstantConditions
+        if ((Object) this instanceof ServerPlayerEntity && original.isEmpty()) {
+            if (LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, (ServerPlayerEntity) (Object) this) >= 50) {
+                return new ItemStack(Items.ARROW);
+            }
         }
-    }
-
-    @SuppressWarnings({"InvalidInjectorMethodSignature", "MixinAnnotationTarget"})
-    @ModifyVariable(method = "onStoppedUsing", at = @At(value = "INVOKE_ASSIGN", ordinal = 2, shift = At.Shift.AFTER), ordinal = 0)
-    public boolean rpgstats$forceCanShootArrow(boolean bl) {
-        if (
-                itemUser != null
-                        && LevelUtils.INSTANCE.getComponentLevel(Components.RANGED, itemUser) >= 50
-                        && RPGStatsMain.levelConfig.getRanged().getEnableLv50Buff()
-        ) {
-            itemUser = null;
-            return true;
-        }
-        return bl;
+        return original;
     }
 }

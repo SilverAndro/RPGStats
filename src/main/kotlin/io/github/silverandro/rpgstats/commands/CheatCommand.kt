@@ -7,57 +7,67 @@
 package io.github.silverandro.rpgstats.commands
 
 import com.mojang.brigadier.CommandDispatcher
+import com.mojang.brigadier.arguments.IntegerArgumentType
+import com.mojang.serialization.Codec
 import io.github.silverandro.rpgstats.LevelUtils
 import mc.rpgstats.hooky_gen.api.Command
+import net.minecraft.command.argument.EntityArgumentType
+import net.minecraft.command.argument.EnumArgumentType
+import net.minecraft.command.argument.IdentifierArgumentType
+import net.minecraft.server.command.CommandManager.argument
+import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Identifier
-import org.quiltmc.qkl.library.brigadier.CommandResult
-import org.quiltmc.qkl.library.brigadier.argument.*
-import org.quiltmc.qkl.library.brigadier.executeWithResult
-import org.quiltmc.qkl.library.brigadier.register
-import org.quiltmc.qkl.library.brigadier.required
-import org.quiltmc.qkl.library.brigadier.util.required
+import net.minecraft.util.StringIdentifiable
 import kotlin.math.floor
 
 @Command
 object CheatCommand {
-    enum class Operation {
+    enum class Operation : StringIdentifiable {
         SET,
         ADD,
-        SUBTRACT
+        SUBTRACT;
+
+        override fun asString() = this.name
+
+        companion object {
+            val CODEC: Codec<Operation> = StringIdentifiable.createCodec { entries.toTypedArray() }
+        }
     }
 
-    enum class Type {
+    enum class Type : StringIdentifiable {
         XP,
-        LEVELS
+        LEVELS;
+
+        override fun asString() = this.name
+
+        companion object {
+            val CODEC: Codec<Type> = StringIdentifiable.createCodec { entries.toTypedArray() }
+        }
     }
+
+    private val operationArg = object : EnumArgumentType<Operation>(Operation.CODEC, { Operation.entries.toTypedArray() }) {}
+    private val typeArg = object : EnumArgumentType<Type>(Type.CODEC, { Type.entries.toTypedArray() }) {}
 
     fun register(dispatch: CommandDispatcher<ServerCommandSource>) {
-        dispatch.register("rpgcheat") {
-            requires { it.hasPermissionLevel(2) }
-            required(players("targetPlayers")) { getTargetPlayers ->
-                required(identifier("skill")) { getSkillIdentifier ->
-                    suggests(SkillSuggestionProvider())
-                    required(
-                        enum("operation", Operation::class),
-                        enum("type", Type::class),
-                        integer("amount", min = 0)
-                    ) { getOperation, getType, getAmount ->
-                        executeWithResult {
-                            val count = modifyXpAndLevels(
-                                getTargetPlayers().required(),
-                                getSkillIdentifier().value(),
-                                getOperation().value(),
-                                getType().value(),
-                                getAmount().value()
-                            )
-                            CommandResult.success(count)
-                        }
-                    }
-                }
-            }
-        }
+        dispatch.register(literal("rpgcheat")
+            .requires {it.hasPermissionLevel(2)}
+            .then(argument("targetPlayers", EntityArgumentType.players())
+                .then(argument("skill", IdentifierArgumentType.identifier())
+                    .suggests(SkillSuggestionProvider())
+                    .then(argument("operation", operationArg)
+                        .then(argument("type", typeArg)
+                            .then(argument("amount", IntegerArgumentType.integer(0))
+                                .executes {
+                                    return@executes modifyXpAndLevels(
+                                        EntityArgumentType.getPlayers(it, "targetPlayers"),
+                                        IdentifierArgumentType.getIdentifier(it, "skill"),
+                                        it.getArgument("operation", Operation::class.java),
+                                        it.getArgument("type", Type::class.java),
+                                        IntegerArgumentType.getInteger(it, "amount")
+                                    )
+                                }))))))
     }
 
     private fun modifyXpAndLevels(

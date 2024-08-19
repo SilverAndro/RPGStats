@@ -7,67 +7,51 @@
 package io.github.silverandro.rpgstats.commands
 
 import com.mojang.brigadier.CommandDispatcher
-import com.mojang.datafixers.util.Either
 import io.github.silverandro.rpgstats.datadrive.xp.XpData
 import io.github.silverandro.rpgstats.util.supplier
 import mc.rpgstats.hooky_gen.api.Command
+import net.minecraft.command.argument.BlockPosArgumentType
+import net.minecraft.command.argument.EntityArgumentType
+import net.minecraft.server.command.CommandManager.argument
+import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
-import org.quiltmc.qkl.library.brigadier.argument.blockPos
-import org.quiltmc.qkl.library.brigadier.argument.entity
-import org.quiltmc.qkl.library.brigadier.argument.literal
-import org.quiltmc.qkl.library.brigadier.argument.value
-import org.quiltmc.qkl.library.brigadier.execute
-import org.quiltmc.qkl.library.brigadier.register
-import org.quiltmc.qkl.library.brigadier.required
-import org.quiltmc.qkl.library.brigadier.util.required
-import org.quiltmc.qkl.library.text.Color
-import org.quiltmc.qkl.library.text.buildText
-import org.quiltmc.qkl.library.text.color
-import org.quiltmc.qkl.library.text.literal
-import kotlin.jvm.optionals.getOrNull
+import net.minecraft.text.Text
 
 @Command
 @OptIn(ExperimentalStdlibApi::class)
 object DebugCommand {
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
-        dispatcher.register("rpgdebug") {
-            requires { it.hasPermissionLevel(2) }
-            required(literal("rea")) {
-                required(literal("block"), blockPos("blockPos")) { _, blockPos ->
-                    execute {
-                        val entry = XpData.BLOCK_XP[source.world.getBlockState(blockPos().value()).block].getOrNull()
-                        displayRea(source, entry)
-                    }
-                }
-                required(literal("entity"), entity("entitySelected")) { _, entitySelected ->
-                    execute {
-                        val entry = XpData.ENTITY_XP_OVERRIDE[entitySelected().value().type].getOrNull()
-                        displayRea(source, entry)
-                    }
-                }
-            }
-        }
+        dispatcher.register(literal("rpgdebug").requires {it.hasPermissionLevel(2)}
+            .then(literal("rea")
+                .then(literal("block")
+                    .then(argument("blockPos", BlockPosArgumentType.blockPos())
+                        .executes {
+                            val entry = XpData.BLOCK_XP[it.source.world.getBlockState(BlockPosArgumentType.getBlockPos(it, "blockPos")).block]
+                            displayRea(it.source, entry)
+                            return@executes 0
+                        }))
+                .then(literal("entity")
+                    .then(argument("entitySelected", EntityArgumentType.entity())
+                        .executes {
+                            val entry = XpData.ENTITY_XP_OVERRIDE[EntityArgumentType.getEntity(it, "entitySelected").type]
+                            displayRea(it.source, entry)
+                            return@executes 0
+                        }))))
     }
 
-    private fun displayRea(source: ServerCommandSource, entry:  Either<XpData.XpEntry, MutableList<XpData.XpEntry>>?) {
+    private fun displayRea(source: ServerCommandSource, entry: List<XpData.XpEntry>?) {
         if (entry != null) {
-            entry.ifLeft {
-                source.sendFeedback(buildText {
-                    literal(it.id.toString() + "\n")
-                    literal(" - Amount: ${it.amount}\n")
-                    literal(" - Chance: ${it.chance}")
-                }.supplier(), false)
-            }.ifRight {
-                source.sendFeedback(buildText {
-                    it.forEach {
-                        literal(it.id.toString() + "\n")
-                        literal(" - Amount: ${it.amount}\n")
-                        literal(" - Chance: ${it.chance}")
-                    }
-                }.supplier(), false)
+            var output = Text.empty()
+            entry.forEachIndexed { index, it ->
+                output = output.append(Text.of(it.id.toString() + "\n")).append(" - Amount: ${it.amount}\n").append(" - Chance: ${it.chance}")
+                if (index != entry.lastIndex) {
+                    output = output.append("\n")
+                }
             }
+
+            source.sendFeedback(output.supplier(), false)
         } else {
-            source.sendFeedback(buildText { color(Color.RED) { literal("No REA registered!") } }.supplier(), false)
+            source.sendError(Text.of("No REA registered!"))
         }
     }
 }

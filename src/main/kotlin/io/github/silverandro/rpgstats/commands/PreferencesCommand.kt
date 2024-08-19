@@ -7,80 +7,71 @@
 package io.github.silverandro.rpgstats.commands
 
 import com.mojang.brigadier.CommandDispatcher
+import com.mojang.brigadier.arguments.BoolArgumentType
 import io.github.silverandro.rpgstats.stats.Components
 import io.github.silverandro.rpgstats.stats.internal.XpBarLocation
 import io.github.silverandro.rpgstats.stats.internal.XpBarShow
 import io.github.silverandro.rpgstats.util.supplier
 import mc.rpgstats.hooky_gen.api.Command
+import net.minecraft.command.argument.EnumArgumentType
+import net.minecraft.server.command.CommandManager
+import net.minecraft.server.command.CommandManager.argument
+import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
 import net.minecraft.text.Text
-import org.quiltmc.qkl.library.brigadier.argument.boolean
-import org.quiltmc.qkl.library.brigadier.argument.enum
-import org.quiltmc.qkl.library.brigadier.argument.literal
-import org.quiltmc.qkl.library.brigadier.argument.value
-import org.quiltmc.qkl.library.brigadier.execute
-import org.quiltmc.qkl.library.brigadier.register
-import org.quiltmc.qkl.library.brigadier.required
-import org.quiltmc.qkl.library.brigadier.util.required
-import org.quiltmc.qkl.library.text.buildText
-import org.quiltmc.qkl.library.text.literal
-import org.quiltmc.qkl.library.text.translatable
 
 @Command
 object PreferencesCommand {
+    private val xpBarLocationArg = object : EnumArgumentType<XpBarLocation>(XpBarLocation.CODEC, {XpBarLocation.entries.toTypedArray()}) {}
+    private val xpShowArg = object : EnumArgumentType<XpBarShow>(XpBarShow.CODEC, {XpBarShow.entries.toTypedArray()}) {}
+
     fun register(dispatch: CommandDispatcher<ServerCommandSource>) {
-        dispatch.register("rpgconfig") {
-            required(literal("disable_spam"), boolean("disable_button_spam")) { _, boolean ->
-                execute {
-                    val component = Components.PREFERENCES.get(source.playerOrThrow)
-                    component.isOptedOutOfButtonSpam = boolean().value()
-                    source.sendFeedback(
+        dispatch.register(literal("rpgconfig").then(
+            literal("disable_spam").then(
+                CommandManager.argument("disable_button_spam", BoolArgumentType.bool()).executes {
+                    val component = Components.PREFERENCES.get(it.source.playerOrThrow)
+                    component.isOptedOutOfButtonSpam = BoolArgumentType.getBool(it, "disable_button_spam")
+                    it.source.sendFeedback(
                         Text.translatable(
                             "rpgstats.feedback.toggle_sneak",
                             component.isOptedOutOfButtonSpam
                         ).supplier(), false
                     )
-                }
-            }
 
-            required(literal("xp_bar")) {
-                required(literal("location"), enum("location_value", XpBarLocation::class)) { _, enum ->
-                    execute {
-                        val component = Components.PREFERENCES.get(source.playerOrThrow)
-                        component.xpBarLocation = enum().value()
-                        source.sendFeedback(
-                            Text.translatable(
-                                "rpgstats.feedback.xp_bar_location",
-                                component.xpBarLocation.name
-                            ).supplier(), false
-                        )
-                    }
-                }
-                required(literal("show"), enum("show_value", XpBarShow::class)) { _, enum ->
-                    execute {
-                        val component = Components.PREFERENCES.get(source.player)
-                        component.xpBarShow = enum().value()
-                        source.sendFeedback(
-                            Text.translatable(
-                                "rpgstats.feedback.xp_bar_show",
-                                component.xpBarShow.name
-                            ).supplier(), false
-                        )
-                    }
-                }
-            }
-
-            execute {
-                val component = Components.PREFERENCES.get(source.player)
-                val feedback = buildText {
-                    translatable("rpgstats.feedback.toggle_sneak", component.isOptedOutOfButtonSpam)
-                    literal("\n")
-                    translatable("rpgstats.feedback.xp_bar_location", component.xpBarLocation.name)
-                    literal("\n")
-                    translatable("rpgstats.feedback.xp_bar_show", component.xpBarShow.name)
-                }
-                source.sendFeedback(feedback.supplier(), false)
-            }
-        }
+                    return@executes 0
+                })).then(
+                    literal("xp_bar")
+                        .then(literal("location").then(argument("location_value", xpBarLocationArg).executes {
+                            val component = Components.PREFERENCES.get(it.source.playerOrThrow)
+                            component.xpBarLocation = it.getArgument("location_value", XpBarLocation::class.java)
+                            it.source.sendFeedback(
+                                Text.translatable(
+                                    "rpgstats.feedback.xp_bar_location",
+                                    component.xpBarLocation.name
+                                ).supplier(), false
+                            )
+                            return@executes 0
+                        }))
+                        .then(literal("show").then(argument("show_value", xpShowArg).executes {
+                            val component = Components.PREFERENCES.get(it.source.playerOrThrow)
+                            component.xpBarShow = it.getArgument("show_value", XpBarShow::class.java)
+                            it.source.sendFeedback(
+                                Text.translatable(
+                                    "rpgstats.feedback.xp_bar_show",
+                                    component.xpBarShow.name
+                                ).supplier(), false
+                            )
+                            return@executes 0
+                        }))
+                ).executes {
+                    val component = Components.PREFERENCES.get(it.source.playerOrThrow)
+                    val feedback = Text.translatable("rpgstats.feedback.toggle_sneak", component.isOptedOutOfButtonSpam)
+                        .append("\n")
+                        .append(Text.translatable("rpgstats.feedback.xp_bar_location", component.xpBarLocation.name))
+                        .append("\n")
+                        .append(Text.translatable("rpgstats.feedback.xp_bar_show", component.xpBarShow.name))
+                    it.source.sendFeedback(feedback.supplier(), false)
+                    return@executes 0
+        })
     }
 }

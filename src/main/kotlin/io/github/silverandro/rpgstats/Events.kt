@@ -7,8 +7,6 @@
 package io.github.silverandro.rpgstats
 
 import io.github.silverandro.rpgstats.Constants.LEVELS_MAX
-import io.github.silverandro.rpgstats.Constants.SYNC_NAMES_PACKET_ID
-import io.github.silverandro.rpgstats.Constants.SYNC_STATS_PACKET_ID
 import io.github.silverandro.rpgstats.LevelUtils.getComponentLevel
 import io.github.silverandro.rpgstats.LevelUtils.getComponentXP
 import io.github.silverandro.rpgstats.LevelUtils.getLowestLevel
@@ -21,16 +19,16 @@ import io.github.silverandro.rpgstats.stats.Components
 import io.github.silverandro.rpgstats.stats.systems.StatAttributeAction
 import io.github.silverandro.rpgstats.util.filterInPlace
 import io.github.silverandro.rpgstats.util.readSelectorMap
-import io.netty.buffer.Unpooled
 import kotlinx.coroutines.CancellationException
 import mc.rpgstats.hooky_gen.api.RegisterOn
+import net.fabricmc.fabric.api.command.v2.EntitySelectorOptionRegistry
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup
 import net.minecraft.block.BlockState
 import net.minecraft.block.CropBlock
 import net.minecraft.entity.attribute.EntityAttributeModifier
 import net.minecraft.entity.effect.StatusEffectInstance
 import net.minecraft.entity.effect.StatusEffects
 import net.minecraft.entity.player.PlayerEntity
-import net.minecraft.network.PacketByteBuf
 import net.minecraft.server.MinecraftServer
 import net.minecraft.server.network.ServerPlayNetworkHandler
 import net.minecraft.server.network.ServerPlayerEntity
@@ -38,57 +36,54 @@ import net.minecraft.text.Text
 import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import org.quiltmc.qkl.library.networking.allPlayers
-import org.quiltmc.qsl.command.api.EntitySelectorOptionRegistry
-import org.quiltmc.qsl.networking.api.PlayerLookup
-import org.quiltmc.qsl.networking.api.ServerPlayNetworking
 import java.util.concurrent.ConcurrentHashMap
 
-@RegisterOn("org.quiltmc.qsl.lifecycle.api.event.ServerLifecycleEvents.READY")
+@RegisterOn("net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STARTED")
 fun registerEntitySelectors() {
     EntitySelectorOptionRegistry.register(
-        Identifier("rpgstats", "level"),
+        Identifier.of("rpgstats", "level"),
+        Text.translatable("rpgstats.feedback.level_selector"),
         { optionReader ->
             val arg = optionReader.readSelectorMap()
-            optionReader.setPredicate {
+            optionReader.addPredicate {
                 if (it is ServerPlayerEntity) {
-                    return@setPredicate arg.any { (id, range) ->
+                    return@addPredicate arg.any { (id, range) ->
                         if (id == "rpgstats:_any") {
                             LevelUtils.getStatLevelsForPlayer(it).any { range.test(it) }
                         } else {
-                            range.test(getComponentLevel(Identifier(id), it))
+                            range.test(getComponentLevel(Identifier.of(id), it))
                         }
                     }
                 } else {
-                    return@setPredicate false
+                    return@addPredicate false
                 }
             }
-            optionReader.setFlag("rpgstatsLevels", true)
+            optionReader.setCustomFlag(Constants.LEVEL_SELECTOR_ID, true)
         },
-        { optionReader -> optionReader.selectsEntityType() && !optionReader.getFlag("rpgstatsLevels") },
-        Text.translatable("rpgstats.feedback.level_selector")
+        { optionReader -> optionReader.selectsEntityType() && !optionReader.getCustomFlag(Constants.LEVEL_SELECTOR_ID) }
     )
+
     EntitySelectorOptionRegistry.register(
-        Identifier("rpgstats", "xp"),
+        Identifier.of("rpgstats", "xp"),
+        Text.translatable("rpgstats.feedback.xp_selector"),
         { optionReader ->
             val arg = optionReader.readSelectorMap()
-            optionReader.setPredicate {
+            optionReader.addPredicate {
                 if (it is ServerPlayerEntity) {
-                    return@setPredicate arg.any { (id, range) ->
+                    return@addPredicate arg.any { (id, range) ->
                         if (id == "rpgstats:_any") {
                             LevelUtils.getStatXpsForPlayer(it).any { range.test(it) }
                         } else {
-                            range.test(getComponentXP(Identifier(id), it))
+                            range.test(getComponentXP(Identifier.of(id), it))
                         }
                     }
                 } else {
-                    return@setPredicate false
+                    return@addPredicate false
                 }
             }
-            optionReader.setFlag("rpgstatsXp", true)
+            optionReader.setCustomFlag(Constants.XP_SELECTOR_ID, true)
         },
-        { optionReader -> optionReader.selectsEntityType() && !optionReader.getFlag("rpgstatsLevels") },
-        Text.translatable("rpgstats.feedback.xp_selector")
+        { optionReader -> optionReader.selectsEntityType() && !optionReader.getCustomFlag(Constants.XP_SELECTOR_ID) }
     )
 }
 
@@ -109,25 +104,20 @@ fun grantBlockBreakXP(world: World, playerEntity: PlayerEntity, blockPos: BlockP
 
         val block = blockState.block
         if (RPGStatsMain.config.debug.logBrokenBlocks) {
-            Constants.debugLogger.info(playerEntity.entityName + " broke " + block.translationKey + " at " + blockPos)
+            Constants.debugLogger.info(playerEntity.gameProfile.name + " broke " + block.translationKey + " at " + blockPos)
         }
 
         val player = playerEntity as? ServerPlayerEntity ?: return
         if (block is CropBlock && !block.isMature(blockState)) return
 
-        val amount = XpData.BLOCK_XP.get(block).orElse(null) ?: return
-        amount.ifLeft {
+        XpData.BLOCK_XP[block]?.forEach {
             LevelUtils.applyReaEntry(it, player)
-        }.ifRight {
-            it.forEach {
-                LevelUtils.applyReaEntry(it, player)
-            }
         }
     }
 }
 
 private var tickCount = 0
-@RegisterOn("org.quiltmc.qsl.lifecycle.api.event.ServerTickEvents.END")
+@RegisterOn("net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK")
 fun syncDataAndGrantAdvancements(server: MinecraftServer) {
     blacklistedPos.filterInPlace { blockPos, i ->
         blacklistedPos[blockPos] = i - 1
@@ -146,7 +136,7 @@ fun syncDataAndGrantAdvancements(server: MinecraftServer) {
             // Grant the hidden max level advancement
             val possible = advancements
                 .stream()
-                .filter { advancement -> advancement.comp_1919 == LEVELS_MAX }
+                .filter { advancement -> advancement.id == LEVELS_MAX }
                 .findFirst()
             if (possible.isPresent) {
                 if (!player.advancementTracker.getProgress(possible.get()).isDone) {
@@ -157,7 +147,7 @@ fun syncDataAndGrantAdvancements(server: MinecraftServer) {
             }
 
             // Client has the mod installed
-            if (ServerPlayNetworking.canSend(player, SYNC_NAMES_PACKET_ID)) {
+            /*if (ServerPlayNetworking.canSend(player, SYNC_NAMES_PACKET_ID)) {
                 val count = Components.components.size
                 val nameData = PacketByteBuf(Unpooled.buffer())
                 val statData = PacketByteBuf(Unpooled.buffer())
@@ -178,6 +168,7 @@ fun syncDataAndGrantAdvancements(server: MinecraftServer) {
                 ServerPlayNetworking.send(player, SYNC_STATS_PACKET_ID, statData)
                 ServerPlayNetworking.send(player, SYNC_NAMES_PACKET_ID, nameData)
             }
+             */
 
             // Mining lv 50 effect
             if (player.blockPos.y <= RPGStatsMain.levelConfig.mining.effectLevelTrigger &&
@@ -203,14 +194,14 @@ fun syncDataAndGrantAdvancements(server: MinecraftServer) {
     }
 }
 
-@RegisterOn("org.quiltmc.qsl.lifecycle.api.event.ServerTickEvents.END")
+@RegisterOn("net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents.END_SERVER_TICK")
 fun updateStatModifiers(server: MinecraftServer) {
     // For every player
-    server.allPlayers.forEach { player ->
+    server.playerManager.playerList.forEach { player ->
         // Get all their stats/components
         Components.components.keys.forEach { id ->
             // Map those into actions
-            Components.actions[id]?.forEachIndexed { actionIndex, action ->
+            Components.actions[id]?.forEach { action ->
                 // If the action modifies an attribute
                 if (action is StatAttributeAction) {
                     // Compute the total modification
@@ -223,16 +214,15 @@ fun updateStatModifiers(server: MinecraftServer) {
 
                     // Generate a modifier based on the total amount for this player
                     val modifier = EntityAttributeModifier(
-                        Components.modifierIDFor(id.toUnderscoreSeparatedString(), actionIndex),
-                        "$id ${action.stat.translationKey}",
+                        id,
                         total,
-                        EntityAttributeModifier.Operation.ADDITION
+                        EntityAttributeModifier.Operation.ADD_VALUE
                     )
 
                     // If the player has an attribute that is modified by this modifier
-                    with (player.getAttributeInstance(action.stat) ?: return@forEachIndexed) {
+                    with (player.getAttributeInstance(action.stat) ?: return@forEach) {
                         // Remove it if we already applied this action
-                        if (hasModifier(modifier)) {
+                        if (hasModifier(id)) {
                             removeModifier(modifier.id)
                         }
                         // Apply modifier in a way that won't save
@@ -244,7 +234,7 @@ fun updateStatModifiers(server: MinecraftServer) {
     }
 }
 
-@RegisterOn("org.quiltmc.qsl.networking.api.ServerPlayConnectionEvents.DISCONNECT")
+@RegisterOn("net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.DISCONNECT")
 fun cleanupPlayerTasks(handler: ServerPlayNetworkHandler) {
     XpBarRenderer.activeBars[handler.player.uuid]?.cancel(CancellationException("Player disconnected from server"))
     LevelUpDisplays.activeDisplays[handler.player.uuid]?.cancel(CancellationException("Player disconnected from server"))

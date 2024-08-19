@@ -6,16 +6,15 @@
 
 package io.github.silverandro.rpgstats.advancemnents
 
-import com.google.gson.JsonObject
+import com.mojang.serialization.Codec
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.github.silverandro.rpgstats.Constants.ANY_ID
 import io.github.silverandro.rpgstats.LevelUtils.getHighestLevel
 import io.github.silverandro.rpgstats.advancemnents.LevelUpCriterion.LevelCriteria
 import io.github.silverandro.rpgstats.stats.Components
 import net.minecraft.advancement.criterion.AbstractCriterion
-import net.minecraft.advancement.criterion.AbstractCriterionConditions
-import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer
+import net.minecraft.predicate.entity.LootContextPredicate
 import net.minecraft.server.network.ServerPlayerEntity
-import net.minecraft.unmapped.C_ctsfmifk
 import net.minecraft.util.Identifier
 import java.util.*
 
@@ -24,33 +23,30 @@ class LevelUpCriterion : AbstractCriterion<LevelCriteria>() {
         this.trigger(player) { levelCriteria: LevelCriteria -> levelCriteria.matches(player) }
     }
 
-    class LevelCriteria(
-        optional: Optional<C_ctsfmifk>,
-        private val level: Int,
-        id: String
-    ) : AbstractCriterionConditions(
-        optional
-    ) {
-        private val statId: Identifier = Identifier(id)
-
+    @JvmRecord
+    data class LevelCriteria(val statID: Identifier, val level: Int) : Conditions {
         fun matches(player: ServerPlayerEntity): Boolean {
-            return if (statId == ANY_ID) getHighestLevel(player) >= level else Components.STATS.get(player)
-                .getOrCreateID(statId).level >= level
+            return if (statID == ANY_ID) getHighestLevel(player) >= level else Components.STATS.get(player)
+                .getOrCreateID(statID).level >= level
         }
 
-        override fun toJson(): JsonObject {
-            val jsonObject = super.toJson()
-            jsonObject.addProperty("level", level)
-            jsonObject.addProperty("stat", statId.toString())
-            return jsonObject
+        override fun player(): Optional<LootContextPredicate> {
+            return Optional.empty()
         }
     }
+    override fun getConditionsCodec(): Codec<LevelCriteria> {
+        return CODEC
+    }
 
-    override fun method_27854(
-        jsonObject: JsonObject,
-        optional: Optional<C_ctsfmifk>,
-        advancementEntityPredicateDeserializer: AdvancementEntityPredicateDeserializer
-    ): LevelCriteria {
-        return LevelCriteria(optional, jsonObject["level"].asInt, jsonObject["stat"].asString)
+    companion object {
+        val CODEC: Codec<LevelCriteria> = RecordCodecBuilder.create { instance ->
+            instance.group(
+                Identifier.CODEC.fieldOf("statID").forGetter(LevelCriteria::statID),
+                Codec.INT.fieldOf("level").forGetter(LevelCriteria::level)
+            ).apply(
+                instance,
+                ::LevelCriteria
+            )
+        }
     }
 }

@@ -6,31 +6,18 @@
 
 package io.github.silverandro.rpgstats.client
 
-import com.mojang.blaze3d.platform.InputUtil
-import io.github.silverandro.rpgstats.Constants
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.network.ClientPlayNetworkHandler
-import net.minecraft.client.option.KeyBind
-import net.minecraft.network.PacketByteBuf
+import net.fabricmc.api.ClientModInitializer
+import net.minecraft.client.option.KeyBinding
 import net.minecraft.util.Identifier
 import net.minecraft.util.Pair
-import org.lwjgl.glfw.GLFW
-import org.quiltmc.loader.api.ModContainer
-import org.quiltmc.qkl.library.text.Color
-import org.quiltmc.qkl.library.text.buildText
-import org.quiltmc.qkl.library.text.color
-import org.quiltmc.qkl.library.text.literal
-import org.quiltmc.qsl.base.api.entrypoint.client.ClientModInitializer
-import org.quiltmc.qsl.lifecycle.api.client.event.ClientTickEvents
-import org.quiltmc.qsl.networking.api.client.ClientPlayNetworking
 
 object RPGStatsClient : ClientModInitializer {
     private val nameMap = HashMap<Identifier, String>()
     private val currentStats = HashMap<Identifier, Pair<Int, Int>>()
-    private lateinit var openGUIKeybind: KeyBind
+    private lateinit var openGUIKeybind: KeyBinding
 
-    override fun onInitializeClient(mod: ModContainer) {
+    override fun onInitializeClient() {
+        /*
         ClientPlayNetworking.registerGlobalReceiver(Constants.SYNC_NAMES_PACKET_ID) { _, _, byteBuf, _ ->
             // Clear data
             nameMap.clear()
@@ -41,7 +28,7 @@ object RPGStatsClient : ClientModInitializer {
             // Read each stat in turn
             for (i in 0 until count) {
                 // Read the identifier
-                val statId = byteBuf.readIdentifier()
+                val statId = byteBuf.readIdentifier.of()
                 // Read the name
                 val name = byteBuf.readString()
                 nameMap[statId] = name
@@ -71,7 +58,7 @@ object RPGStatsClient : ClientModInitializer {
         }
 
         openGUIKeybind = KeyBindingHelper.registerKeyBinding(
-            KeyBind(
+            KeyBinding(
                 "key.rpgstats.open_gui",
                 InputUtil.Type.KEYSYM,
                 GLFW.GLFW_KEY_UNKNOWN,
@@ -79,12 +66,14 @@ object RPGStatsClient : ClientModInitializer {
             )
         )
 
-        ClientTickEvents.END.register(ClientTickEvents.End { client: MinecraftClient ->
+        ClientTickEvents.END_CLIENT_TICK.register { client: MinecraftClient ->
             while (openGUIKeybind.wasPressed()) {
                 if (client.currentScreen == null) {
                     client.player?.sendMessage(buildText { color(Color.RED) { literal("Sorry, RPGStats GUI is still in development for this version") } }, false)
                 }
             }
-        })
+        }
+
+         */
     }
 }

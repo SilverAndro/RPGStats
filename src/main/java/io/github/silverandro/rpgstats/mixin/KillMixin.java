@@ -6,7 +6,6 @@
 
 package io.github.silverandro.rpgstats.mixin;
 
-import com.mojang.datafixers.util.Either;
 import io.github.silverandro.rpgstats.LevelUtils;
 import io.github.silverandro.rpgstats.RPGStatsMain;
 import io.github.silverandro.rpgstats.datadrive.xp.XpData;
@@ -16,10 +15,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.boss.WitherEntity;
 import net.minecraft.entity.boss.dragon.EnderDragonEntity;
 import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.passive.PassiveEntity;
+import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,7 +27,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
 
-@SuppressWarnings("ConstantConditions")
 @Mixin(LivingEntity.class)
 public abstract class KillMixin {
     @Inject(at = @At("HEAD"), method = "onDeath")
@@ -38,22 +36,20 @@ public abstract class KillMixin {
             Entity entity = source.getAttacker();
 
             if (entity instanceof ServerPlayerEntity serverPlayer) {
-                Either<XpData.XpEntry, List<XpData.XpEntry>> reaOverride = XpData.INSTANCE.getENTITY_XP_OVERRIDE().get(le.getType()).orElse(null);
-                if (reaOverride != null) {
-                    reaOverride.ifLeft(xpEntry -> LevelUtils.INSTANCE.applyReaEntry(xpEntry, serverPlayer, source));
-                    reaOverride.ifRight(xpEntries -> xpEntries.forEach(xpEntry -> LevelUtils.INSTANCE.applyReaEntry(xpEntry, serverPlayer, source)));
-                    return;
+                List<XpData.XpEntry> reaOverride = XpData.INSTANCE.getENTITY_XP_OVERRIDE().get(le.getType());
+                for (XpData.XpEntry entry : reaOverride) {
+                    LevelUtils.INSTANCE.applyReaEntry(entry, serverPlayer, source);
                 }
 
-                if (source.isType(DamageTypes.MAGIC)) {
+                if (source.isIn(DamageTypeTags.WITCH_RESISTANT_TO)) {
                     LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, serverPlayer, 1);
-                } else if (source.isIndirect()) {
+                } else if (!source.isDirect()) {
                     if (le instanceof WitherEntity || le instanceof EnderDragonEntity) {
                         LevelUtils.INSTANCE.addXpAndLevelUp(Components.RANGED, serverPlayer, 130);
                     } else {
                         LevelUtils.INSTANCE.addXpAndLevelUp(Components.RANGED, serverPlayer, 1);
                     }
-                } else if (!source.isType(DamageTypes.EXPLOSION) && !source.isType(DamageTypes.ON_FIRE) && !source.isType(DamageTypes.IN_FIRE)) {
+                } else if (!source.isIn(DamageTypeTags.IS_EXPLOSION) && !source.isIn(DamageTypeTags.IS_FIRE)) {
                     if (le instanceof PassiveEntity) {
                         LevelUtils.INSTANCE.addXpAndLevelUp(Components.FARMING, serverPlayer, 1);
                     } else {

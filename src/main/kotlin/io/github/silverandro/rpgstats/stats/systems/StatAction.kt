@@ -9,7 +9,9 @@ package io.github.silverandro.rpgstats.stats.systems
 import io.github.silverandro.rpgstats.util.cleanDisplay
 import net.minecraft.entity.attribute.EntityAttribute
 import net.minecraft.entity.player.PlayerEntity
-import org.quiltmc.qkl.library.text.*
+import net.minecraft.registry.entry.RegistryEntry
+import net.minecraft.text.Text
+import net.minecraft.util.Formatting
 
 interface StatAction {
     fun onLevelUp(
@@ -20,7 +22,7 @@ interface StatAction {
 }
 
 data class StatAttributeAction(
-    val stat: EntityAttribute,
+    val stat: RegistryEntry<EntityAttribute>,
     val value: Double,
     val shouldApply: (Int) -> Boolean
 ) : StatAction {
@@ -28,11 +30,10 @@ data class StatAttributeAction(
         if (!shouldApply(newLevel)) return
         if (!hideMessages) {
             player.sendMessage(
-                buildText {
-                    color(Color.GREEN) { literal("| ") }
-                    color(Color.YELLOW) { literal((if (value > 0) "+" else "-") + value.cleanDisplay + " ") }
-                    translatable(stat.translationKey)
-                }, false
+                Text.literal("| ").styled { it.withColor(Formatting.GREEN) }
+                    .append(Text.literal((if (value > 0) "+" else "-") + value.cleanDisplay + " ")).styled { it.withColor(Formatting.YELLOW) }
+                    .append(Text.translatable(stat.value().translationKey)),
+                false
             )
         }
     }
@@ -47,12 +48,11 @@ data class StatSpecialAction(
     override fun onLevelUp(player: PlayerEntity, newLevel: Int, hideMessages: Boolean) {
         if (!shouldApply(newLevel) || hideMessages) return
         player.sendMessage(
-            buildText {
-                color(Color.GREEN) { literal("| ") }
-                color(Color.YELLOW) { translatable(name) }
-                literal(" - ")
-                translatable(description, descriptionExtra ?: arrayOf(0))
-            }, false
+            Text.literal("| ").styled { it.withColor(Formatting.GREEN) }
+                .append(Text.translatable(name).styled { it.withColor(Formatting.YELLOW) })
+                .append(" - ")
+                .append(Text.translatable(description, descriptionExtra ?: arrayOf(0))),
+            false
         )
     }
 }
@@ -65,11 +65,10 @@ data class StatFakeAttributeAction(
     override fun onLevelUp(player: PlayerEntity, newLevel: Int, hideMessages: Boolean) {
         if (!shouldApply(newLevel) || hideMessages) return
         player.sendMessage(
-            buildText {
-                color(Color.GREEN) { literal("| ") }
-                color(Color.YELLOW) { literal((if (fakeValue > 0) "+" else "-") + fakeValue.cleanDisplay + " ") }
-                translatable(nameTranslationKey)
-            }, false
+            Text.literal("| ").styled { it.withColor(Formatting.GREEN) }
+                .append(Text.literal((if (fakeValue > 0) "+" else "-") + fakeValue.cleanDisplay + " ")).styled { it.withColor(Formatting.YELLOW) }
+                .append(Text.translatable(nameTranslationKey)),
+            false
         )
     }
 }

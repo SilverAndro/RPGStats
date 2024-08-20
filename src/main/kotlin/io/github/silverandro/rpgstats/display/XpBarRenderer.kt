@@ -38,10 +38,10 @@ object XpBarRenderer {
         }
     }
 
-    fun generateBar(total: Int, current: Int, length: Int): Text {
+    private fun generateBar(total: Int, current: Int, length: Int): Text {
         val filledSlices = min(floor((current.toDouble() / total)*length), length.toDouble()).toInt()
         return Text.literal(buildString { append("["); repeat(filledSlices) { append("|") } }).styled { it.withColor(Formatting.GREEN) }
-            .append(Text.literal(buildString { repeat(length-filledSlices) { append("|") } }))
+            .append(Text.literal(buildString { repeat(length-filledSlices) { append("|") } }).styled { it.withColor(Formatting.WHITE) })
             .append(Text.literal("]").styled { it.withColor(Formatting.GREEN) })
     }
 

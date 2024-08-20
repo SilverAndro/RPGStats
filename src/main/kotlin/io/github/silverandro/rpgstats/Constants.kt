@@ -6,7 +6,9 @@
 
 package io.github.silverandro.rpgstats
 
+import io.github.silverandro.rpgstats.util.IdentifierSerializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.modules.SerializersModule
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.util.Identifier
 import org.apache.logging.log4j.LogManager
@@ -27,7 +29,12 @@ object Constants {
     val LEVEL_SELECTOR_ID = Identifier.of(MOD_ID, "rpgstats_levels")
     val XP_SELECTOR_ID = Identifier.of(MOD_ID, "rpgstats_xp")
 
+    private val module = SerializersModule {
+        contextual(Identifier::class, IdentifierSerializer)
+    }
+
     val json = Json {
+        serializersModule = module
         if (FabricLoader.getInstance().isDevelopmentEnvironment.not()) {
             ignoreUnknownKeys = true
             isLenient = true

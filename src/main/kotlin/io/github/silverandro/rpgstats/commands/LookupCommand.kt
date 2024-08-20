@@ -12,7 +12,6 @@ import io.github.silverandro.rpgstats.LevelUtils
 import io.github.silverandro.rpgstats.stats.Components
 import mc.rpgstats.hooky_gen.api.Command
 import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.command.argument.EnumArgumentType
 import net.minecraft.command.argument.IdentifierArgumentType
 import net.minecraft.server.command.CommandManager.argument
 import net.minecraft.server.command.CommandManager.literal
@@ -48,27 +47,32 @@ object LookupCommand {
         }
     }
 
-    private val lookupTypeArg = object : EnumArgumentType<LookupType>(LookupType.CODEC, { LookupType.entries.toTypedArray() }) {}
-    private val lookupTypeNoSkillArg = object : EnumArgumentType<LookupTypeNoSkill>(LookupTypeNoSkill.CODEC, { LookupTypeNoSkill.entries.toTypedArray() }) {}
+    private val args = argument("targetPlayer", EntityArgumentType.player()).apply {
+        thenEnum<LookupType> {
+            then(argument("skillId", IdentifierArgumentType.identifier())
+                .suggests(SkillSuggestionProvider())
+                .executes {
+                    val player = EntityArgumentType.getPlayer(it, "targetPlayer")
+                    val lookup = it.getArgument("skillLookup", LookupType::class.java)
+                    val skillId = IdentifierArgumentType.getIdentifier(it, "skillId")
+                    return@executes preformLookup(player, lookup, skillId)
+                }
+            )
+        }
+        thenEnum<LookupTypeNoSkill> {
+            executes {
+                val player = EntityArgumentType.getPlayer(it, "targetPlayer")
+                val lookup = it.getArgument("generalLookup", LookupTypeNoSkill::class.java)
+                return@executes preformLookup(player, lookup)
+            }
+        }
+    }
+
 
     fun register(dispatcher: CommandDispatcher<ServerCommandSource>) {
         dispatcher.register(literal("rpglookup")
             .requires { it.hasPermissionLevel(2) }
-            .then(argument("targetPlayer", EntityArgumentType.player())
-                .then(argument("skillLookup", lookupTypeArg).then(argument("skillId", IdentifierArgumentType.identifier())
-                    .suggests(SkillSuggestionProvider())
-                    .executes {
-                        val player = EntityArgumentType.getPlayer(it, "targetPlayer")
-                        val lookup = it.getArgument("skillLookup", LookupType::class.java)
-                        val skillId = IdentifierArgumentType.getIdentifier(it, "skillId")
-                        return@executes preformLookup(player, lookup, skillId)
-                    }
-                ))
-                .then(argument("generalLookup", lookupTypeNoSkillArg).executes {
-                    val player = EntityArgumentType.getPlayer(it, "targetPlayer")
-                    val lookup = it.getArgument("generalLookup", LookupTypeNoSkill::class.java)
-                    return@executes preformLookup(player, lookup)
-                }))
+            .then(args)
         )
     }
 

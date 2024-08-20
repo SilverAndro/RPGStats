@@ -8,17 +8,18 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(targets = "net.minecraft.class_8638")
+@Mixin(targets = "net.minecraft.entity.effect.WitherStatusEffect")
 public class WitherImmuneMixin {
     @Inject(method = "applyUpdateEffect", at = @At("HEAD"), cancellable = true)
-    public void rpgstats$negatePoison(LivingEntity entity, int amplifier, CallbackInfo ci) {
+    public void rpgstats$negatePoison(LivingEntity entity, int amplifier, CallbackInfoReturnable<Boolean> cir) {
         if (!entity.getWorld().isClient) {
             if (entity instanceof ServerPlayerEntity serverPlayer) {
                 int level = LevelUtils.INSTANCE.getComponentLevel(Components.MAGIC, serverPlayer);
                 if (level > 50 && !RPGStatsMain.levelConfig.getMagic().getEnableLv50Buff()) {
-                    ci.cancel();
+                    cir.setReturnValue(false);
+                    cir.cancel();
                 }
             }
         }

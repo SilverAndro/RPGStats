@@ -37,8 +37,10 @@ public abstract class KillMixin {
 
             if (entity instanceof ServerPlayerEntity serverPlayer) {
                 List<XpData.XpEntry> reaOverride = XpData.INSTANCE.getENTITY_XP_OVERRIDE().get(le.getType());
-                for (XpData.XpEntry entry : reaOverride) {
-                    LevelUtils.INSTANCE.applyReaEntry(entry, serverPlayer, source);
+                if (reaOverride != null) {
+                    for (XpData.XpEntry entry : reaOverride) {
+                        LevelUtils.INSTANCE.applyReaEntry(entry, serverPlayer, source);
+                    }
                 }
 
                 if (source.isIn(DamageTypeTags.WITCH_RESISTANT_TO)) {

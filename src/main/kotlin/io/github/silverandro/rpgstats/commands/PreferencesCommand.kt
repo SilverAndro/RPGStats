@@ -13,8 +13,6 @@ import io.github.silverandro.rpgstats.stats.internal.XpBarLocation
 import io.github.silverandro.rpgstats.stats.internal.XpBarShow
 import io.github.silverandro.rpgstats.util.supplier
 import mc.rpgstats.hooky_gen.api.Command
-import net.minecraft.command.argument.EnumArgumentType
-import net.minecraft.server.command.CommandManager
 import net.minecraft.server.command.CommandManager.argument
 import net.minecraft.server.command.CommandManager.literal
 import net.minecraft.server.command.ServerCommandSource
@@ -22,13 +20,42 @@ import net.minecraft.text.Text
 
 @Command
 object PreferencesCommand {
-    private val xpBarLocationArg = object : EnumArgumentType<XpBarLocation>(XpBarLocation.CODEC, {XpBarLocation.entries.toTypedArray()}) {}
-    private val xpShowArg = object : EnumArgumentType<XpBarShow>(XpBarShow.CODEC, {XpBarShow.entries.toTypedArray()}) {}
+    private val xpLocationArgs = literal("location").apply {
+        thenEnum<XpBarLocation> {
+            executes {
+                val component = Components.PREFERENCES.get(it.source.playerOrThrow)
+                component.xpBarLocation = it.getArgument("location_value", XpBarLocation::class.java)
+                it.source.sendFeedback(
+                    Text.translatable(
+                        "rpgstats.feedback.xp_bar_location",
+                        component.xpBarLocation.name
+                    ).supplier(), false
+                )
+                return@executes 0
+            }
+        }
+    }
+
+    private val xpShowArgs = literal("show").apply {
+        thenEnum<XpBarShow> {
+            executes {
+                val component = Components.PREFERENCES.get(it.source.playerOrThrow)
+                component.xpBarShow = it.getArgument("show_value", XpBarShow::class.java)
+                it.source.sendFeedback(
+                    Text.translatable(
+                        "rpgstats.feedback.xp_bar_show",
+                        component.xpBarShow.name
+                    ).supplier(), false
+                )
+                return@executes 0
+            }
+        }
+    }
 
     fun register(dispatch: CommandDispatcher<ServerCommandSource>) {
         dispatch.register(literal("rpgconfig").then(
             literal("disable_spam").then(
-                CommandManager.argument("disable_button_spam", BoolArgumentType.bool()).executes {
+                argument("disable_button_spam", BoolArgumentType.bool()).executes {
                     val component = Components.PREFERENCES.get(it.source.playerOrThrow)
                     component.isOptedOutOfButtonSpam = BoolArgumentType.getBool(it, "disable_button_spam")
                     it.source.sendFeedback(
@@ -41,28 +68,8 @@ object PreferencesCommand {
                     return@executes 0
                 })).then(
                     literal("xp_bar")
-                        .then(literal("location").then(argument("location_value", xpBarLocationArg).executes {
-                            val component = Components.PREFERENCES.get(it.source.playerOrThrow)
-                            component.xpBarLocation = it.getArgument("location_value", XpBarLocation::class.java)
-                            it.source.sendFeedback(
-                                Text.translatable(
-                                    "rpgstats.feedback.xp_bar_location",
-                                    component.xpBarLocation.name
-                                ).supplier(), false
-                            )
-                            return@executes 0
-                        }))
-                        .then(literal("show").then(argument("show_value", xpShowArg).executes {
-                            val component = Components.PREFERENCES.get(it.source.playerOrThrow)
-                            component.xpBarShow = it.getArgument("show_value", XpBarShow::class.java)
-                            it.source.sendFeedback(
-                                Text.translatable(
-                                    "rpgstats.feedback.xp_bar_show",
-                                    component.xpBarShow.name
-                                ).supplier(), false
-                            )
-                            return@executes 0
-                        }))
+                        .then(xpLocationArgs)
+                        .then(xpShowArgs)
                 ).executes {
                     val component = Components.PREFERENCES.get(it.source.playerOrThrow)
                     val feedback = Text.translatable("rpgstats.feedback.toggle_sneak", component.isOptedOutOfButtonSpam)

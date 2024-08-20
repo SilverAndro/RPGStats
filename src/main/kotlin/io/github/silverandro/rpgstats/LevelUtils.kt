@@ -145,11 +145,11 @@ object LevelUtils {
             val nextXP = calculateXpNeededForLevel(currentLevel + 1)
             (if (hidden) Text.literal("[HIDDEN] ") else Text.empty())
                 .append(Text.translatable(entry.translationKey).styled { it.withColor(Formatting.GOLD) })
-                .append(Text.translatable("rpgstats.notmaxlevel_trunc"))
+                .append(Text.translatable("rpgstats.notmaxlevel_trunc", currentLevel, xp, nextXP))
         } else {
             (if (hidden) Text.literal("[HIDDEN] ") else Text.empty())
                 .append(Text.translatable(entry.translationKey).styled { it.withColor(Formatting.GOLD) })
-                .append(Text.translatable("rpgstats.maxlevel_trunc"))
+                .append(Text.translatable("rpgstats.maxlevel_trunc", currentLevel))
         }
     }
 

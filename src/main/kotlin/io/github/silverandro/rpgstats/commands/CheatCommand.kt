@@ -12,7 +12,6 @@ import com.mojang.serialization.Codec
 import io.github.silverandro.rpgstats.LevelUtils
 import mc.rpgstats.hooky_gen.api.Command
 import net.minecraft.command.argument.EntityArgumentType
-import net.minecraft.command.argument.EnumArgumentType
 import net.minecraft.command.argument.IdentifierArgumentType
 import net.minecraft.server.command.CommandManager.argument
 import net.minecraft.server.command.CommandManager.literal
@@ -47,27 +46,32 @@ object CheatCommand {
         }
     }
 
-    private val operationArg = object : EnumArgumentType<Operation>(Operation.CODEC, { Operation.entries.toTypedArray() }) {}
-    private val typeArg = object : EnumArgumentType<Type>(Type.CODEC, { Type.entries.toTypedArray() }) {}
+    private val args = argument("skill", IdentifierArgumentType.identifier()).apply {
+        suggests(SkillSuggestionProvider())
+        thenEnum<Operation> {
+            thenEnum<Type> {
+                then(argument("amount", IntegerArgumentType.integer(0))
+                    .executes {
+                        return@executes modifyXpAndLevels(
+                            EntityArgumentType.getPlayers(it, "targetPlayers"),
+                            IdentifierArgumentType.getIdentifier(it, "skill"),
+                            it.getArgument("operation", Operation::class.java),
+                            it.getArgument("type", Type::class.java),
+                            IntegerArgumentType.getInteger(it, "amount")
+                        )
+                    }
+                )
+            }
+        }
+    }
 
     fun register(dispatch: CommandDispatcher<ServerCommandSource>) {
         dispatch.register(literal("rpgcheat")
             .requires {it.hasPermissionLevel(2)}
             .then(argument("targetPlayers", EntityArgumentType.players())
-                .then(argument("skill", IdentifierArgumentType.identifier())
-                    .suggests(SkillSuggestionProvider())
-                    .then(argument("operation", operationArg)
-                        .then(argument("type", typeArg)
-                            .then(argument("amount", IntegerArgumentType.integer(0))
-                                .executes {
-                                    return@executes modifyXpAndLevels(
-                                        EntityArgumentType.getPlayers(it, "targetPlayers"),
-                                        IdentifierArgumentType.getIdentifier(it, "skill"),
-                                        it.getArgument("operation", Operation::class.java),
-                                        it.getArgument("type", Type::class.java),
-                                        IntegerArgumentType.getInteger(it, "amount")
-                                    )
-                                }))))))
+                .then(args)
+            )
+        )
     }
 
     private fun modifyXpAndLevels(

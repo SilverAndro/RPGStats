@@ -11,49 +11,49 @@ import net.minecraft.util.Identifier
 
 class RPGStatsConfig : Config(Identifier.of(Constants.MOD_ID, "main")) {
     @Comment("If players should lose all stats on death")
-    val hardcoreMode = false
+    var hardcoreMode = false
 
     @Comment("Level scaling formula inputs")
-    val scaling = LevelScaling()
+    var scaling = LevelScaling()
 
     @Comment("Settings for the anticheat implementation")
-    val antiCheat = AntiCheat()
+    var antiCheat = AntiCheat()
 
     @Comment("Debug logging config")
-    val debug = Debug()
+    var debug = Debug()
 
     class AntiCheat : Walkable {
         @Comment("Prevent duplicate XP from breaking blocks in the same location")
-        val blockBreakPos = true
+        var blockBreakPos = true
 
         @Comment("How many ticks before you gain XP from breaking a block from a location again")
         @ValidatedInt.Restrict(0)
-        val blockBreakDelay = 6000
+        var blockBreakDelay = 6000
     }
 
     class LevelScaling : Walkable {
         @ValidatedDouble.Restrict(0.0001)
-        val power = 2.07
+        var power = 2.07
 
         @ValidatedDouble.Restrict(0.0001)
-        val scale = 0.52
+        var scale = 0.52
 
         @ValidatedInt.Restrict(1)
-        val base = 80
+        var base = 80
 
         @Comment("If the required amount should be the requirements from previous levels combined + new one instead of just solving once")
-        val isCumulative = false
+        var isCumulative = false
 
         @Comment("The maximum level allowed")
         @ValidatedInt.Restrict(0)
-        val maxLevel = 50
+        var maxLevel = 50
     }
 
     class Debug : ConfigSection() {
-        val logXpGain = false
-        val logBrokenBlocks = false
-        val logRawOps = false
-        val logRawWrite = false
-        val logAntiCheatPrevention = false
+        var logXpGain = false
+        var logBrokenBlocks = false
+        var logRawOps = false
+        var logRawWrite = false
+        var logAntiCheatPrevention = false
     }
 }

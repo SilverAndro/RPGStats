@@ -47,7 +47,7 @@ object StatsCommand {
                 false
             )
 
-           statsToShow.forEach { (identifier, entry) ->
+            statsToShow.forEach { (identifier, entry) ->
                 source.sendFeedback(LevelUtils.getLevelDisplay(identifier, target, !entry.shouldShowToUser).supplier(), false)
             }
         } else {

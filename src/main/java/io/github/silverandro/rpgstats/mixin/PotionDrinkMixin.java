@@ -16,6 +16,7 @@ import net.minecraft.item.PotionItem;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
@@ -25,8 +26,14 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 // Have to lower priority due to mixin bug with mixin conflict handling
 @Mixin(value = PotionItem.class, priority = 900)
 public class PotionDrinkMixin {
-    // What is this bruh. None of the capturing is documented, and it's a core feature of the annotation
-    // Also it literally says Redirect is better :rolling_eyes:
+    @Unique
+    private static LivingEntity potionUser;
+
+    @Inject(method = "finishUsing", at = @At("HEAD"))
+    private void capturePlayer(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
+        potionUser = user;
+    }
+
     @ModifyArgs(
             method = "method_57389(Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/entity/effect/StatusEffectInstance;)V",
             at = @At(
@@ -35,14 +42,10 @@ public class PotionDrinkMixin {
             )
     )
     private static void rpgstats$OnFinishDrinkingPotion(Args args) {
-        for (int i = 0; i < args.size(); i++) {
-            System.out.println(String.valueOf(args.get(i)));
-        }
-
         // Yay! no type safety
         StatusEffectInstance effect = args.get(0);
 
-        if (null instanceof ServerPlayerEntity playerEntity) {
+        if (potionUser instanceof ServerPlayerEntity playerEntity) {
             LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, playerEntity, 10);
 
             int newDuration;
@@ -64,20 +67,7 @@ public class PotionDrinkMixin {
 
             args.set(0, newInstance);
         }
-    }
-
-    @Inject(
-            method = "finishUsing",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/entity/player/PlayerEntity;incrementStat(Lnet/minecraft/stat/Stat;)V"
-            )
-    )
-    private void rpgstats$OnFinishDrinkingHealthPotion(ItemStack stack, World world, LivingEntity user, CallbackInfoReturnable<ItemStack> cir) {
-        if (user instanceof ServerPlayerEntity playerEntity) {
-            LevelUtils.INSTANCE.addXpAndLevelUp(Components.MAGIC, playerEntity, 10);
-
-        }
+        potionUser = null;
     }
 
     @Inject(at = @At("HEAD"), method = "getMaxUseTime", cancellable = true)

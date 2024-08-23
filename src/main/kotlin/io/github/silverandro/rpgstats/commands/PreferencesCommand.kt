@@ -21,10 +21,10 @@ import net.minecraft.text.Text
 @Command
 object PreferencesCommand {
     private val xpLocationArgs = literal("location").apply {
-        thenEnum<XpBarLocation> {
+        thenEnum<XpBarLocation> { location ->
             executes {
                 val component = Components.PREFERENCES.get(it.source.playerOrThrow)
-                component.xpBarLocation = it.getArgument("location_value", XpBarLocation::class.java)
+                component.xpBarLocation = location
                 it.source.sendFeedback(
                     Text.translatable(
                         "rpgstats.feedback.xp_bar_location",
@@ -37,10 +37,10 @@ object PreferencesCommand {
     }
 
     private val xpShowArgs = literal("show").apply {
-        thenEnum<XpBarShow> {
+        thenEnum<XpBarShow> { show ->
             executes {
                 val component = Components.PREFERENCES.get(it.source.playerOrThrow)
-                component.xpBarShow = it.getArgument("show_value", XpBarShow::class.java)
+                component.xpBarShow = show
                 it.source.sendFeedback(
                     Text.translatable(
                         "rpgstats.feedback.xp_bar_show",

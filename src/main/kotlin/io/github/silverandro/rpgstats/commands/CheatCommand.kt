@@ -48,15 +48,15 @@ object CheatCommand {
 
     private val args = argument("skill", IdentifierArgumentType.identifier()).apply {
         suggests(SkillSuggestionProvider())
-        thenEnum<Operation> {
-            thenEnum<Type> {
+        thenEnum<Operation> { operation ->
+            thenEnum<Type> { type ->
                 then(argument("amount", IntegerArgumentType.integer(0))
                     .executes {
                         return@executes modifyXpAndLevels(
                             EntityArgumentType.getPlayers(it, "targetPlayers"),
                             IdentifierArgumentType.getIdentifier(it, "skill"),
-                            it.getArgument("operation", Operation::class.java),
-                            it.getArgument("type", Type::class.java),
+                            operation,
+                            type,
                             IntegerArgumentType.getInteger(it, "amount")
                         )
                     }

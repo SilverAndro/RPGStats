@@ -31,8 +31,8 @@ data class StatAttributeAction(
         if (!hideMessages) {
             player.sendMessage(
                 Text.literal("| ").styled { it.withColor(Formatting.GREEN) }
-                    .append(Text.literal((if (value > 0) "+" else "-") + value.cleanDisplay + " ")).styled { it.withColor(Formatting.YELLOW) }
-                    .append(Text.translatable(stat.value().translationKey)),
+                    .append(Text.literal((if (value > 0) "+" else "-") + value.cleanDisplay + " ").styled { it.withColor(Formatting.YELLOW) })
+                    .append(Text.translatable(stat.value().translationKey).styled { it.withColor(Formatting.RESET) }),
                 false
             )
         }
@@ -50,8 +50,8 @@ data class StatSpecialAction(
         player.sendMessage(
             Text.literal("| ").styled { it.withColor(Formatting.GREEN) }
                 .append(Text.translatable(name).styled { it.withColor(Formatting.YELLOW) })
-                .append(" - ")
-                .append(Text.translatable(description, descriptionExtra ?: arrayOf(0))),
+                .append(Text.literal(" - ").styled { it.withColor(Formatting.RESET) })
+                .append(if (descriptionExtra == null) Text.translatable(description) else Text.translatable(description, descriptionExtra)),
             false
         )
     }
@@ -66,8 +66,8 @@ data class StatFakeAttributeAction(
         if (!shouldApply(newLevel) || hideMessages) return
         player.sendMessage(
             Text.literal("| ").styled { it.withColor(Formatting.GREEN) }
-                .append(Text.literal((if (fakeValue > 0) "+" else "-") + fakeValue.cleanDisplay + " ")).styled { it.withColor(Formatting.YELLOW) }
-                .append(Text.translatable(nameTranslationKey)),
+                .append(Text.literal((if (fakeValue > 0) "+" else "-") + fakeValue.cleanDisplay + " ").styled { it.withColor(Formatting.YELLOW) })
+                .append(Text.translatable(nameTranslationKey).styled { it.withColor(Formatting.RESET) }),
             false
         )
     }

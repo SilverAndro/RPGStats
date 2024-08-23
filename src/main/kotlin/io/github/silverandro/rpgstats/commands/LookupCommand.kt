@@ -48,21 +48,19 @@ object LookupCommand {
     }
 
     private val args = argument("targetPlayer", EntityArgumentType.player()).apply {
-        thenEnum<LookupType> {
+        thenEnum<LookupType> { lookup ->
             then(argument("skillId", IdentifierArgumentType.identifier())
                 .suggests(SkillSuggestionProvider())
                 .executes {
                     val player = EntityArgumentType.getPlayer(it, "targetPlayer")
-                    val lookup = it.getArgument("skillLookup", LookupType::class.java)
                     val skillId = IdentifierArgumentType.getIdentifier(it, "skillId")
                     return@executes preformLookup(player, lookup, skillId)
                 }
             )
         }
-        thenEnum<LookupTypeNoSkill> {
+        thenEnum<LookupTypeNoSkill> { lookup ->
             executes {
                 val player = EntityArgumentType.getPlayer(it, "targetPlayer")
-                val lookup = it.getArgument("generalLookup", LookupTypeNoSkill::class.java)
                 return@executes preformLookup(player, lookup)
             }
         }

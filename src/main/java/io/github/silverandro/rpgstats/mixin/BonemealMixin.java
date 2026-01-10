@@ -34,7 +34,7 @@ public class BonemealMixin {
     private static final java.util.Random RANDOM = new java.util.Random();
 
     // TODO: Generalize this! Breaks often and not ideal
-    @Inject(at = @At("HEAD"), method = "useOnGround")
+    @Inject(at = @At(value = "RETURN", ordinal = 2), method = "useOnGround")
     private static void rpgstats$groundEffectiveness(ItemStack stack, World world, BlockPos blockPos, Direction facing, CallbackInfoReturnable<Boolean> cir) {
         if (world.getBlockState(blockPos).isOf(Blocks.WATER) && world.getFluidState(blockPos).getLevel() == 8) {
             if (world instanceof ServerWorld && stack.getHolder() != null) {
@@ -90,7 +90,7 @@ public class BonemealMixin {
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "useOnFertilizable")
+    @Inject(at = @At(value = "RETURN", ordinal = 0), method = "useOnFertilizable")
     private static void rpgstats$onGrowable(ItemStack stack, World world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         if (!world.isClient && stack.getHolder() != null && stack.getHolder() instanceof ServerPlayerEntity) {
             int level = LevelUtils.INSTANCE.getComponentLevel(Components.FARMING, (ServerPlayerEntity) stack.getHolder());
